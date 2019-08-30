@@ -1,0 +1,429 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header card-header-danger">
+            <button type="button" class="btn btn-primary float-right btn-sm" id="AddCustomerbtn" data-toggle="modal"
+                (click)="largeModal.show()">
+                Add Sales Order
+            </button>
+            <h4 class="card-title mt-0">Sale Order List</h4>
+        </div>
+        <div class="card-body bg-white">
+            <div class="table-responsive animated flash">
+                <table class="table " id="DisplayCustomerView">
+                    <thead class="">
+                        <th>
+                            Sales Order
+                        </th>
+                        <th>
+                            Sales Channel
+                        </th>
+
+                        <th>
+                            Customer Name
+                        </th>
+                        <th>
+                            Shipment
+                        </th>
+                        <th>
+                            Payment
+                        </th>
+                        <th>
+                            Total
+                        </th>
+                        <th>
+                            Date Created
+                        </th>
+                        <th colspan="3" class="text-center">
+                            Action
+                        </th>
+                    </thead>
+                    <tbody class="d-none LoderoutCustomer">
+                        <!-- <tr *ngFor="let item of EmployeeModelLists" class="CustomerListID">
+                            <td class="mr-2">
+                                {{item.first_Name}} {{item.last_Name}}
+                            </td>
+                            <td class="mr-2">
+                                {{item.gender}}
+                            </td>
+                            <td class="mr-2">
+                                {{item.departmentName}}
+                            </td>
+                            <td class="mr-2">
+                                {{item.emailId}}
+                            </td>
+                            <td class="mr-2">
+                                {{item.mobileNo}}
+                            </td>
+                            <td class="mr-2">
+                                {{item.hobbiesLists}}
+                            </td>
+                            <td class="text-center" (click)="EmployeeEdit(item.employeeId)">
+                                <i class="material-icons text-warning"> edit</i>
+                            </td>
+                            <td class="text-center">
+                                <i class="material-icons text-success">insert_drive_file</i>
+                            </td>
+                            <td class="text-center" (click)="DeleteEmpoloyee(item.employeeId)">
+                                <i class="material-icons text-danger">
+                                    delete_outline
+                                </i>
+                            </td>
+                        </tr> -->
+                    </tbody>
+                </table>
+
+
+                <div class="mt-2 text-center LodersetEmployee">
+                    <div class="spinner-border text-danger" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{SaleTitle}}</h4>
+                <button type="button" class="close" (click)="largeModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <tabset>
+                    <tab id="TabOrderDetail">
+                        <ng-template tabHeading><i class="fa fa-shopping-cart text-info"></i> Order Details
+                        </ng-template>
+                        <form [formGroup]="SalesOrderDetailsForm">
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label>FROM COMPANY</label>
+                                    <select class="form-control" (change)="ChangeFormCompanyvalue($event.target.value)"
+                                        formControlName="FormCompany" id="FormCompany"
+                                        [ngClass]="{ 'is-invalid': SalesOrderTabSubmit && f.FormCompany.errors }">
+                                        <option value="" selected>--Select--</option>
+                                        <option value="1">ABC</option>
+                                    </select>
+                                    <div *ngIf="SalesOrderTabSubmit && f.FormCompany.errors" class="invalid-feedback">
+                                        <div *ngIf="f.FormCompany.errors.required">Company is required</div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-4 mt-4">
+                                    <label>Manage multiple companies under 1 inventory? <a href="#" class="">Create New
+                                            Company</a></label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-4">
+                                    <label>SALES ORDER # </label>
+                                    <p class="text-info">New</p>
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <label><i class="fa fa-calendar"></i> DATE ORDERED
+                                    </label>
+                                    <input class="form-control" formControlName="DateOrdered"
+                                        [ngModel]="CurrentDate | date:'yyyy-MM-dd'" id="DateOrdered"
+                                        placeholder="DATE ORDERED" type="date">
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <label><i class="fa fa-calendar"></i> ESTIMATED DELIVERY DATE
+                                    </label>
+                                    <input class="form-control" formControlName="EstimatedDeliveryDate"
+                                        id="EstimatedDeliveryDate"
+                                        [ngClass]="{'is-invalid': SalesOrderTabSubmit && f.EstimatedDeliveryDate.errors }"
+                                        placeholder="DISCOUNT PERCENTAGE" type="date">
+                                    <div *ngIf="SalesOrderTabSubmit && f.EstimatedDeliveryDate.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="f.EstimatedDeliveryDate.errors.required">Please Select Estimated
+                                            Delivery Date</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label>CUSTOMER</label>
+                                    <select class="form-control" (change)="ChangeCustomerIdvalue($event.target.value)"
+                                        formControlName="CustomerId" id="CustomerId"
+                                        [ngClass]="{ 'is-invalid': SalesOrderTabSubmit && f.CustomerId.errors }">
+                                        <option value="" selected>--Select--</option>
+                                        <option value="1">ABC</option>
+                                    </select>
+                                    <div *ngIf="SalesOrderTabSubmit && f.CustomerId.errors" class="invalid-feedback">
+                                        <div *ngIf="f.CustomerId.errors.required">Customer is required</div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label>SHIPPING ADDRESS </label>
+                                    <p>
+                                        Address
+                                    </p>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label>BILLING ADDRESS </label>
+                                    <p>
+                                        Address
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label>CUSTOMER'S PURCHASE ORDER NUMBER</label>
+                                    <input class="form-control" formControlName="CustomerPurchesOrderNumber"
+                                        id="CustomerPurchesOrderNumber" placeholder="CUSTOMER'S PURCHASE ORDER NUMBER"
+                                        type="text">
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label>REMARKS</label>
+                                    <input class="form-control" formControlName="Remarks" id="REMARKS"
+                                        placeholder="REMARKS" type="text">
+                                </div>
+                            </div>
+                        </form>
+                    </tab>
+
+                    <tab id="SaleOrderType">
+                        <ng-template tabHeading><i class="fa fa-cart-arrow-down text-info"></i> Sales Order Type
+                        </ng-template>
+                        <form [formGroup]="SalesOrderTypeForm">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label>SALES ORDER TYPE </label>
+                                    <select class="form-control"
+                                        (change)="ChangeSalesOrderTypevalue($event.target.value)"
+                                        formControlName="SalesOrderType" id="FormCSalesOrderTypeompany"
+                                        [ngClass]="{ 'is-invalid': SalesOrderTabSubmitsecond && f1.SalesOrderType.errors }">
+                                        <option value="" selected>--Select--</option>
+                                        <option value="1">ABC</option>
+                                    </select>
+                                    <div *ngIf="SalesOrderTabSubmitsecond && f1.SalesOrderType.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="f1.SalesOrderType.errors.required">Sales Order Type is required
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label>CREDIT TERMS </label>
+                                    <select class="form-control"
+                                        (change)="ChangeSalesOrderTypevalue($event.target.value)"
+                                        formControlName="Creditterms" id="Creditterms">
+                                        <option value="" selected>--Select--</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label>SHIPMENT METHOD </label>
+                                    <select class="form-control"
+                                        (change)="ChangeShippingMethodvalue($event.target.value)"
+                                        formControlName="ShippingMethod" id="ShippingMethod">
+                                        <option value="" selected>--Select--</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label>SALES REP</label>
+                                    <select class="form-control" (change)="ChangeSalesRepvalue($event.target.value)"
+                                        formControlName="SalesRep" id="SalesRep">
+                                        <option value="" selected>--Select--</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label>CURRENCY</label>
+                                    <select class="form-control" (change)="ChangeCurrencyvalue($event.target.value)"
+                                        formControlName="Currency" id="Currency">
+                                        <option value="" selected>--Select--</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-3">
+                                    ADDITIONAL CHARGES
+                                    <i class="fa fa-info-circle text-info"
+                                        tooltip="Specify additional charges 
+                                    (eg: insurance or loading fees) if applicable. Additional cost will be 
+                                    applied to 1 item or a group of items selling price or applied to entire sales order." placement="right"></i>
+                                    <br />
+                                    <button class="btn btn-primary btn-block"
+                                        (click)="largeModal1.show()">Manage</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </tab>
+                    <tab>
+                        <ng-template tabHeading><i class="fa fa-cubes text-info"></i> Order Items
+                        </ng-template>
+                        <table class="table ">
+                            <tr>
+                                <th>#</th>
+                                <th>ITEM</th>
+                                <th>UNIT</th>
+                                <th>UNIT PRICE</th>
+                                <th>QTY</th>
+                                <th>DISCOUNT</th>
+                                <th>TAX</th>
+                                <th>TOTAL</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    #
+                                </td>
+                                <td>
+
+                                    <div class="clo-sm-2">
+                                        <select class="form-control" id="Currency">
+                                            <option value="" selected>--Select--</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="clo-sm-2">
+                                        <select class="form-control" id="Currency">
+                                            <option value="" selected>--Select--</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="clo-sm-2">
+                                        <input class="form-control" id="AMOUNT" placeholder="AMOUNT" type="text">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="clo-sm-2">
+                                        <input class="form-control" id="AMOUNT" placeholder="AMOUNT" type="text">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="clo-sm-2">
+                                        <select class="form-control" id="Currency">
+                                            <option value="" selected>--Select--</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>Tax</td>
+                                <td>000.00</td>
+                            </tr>
+                        </table>
+                    </tab>
+                </tabset>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="largeModal.hide()">Close</button>
+                <button type="button" class="btn btn-primary"
+                    (click)="SaveSalesOrder(SalesOrderDetailsForm,SalesOrderTypeForm)">{{SavebtnTitle}}</button>
+
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #largeModal1="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Additional Charges</h4>
+                <button type="button" class="close" (click)="largeModal1.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p> <i class="fa fa-info-circle text-warning"></i> You can add additional charges after shipping, but
+                    cannot edit/add after creating invoices&hellip;</p>
+
+                <tabset>
+                    <tab>
+                        <ng-template tabHeading><i class="fa fa-product-hunt text-info"></i> APPLY FOR ALL
+                        </ng-template>
+                        <table class="table ">
+                            <tr>
+                                <th>ADDITIONAL CHARGES</th>
+                                <th>AMOUNT</th>
+                                <th>TAXES</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="clo-sm-8">
+                                        <select class="form-control" id="Currency">
+                                            <option value="" selected>--Select--</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="clo-sm-2">
+                                        <input class="form-control" id="AMOUNT" placeholder="AMOUNT" type="text">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="clo-sm-2">
+                                        <select class="form-control" id="Currency">
+                                            <option value="" selected>--Select--</option>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </tab>
+                    <tab>
+                        <ng-template tabHeading><i class="fa fa-product-hunt text-info"></i>APPLY TO PRODUCT
+                        </ng-template>
+                        <table class="table ">
+                            <tr>
+                                <th>PRODUCT(S)</th>
+                                <th>UOM</th>
+                                <th>ADDITIONAL CHARGES</th>
+                                <th>AMOUNT</th>
+                                <th>TAX</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="clo-sm-8">
+                                        prodcut from select item only name
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="clo-sm-2">
+                                        Unit[1]
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="clo-sm-2">
+                                        <select class="form-control" id="Currency">
+                                            <option value="" selected>--Select--</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="clo-sm-2">
+                                        <input class="form-control" id="AMOUNT" placeholder="AMOUNT" type="text">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="clo-sm-3">
+                                        <select class="form-control" id="Currency">
+                                            <option value="" selected>--Select--</option>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </tab>
+                </tabset>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="largeModal1.hide()">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>

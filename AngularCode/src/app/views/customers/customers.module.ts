@@ -1,6 +1,6 @@
 // Angular
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule , ReactiveFormsModule} from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CustomerComponent } from './customer/customer.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -27,7 +27,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     // PaginationModule.forRoot(),
     // PopoverModule.forRoot(),
     // ProgressbarModule.forRoot(),
-     TooltipModule.forRoot()
+     TooltipModule.forRoot(),
+     ReactiveFormsModule
   ],
   declarations: [
   CustomerComponent,

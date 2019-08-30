@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Shalin\\InventoryProject\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj": {}
+    "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj": {}
   },
   "projects": {
-    "D:\\Shalin\\InventoryProject\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj": {
+    "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Shalin\\InventoryProject\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj",
+        "projectUniqueName": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj",
         "projectName": "Inventory.Core",
-        "projectPath": "D:\\Shalin\\InventoryProject\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj",
+        "projectPath": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "D:\\Shalin\\InventoryProject\\CoreCode\\Inventory.Web\\Inventory.Core\\obj\\",
+        "outputPath": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -41,6 +41,10 @@
       "frameworks": {
         "netstandard2.0": {
           "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "NETStandard.Library": {
               "suppressParent": "All",
               "target": "Package",

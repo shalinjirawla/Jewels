@@ -11,9 +11,13 @@ namespace Inventory.Core.Models.Customer
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long CustomerTypeId { get; set; }
-        public string Name { get; set; }
-        public DateTime CreationTime { get; set; }
- 
+        public string CustomerTypeName { get; set; }
+        public Nullable<DateTime> CreationTime { get; set; }
+        public Nullable<long> CreatorUserId { get; set; }
+        public Nullable<DateTime> LastModificationTime { get; set; }
+        public Nullable<long> LastModifierUserId { get; set; }
+        public Boolean IsActive { get; set; }
+
 
 
 

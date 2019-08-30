@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Inventory.Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class ValuesController : ControllerBase
     {

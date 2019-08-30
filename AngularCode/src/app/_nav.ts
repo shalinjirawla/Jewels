@@ -79,12 +79,12 @@ export const navItems: NavData[] = [
   },
   {
     name: 'Products',
-    url: '/base',
+    url: '/products',
     icon: 'fa fa-product-hunt',
     children: [
       {
         name: 'Product',
-        url: '/base/cards',
+        url: '/products/product',
         icon: 'icon-paypal'
       },
       {
@@ -99,7 +99,7 @@ export const navItems: NavData[] = [
       },
       {
         name: 'Categories',
-        url: '/base/carousels',
+        url: '/products/categories',
         icon: 'icon-vector'
       },
       {
@@ -115,7 +115,7 @@ export const navItems: NavData[] = [
   },
   {
     name: 'Sales',
-    url: '/buttons',
+    url: '/sales',
     icon: 'cui-cart icons',
     children: [
       {
@@ -125,7 +125,7 @@ export const navItems: NavData[] = [
       },
       {
         name: 'Sales Orders',
-        url: '/buttons/dropdowns',
+        url: '/sales/saleOrder',
         icon: 'fa fa-shopping-cart'
       },
       {

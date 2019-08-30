@@ -86,128 +86,287 @@
                 </button>
             </div>
             <div class="modal-body">
+                
                 <tabset>
                     <tab>
+                            <form [formGroup]="AddCustomerForm">
                         <ng-template tabHeading><i class="icon-user text-info"></i> Customer Details</ng-template>
                         <div class="row">
                             <div class="form-group col-sm-6">
                                 <label for="city">CUSTOMER NAME</label>
-                                <input class="form-control" id="CUSTOMER-NAME" placeholder="CUSTOMER NAME" type="text">
+                                <input class="form-control" id="CUSTOMER-NAME" formControlName="CustomerName" placeholder="CUSTOMER NAME" type="text">
                             </div>
-                            <div class="form-group col-sm-6">
+                            <div class="form-group col-sm-4">
                                 <label for="postal-code">CUSTOMER CODE</label>
-                                <input class="form-control" id="CUSTOMER-CODE" placeholder="CUSTOMER CODE" type="text">
+                                <input class="form-control" id="CUSTOMER-CODE" formControlName="CustomerCode" placeholder="CUSTOMER CODE" type="text">
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-sm-6">
+                            <div class="form-group col-sm-4">
                                 <label for="city">CUSTOMER GROUP <i class="fa fa-info-circle text-info" tooltip="Assign a group to this customer. For each product,
                                       specific prices can be applied on customer groups,
                                        tagging customer group for this customer allow you
                                         to generate accurate sales report for different customer
                                          group. This allow you to set product prices & other features."
                                         placement="right"></i></label>
-                                <select class="form-control" id="ccyear">
-                                    <option>2014</option>
-                                    <option>2015</option>
+                                <select class="form-control" formControlName="CustomerTypeId" id="ccyear">
+                                        <option value="0">--Select--</option>
+                                        <option *ngFor="let type of CustomerTypeList"
+                                        [value]="type.customerTypeId">
+                                        {{type.customerTypeName}}
+                                    </option>
 
                                 </select>
                             </div>
-                            <div class="form-group col-sm-6">
+                            <div class="form-group col-sm-2"></div>
+                            <div class="form-group col-sm-4">
                                 <label for="postal-code">WEBSITE</label>
-                                <input class="form-control" id="CUSTOMER-CODE" placeholder="CUSTOMER CODE" type="text">
+                                <input class="form-control" id="CUSTOMER-CODE" formControlName="Website" placeholder="WEBSITE" type="text">
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-sm-6">
+                            <div class="form-group col-sm-4">
                                 <label for="city">TAX REGISTRATION NUMBER</label>
                                 <input class="form-control" id="TAX-REGISTRATION-NUMBER"
-                                    placeholder="TAX REGISTRATION NUMBER" type="number">
+                                    placeholder="TAX REGISTRATION NUMBER" formControlName="TaxRegistrationNumber" type="text">
                             </div>
-                            <div class="form-group col-sm-6">
+                            <div class="form-group col-sm-2"></div>
+                            <div class="form-group col-sm-4">
                                 <label for="postal-code">REMARKS</label>
-                                <input class="form-control" id="REMARKS" placeholder="REMARKS" type="text">
+                                <input class="form-control" formControlName="Remarks" id="REMARKS" placeholder="REMARKS" type="text">
                             </div>
                         </div>
                         <div class="row">
 
-                            <div class="form-group col-sm-6">
+                            <div class="form-group col-sm-4">
                                 <label for="city">DEFAULT CREDIT TERMS <i class="fa fa-info-circle text-info"
                                         tooltip="Selecting a default credit term saves you time when a document is created"
                                         placement="right"></i>
                                 </label>
-                                <input class="form-control" id="DEFAULT-CREDIT-TERMS" placeholder="DEFAULT CREDIT TERMS"
+                                <input class="form-control" formControlName="DefaultCreditTerms" id="DEFAULT-CREDIT-TERMS" placeholder="DEFAULT CREDIT TERMS"
                                     type="text">
                             </div>
-                            <div class="form-group col-sm-6">
+                            <div class="form-group col-sm-2"></div>
+                            <div class="form-group col-sm-4">
                                 <label for="postal-code">DEFAULT CREDIT LIMIT
                                 </label>
-                                <input class="form-control" id="DEFAULT-CREDIT-LIMIT" placeholder="DEFAULT CREDIT LIMIT"
+                                <input class="form-control" formControlName="DefaultCreditLimit" id="DEFAULT-CREDIT-LIMIT" placeholder="DEFAULT CREDIT LIMIT"
                                     type="text">
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-sm-6">
+                            <div class="form-group col-sm-4">
                                 <label for="city">DEFAULT DISCOUNT TYPE
                                 </label>
-                                <select class="form-control" id="ccyear">
-                                    <option>--Select--</option>
-                                    <option>Percentage (%)</option>
-                                    <option>Fixed ($)</option>
+                                <select class="form-control" (change)="ChangeDiscountvalue($event.target.value)" formControlName="DiscountOption" id="DiscountOption">
+                                    <option value="0" selected>--Select--</option>
+                                    <option value="1">Percentage (%)</option>
+                                    <option value="2">Fixed ($)</option>
                                 </select>
                             </div>
-                            <div class="form-group col-sm-6">
+                            <div class="form-group col-sm-2"></div>
+                            <div  class="form-group col-sm-4" *ngIf="DiscountOptionValue==2" style="display: block;">
                                 <label for="postal-code">DISCOUNT AMOUNT
                                 </label>
-                                <input class="form-control" id="DEFAULT-CREDIT-LIMIT" placeholder="DEFAULT CREDIT LIMIT"
+                                <input class="form-control" formControlName="DiscountAmount" id="DEFAULT-CREDIT-LIMIT" placeholder="DISCOUNT AMOUNT"
                                     type="text">
                             </div>
+                            <div class="form-group col-sm-4" *ngIf="DiscountOptionValue==1" style="display: block;">
+                                    <label for="postal-code">DISCOUNT PERCENTAGE
+                                    </label>
+                                    <input class="form-control" formControlName="DiscountPercentage" id="DEFAULT-CREDIT-LIMIT" placeholder="DISCOUNT PERCENTAGE"
+                                        type="text">
+                                </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-sm-12">
+                            <div class="form-group col-sm-4">
                                 <label for="postal-code">DEFAULT CURRENCY
                                 </label>
-                                <select class="form-control" id="ccyear">
-                                    <option>--Select--</option>
-                                    <option>USD </option>
-                                    <option>INR (Default)</option>
+                                <select class="form-control" formControlName="DefaultCurrency" id="ccyear">
+                                    <option selected value="0">--Select--</option>
+                                    <option *ngFor="let item of CurrencyList"
+                                      [value]="item.currencyId">
+                                      {{item.currencyName}}
+                                  </option>
                                 </select>
                             </div>
                         </div>
+                        </form>
                     </tab>
                     <tab>
                         <ng-template tabHeading><i class="fa fa-file text-info"></i> Addresses </ng-template>
+                        <div *ngIf="AddressLenghtcount" style="display: block;">
+                            <div class="table-responsive animated flash">
+                                <table class="table " id="AddressList">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10%;">Address Type</th>
+                                            <th style="width: 30%;">Address</th>
+                                            <th style="width: 10%;">City</th>
+                                            <th style="width: 10%;">Postal Code</th>
+                                            <th style="width: 15%;" class="ml-2" >Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let type of AddressList.Address; let i = index">
+                                            <td *ngIf="type.AddressType==1"> Billing</td>
+                                            <td *ngIf="type.AddressType==2"> Shipping</td>
+                                            <td *ngIf="type.AddressType==0"> </td>
+                                            <td>{{type.Address}}</td>
+                                            <td>{{type.City}}</td>
+                                            <td>{{type.PostalCode}}</td>
+                                            <td>
+                                                    <span style="cursor: pointer;" class="btn-lg mr-5">
+                                                        <span class="text-primary " (click)="EditAddress(i)">
+                                                        <i class="fa fa-pencil"></i>
+                                                    </span>
+                                                    <span *ngIf="type.DefaultAddress" class="text-primary ml-2" >
+                                                    <i class="fa fa-check"></i>
+                                                </span>
+                                                <span *ngIf="!type.DefaultAddress" class="ml-2" (click)="SetDeafult(type.DefaultAddress,i)" >
+                                                        <i class="fa fa-check"></i>
+                                                    </span>
+                                                <span class="text-danger ml-2">
+                                                    <i class="fa fa-trash"></i></span> </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button type="button" class="btn btn-primary btn-md pull-right" (click)="AddNewAddress()">Add New </button>
+                            </div>
+                        </div>
+                        <div *ngIf="!AddressLenghtcount" style="display: block;">
+                        <form [formGroup]="AddCustomerAddressForm">
                         <div class="row">
-                                <div class="form-group col-sm-6">
-                                    <label for="city"> TYPE
+                                <div class="form-group col-sm-4">
+                                    <label for="type"> TYPE
                                     </label>
-                                    <select class="form-control" id="ccyear">
-                                        <option>--Select--</option>
-                                        <option>Billing (%)</option>
-                                        <option>Shipping ($)</option>
+                                    <select class="form-control" formControlName="AddressType" id="ccyear">
+                                        <option value="0">--Select--</option>
+                                        <option value="1">Billing (%)</option>
+                                        <option value="2">Shipping ($)</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-sm-6">
-                                    <label for="postal-code">DISCOUNT AMOUNT
+                                <div class="form-group col-sm-2"></div>
+                                <div class="form-group col-sm-4">
+                                    <label for="address">ADDRESS
                                     </label>
-                                    <input class="form-control" id="DEFAULT-CREDIT-LIMIT" placeholder="DEFAULT CREDIT LIMIT"
+                                    <textarea placeholder="Address" class="form-control" formControlName="Address" id="Customer_Address" ></textarea>
+                                    <!-- <input class="form-control" id="DEFAULT-CREDIT-LIMIT" placeholder="DEFAULT CREDIT LIMIT"
+                                        type="text"> -->
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-4">
+                                    <label for="country"> COUNTRY
+                                    </label>
+                                    <select class="form-control" formControlName="Country" id="customer_Coutry">
+                                        <option value="0">--Select--</option>
+                                        <option value="1">INDIA</option>
+                                        <option value="2">USA</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-2"></div>
+                                <div class="form-group col-sm-4">
+                                    <label for="state">STATE
+                                    </label>
+                                    <input class="form-control" formControlName="State" id="customer_State" placeholder="State"
                                         type="text">
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="form-group col-sm-4">
+                                    <label for="city"> CITY / TOWN
+                                    </label>
+                                    <input class="form-control" formControlName="City" id="Customer_City" placeholder="City"
+                                        type="text">
+                                </div>
+                                <div class="form-group col-sm-2"></div>
+                                <div class="form-group col-sm-4">
+                                    <label for="postal-code">POSTAL CODE
+                                    </label>
+                                    <input class="form-control" formControlName="PostalCode" id="Customer_Code" placeholder="Postal Code"
+                                        type="text">
+                                </div>
+                            </div>
+                            </form>
+                        
+                            <div class="row">
+                                <div class="col-sm-12">
+                            <button type="button" class="btn btn-primary btn-md pull-right" (click)="AddCustomerAddress(AddCustomerAddressForm)">Add </button>
+                        </div>
+                    </div>
+                        </div>
                     </tab>
                     <tab>
                         <ng-template tabHeading><i class="fa fa-phone text-info"></i>  Contacts
                         </ng-template>
-                        3. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                        incididunt ut
-
+                        <form [formGroup]="AddCustomerContactForm">
+                        <div class="row">
+                            <div class="form-group col-sm-4">
+                                <label for="designation"> DESIGNATION
+                                </label>
+                                <input class="form-control" formControlName="Designation" id="Customer_Designation" placeholder="Designation"
+                                    type="text">
+                            </div>
+                            <div class="form-group col-sm-2"></div>
+                            <div class="form-group col-sm-4">
+                                    <label for="email"> Email
+                                    </label>
+                                    <input class="form-control" id="Customer_contact_Email" formControlName="Email" placeholder="Email"
+                                        type="text">
+                                </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-12">
+                                <label for="name">NAME
+                                </label>
+                                <div class="row">
+                                <div class="col-sm-4">
+                                <input class="form-control" formControlName="FirstName" id="Customer_contact_fn" placeholder="First Name"
+                                    type="text">
+                                </div>
+                                <div class="form-group col-sm-2"></div>
+                                <div class="col-sm-4">
+                                <input class="form-control" formControlName="LastName" id="Customer_contact_ln" placeholder="Last Name"
+                                    type="text">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="form-group col-sm-4">
+                                <label for="mobile"> MOBILE
+                                </label>
+                                <input class="form-control" id="Customer_contact_Mobile" formControlName="Mobile" placeholder="Mobile"
+                                    type="text">
+                            </div>
+                            <div class="form-group col-sm-2"></div>
+                            <div class="form-group col-sm-4">
+                                    <label for="fax"> FAX
+                                        </label>
+                                <input class="form-control" formControlName="Fax" id="Customer_contact_Fax" placeholder="Fax"
+                                    type="text">
+                            </div>
+                        </div>
+                        <div class="row">
+                                <div class="form-group col-sm-4">
+                                    <label for="office"> OFFICE
+                                    </label>
+                                    <input class="form-control" id="Customer_contact_Office" formControlName="Office" placeholder="Office"
+                                        type="text">
+                                </div>
+                            </div>
+                            </form>
+                            
                     </tab>
                 </tabset>
 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" (click)="largeModal.hide()">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" (click)="AddCustomer(AddCustomerForm)">Save changes</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

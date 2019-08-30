@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Shalin\\InventoryProject\\CoreCode\\Inventory.Web\\Inventory.Web.Core\\Inventory.Web.Core.csproj": {}
+    "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Web.Core\\Inventory.Web.Core.csproj": {}
   },
   "projects": {
-    "D:\\Shalin\\InventoryProject\\CoreCode\\Inventory.Web\\Inventory.Web.Core\\Inventory.Web.Core.csproj": {
+    "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Web.Core\\Inventory.Web.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Shalin\\InventoryProject\\CoreCode\\Inventory.Web\\Inventory.Web.Core\\Inventory.Web.Core.csproj",
+        "projectUniqueName": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Web.Core\\Inventory.Web.Core.csproj",
         "projectName": "Inventory.Web.Core",
-        "projectPath": "D:\\Shalin\\InventoryProject\\CoreCode\\Inventory.Web\\Inventory.Web.Core\\Inventory.Web.Core.csproj",
+        "projectPath": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Web.Core\\Inventory.Web.Core.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "D:\\Shalin\\InventoryProject\\CoreCode\\Inventory.Web\\Inventory.Web.Core\\obj\\",
+        "outputPath": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Web.Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
