@@ -1,5 +1,6 @@
 ﻿using Inventory.Application.Interface;
 using Inventory.Application.ViewModel;
+using Inventory.Application.ViewModel.CustomersVm;
 using Inventory.Core.Models.Customer;
 using Inventory.EntityFrameworkCore.DbContext;
 using System;
@@ -19,53 +20,106 @@ namespace Inventory.Application.Services
             _DbContext = DbContext;
         }
 
-        public async Task<long> AddCustomer(CustomerVm Model)
+        public async Task<long> AddCustomer(AddCustomerVm Model)
         {
             long CustomerId = 0;
             try
             {
-                await Task.Run(() => { 
                 Customer customer = new Customer();
-                if (Model != null)
+                await Task.Run(() =>
                 {
-                    if (Model.CustomerId == 0 && Model.CustomerName != null && Model.CustomerName != "")
+
+                    if (Model != null)
                     {
-                        customer.CustomerName = Model.CustomerName;
-                        customer.CusromerCode = Model.CustomerCode;
-                        int typeid;
-                        typeid = int.Parse(Model.CustomerTypeId);
-                        if (typeid != 0 && typeid > 0)
+                        if (Model.CustomerId == 0 && Model.CustomerName != null && Model.CustomerName != "")
                         {
-                            customer.CustomerTypeId = typeid;
+                            customer.CustomerName = Model.CustomerName;
+                            customer.CusromerCode = Model.CustomerCode;
+                            int typeid;
+                            typeid = Model.CustomerTypeId != null && Model.CustomerTypeId != "" ? int.Parse(Model.CustomerTypeId) : 0;
+                            if (typeid != 0 && typeid > 0)
+                            {
+                                customer.CustomerTypeId = typeid;
+                            }
+                            customer.Website = Model.Website;
+                            customer.TaxRegistrationNumber = Model.TaxRegistrationNumber;
+                            customer.Remarks = Model.Remarks;
+                            customer.DefaultCreditTerms = Model.DefaultCreditTerms;
+                            customer.DefaultCreditLimit = Model.DefaultCreditLimit != null && Model.DefaultCreditLimit != "" ? long.Parse(Model.DefaultCreditLimit) : 0;
+                            customer.DiscountOption = Model.DiscountOption != null && Model.DiscountOption != "" ? long.Parse(Model.DiscountOption) : 0;
+                            if (customer.DiscountOption == 1)
+                            {
+                                customer.DiscountPercentage = Model.DiscountPercentage != null && Model.DiscountPercentage != "" ? double.Parse(Model.DiscountPercentage) : 0;
+                                customer.DiscountAmount = Model.DiscountAmount != null && Model.DiscountAmount != "" ? double.Parse(Model.DiscountAmount) : 0;
+                            }
+                            else if (customer.DiscountOption == 2)
+                            {
+                                customer.DiscountPercentage = Model.DiscountPercentage != null && Model.DiscountPercentage != "" ? double.Parse(Model.DiscountPercentage) : 0;
+                                customer.DiscountAmount = Model.DiscountAmount != null && Model.DiscountAmount != "" ? double.Parse(Model.DiscountAmount) : 0;
+                            }
+                            else
+                            {
+                                customer.DiscountPercentage = 0;
+                                customer.DiscountAmount = 0;
+                            }
+                            customer.DefaultCurrency = Model.DefaultCurrency != null && Model.DefaultCurrency != "" ? long.Parse(Model.DefaultCurrency) : 0;
+                            customer.CreatorUserId = 1;
+                            customer.LastModifierUserId = 1;
+                            DateTime date = new DateTime();
+                            customer.LastModificationTime = date;
+                            customer.IsActive = true;
+
+
+                            _DbContext.Customers.Add(customer);
+                            _DbContext.SaveChanges();
+                            if (Model.AddressList != null)
+                            {
+                                
+                                foreach (var list in Model.AddressList.Address)
+                                {
+                                    CustomerAdderss customerAdderss = new CustomerAdderss();
+                                    customerAdderss.AddressType = list.AddressType;
+                                    customerAdderss.Address = list.Address;
+                                    customerAdderss.DefaultAddress = list.DefaultAddress;
+                                    customerAdderss.CustomerId = customer.CustomerId;
+                                    customerAdderss.CountryId = list.CountryId != null && list.CountryId != "" ? long.Parse(list.CountryId) : 0;
+                                    customerAdderss.State = list.State;
+                                    customerAdderss.City = list.City;
+                                    customerAdderss.PostalCode = list.PostalCode;
+
+                                    _DbContext.customerAddersses.Add(customerAdderss);
+                                    _DbContext.SaveChanges();
+
+                                }
+
+                            }
+                            if (Model.ContactList != null)
+                            {
+                                foreach(var list in Model.ContactList.Contact)
+                                {
+                                    CustomerContacts customerContacts = new CustomerContacts();
+
+                                    customerContacts.CustomerId = customer.CustomerId;
+                                    customerContacts.Designation = list.Designation;
+                                    customerContacts.Email = list.Email;
+                                    customerContacts.FirstName = list.FirstName;
+                                    customerContacts.LastName = list.LastName;
+                                    customerContacts.Mobile = list.Mobile;
+                                    customerContacts.Fax = list.Fax;
+                                    customerContacts.Office = list.Office;
+
+                                    _DbContext.customerContacts.Add(customerContacts);
+                                    _DbContext.SaveChanges();
+
+                                }
+                            }
                         }
-                        customer.Website = Model.Website;
-                        customer.TaxRegistrationNumber = Model.TaxRegistrationNumber;
-                        customer.Remarks = Model.Remarks;
-                        customer.DefaultCreditTerms = Model.DefaultCreditTerms;
-                        customer.DefaultCreditLimit = Model.DefaultCreditLimit != null && Model.DefaultCreditLimit != "" ? long.Parse(Model.DefaultCreditLimit) : 0;
-                        customer.DiscountOption = Model.DiscountOption != null && Model.DiscountOption != "" ? long.Parse(Model.DiscountOption) : 0;
-                        if (customer.DiscountOption == 1)
-                        {
-                            customer.DiscountPercentage = Model.DiscountPercentage != null ? double.Parse(Model.DiscountPercentage) : 0;
-                            customer.DiscountAmount = Model.DiscountAmount != null && Model.DiscountAmount != "" ? double.Parse(Model.DiscountAmount) : 0;
-                        }
-                        else if (customer.DiscountOption == 2)
-                        {
-                            customer.DiscountPercentage = Model.DiscountPercentage != null && Model.DiscountPercentage != "" ? double.Parse(Model.DiscountPercentage) : 0;
-                            customer.DiscountAmount = Model.DiscountAmount != null && Model.DiscountAmount != "" ? double.Parse(Model.DiscountAmount) : 0;
-                        }
-                        else
-                        {
-                            customer.DiscountPercentage = 0;
-                            customer.DiscountAmount = 0;
-                        }
-                        customer.DefaultCurrency = Model.DefaultCurrency != null && Model.DefaultCurrency != "" ? long .Parse(Model.DefaultCurrency) : 0; 
+
+
+
                     }
-                    _DbContext.Customers.Add(customer);
-                    _DbContext.SaveChanges();
-                    CustomerId = customer.CustomerId;
-                }
                 });
+
             }
             catch (Exception ex)
             {
@@ -80,9 +134,9 @@ namespace Inventory.Application.Services
             List<CurrencyVm> CurrencyList = new List<CurrencyVm>();
             try
             {
-                
-                var a =_DbContext.Currencies.ToList();
-                foreach(var c in a)
+
+                var a = _DbContext.Currencies.ToList();
+                foreach (var c in a)
                 {
                     CurrencyVm currency = new CurrencyVm();
                     currency.CurrencyId = c.CurrencyId;
@@ -90,7 +144,7 @@ namespace Inventory.Application.Services
                     CurrencyList.Add(currency);
                 }
 
-                
+
             }
             catch (Exception ex)
             {
@@ -107,7 +161,7 @@ namespace Inventory.Application.Services
             try
             {
                 var a = _DbContext.CustomerTypes.ToList();
-                foreach(var h in a)
+                foreach (var h in a)
                 {
                     CustomerTypeVm customerType = new CustomerTypeVm();
                     customerType.CustomerTypeId = h.CustomerTypeId;
