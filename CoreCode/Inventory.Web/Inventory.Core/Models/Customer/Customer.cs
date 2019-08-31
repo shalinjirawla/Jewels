@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Inventory.Core.Models.Commons;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,24 +12,20 @@ namespace Inventory.Core.Models.Customer
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long CustomerId { get; set; }
-        public String CustomerName { get; set; }
+        public string CustomerName { get; set; }
         [ForeignKey("CustomerType")]
         public Nullable<long> CustomerTypeId { get; set; }
         public string CusromerCode { get; set; }
-        public String Website { get; set; }
+        public string Website { get; set; }
         public string TaxRegistrationNumber { get; set; }
         public string Remarks { get; set; }
         public string DefaultCreditTerms { get; set; }
         public double DefaultCreditLimit { get; set; }
-       // public string PriceList { get; set; }
-        //[ForeignKey]
-        public long DiscountOption { get; set; }//FK
+        [ForeignKey("discountType")]
+        public Nullable<long> DiscountOption { get; set; }
         public double DiscountAmount { get; set; }
-        public double DiscountPercentage { get; set; }
-        //public string DefaultShipmentTerms { get; set; }
-       // public string DefaultShipmentMethod { get; set; }
         [ForeignKey("Currency")]
-        public long DefaultCurrency { get; set; }
+        public Nullable<long> DefaultCurrency { get; set; }
 
         public long CreatorUserId { get; set; }
         public DateTime LastModificationTime { get; set; }
@@ -38,5 +35,6 @@ namespace Inventory.Core.Models.Customer
 
         public CustomerType CustomerType { get; set; }
         public Currency.Currency Currency { get; set; }
+        public DiscountType discountType { get; set; }
     }
 }
