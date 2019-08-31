@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Inventory.Web.share;
 using Inventory.Application.Interface;
-using Inventory.Application.ViewModel;
-
+using Inventory.Application.ViewModel.CustomersVm;
+using System.Threading.Tasks;
 
 namespace Inventory.Web.Controllers
 {
@@ -24,10 +24,10 @@ namespace Inventory.Web.Controllers
             return new ApiResponse { Status = status, Message = message, Data = data };
         }
         [HttpPost]
-        public IActionResult AddCustomer(CustomerVm Model)
+        public async Task<IActionResult> AddCustomer(AddCustomerVm Model)
         {
             string a = "hello";
-            var CustomerID = _icustomer.AddCustomer(Model);
+            var CustomerID =await _icustomer.AddCustomer(Model);
             return Ok(GetAjaxResponse(true, string.Empty, a));
         }
         [HttpGet]
