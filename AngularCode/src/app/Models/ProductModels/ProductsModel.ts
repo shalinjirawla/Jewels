@@ -5,3 +5,8 @@ export class CategoriesModel{
     public Code:undefined|any;
     public Description:undefined|any;
 }
+export class BrandModel{
+    public BrandId:undefined|any;
+    public BrandName:undefined|string;
+    public Description:undefined|any;
+}

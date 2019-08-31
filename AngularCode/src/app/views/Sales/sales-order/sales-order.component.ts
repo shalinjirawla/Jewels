@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { formatDate } from '@angular/common';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { $ } from 'jquery';
 @Component({
   selector: 'app-sales-order',
   templateUrl: './sales-order.component.html',
