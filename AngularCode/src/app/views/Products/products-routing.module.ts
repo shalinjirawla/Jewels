@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import{CategoriesComponent} from './categories/categories.component';
-import { ProductComponent } from './product/product.component';
+//import { ProductComponent } from './product/product.component';
 
 
 const routes: Routes = [
@@ -15,13 +15,13 @@ const routes: Routes = [
         path: '',
         redirectTo: 'product'
       },
-      {
-        path: 'product',
-        component: ProductComponent,
-        data: {
-          title: 'Product'
-        }
-      },
+      // {
+      //   path: 'product',
+      //  // component: ProductComponent,
+      //   data: {
+      //     title: 'Product'
+      //   }
+      // },
       {
         path:'categories',
         component:CategoriesComponent,

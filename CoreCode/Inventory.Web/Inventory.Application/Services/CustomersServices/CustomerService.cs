@@ -47,19 +47,12 @@ namespace Inventory.Application.Services
                             customer.DefaultCreditTerms = Model.DefaultCreditTerms;
                             customer.DefaultCreditLimit = Model.DefaultCreditLimit != null && Model.DefaultCreditLimit != "" ? long.Parse(Model.DefaultCreditLimit) : 0;
                             customer.DiscountOption = Model.DiscountOption != null && Model.DiscountOption != "" ? long.Parse(Model.DiscountOption) : 0;
-                            if (customer.DiscountOption == 1)
+                            if (customer.DiscountOption != 0)
                             {
-                                customer.DiscountPercentage = Model.DiscountPercentage != null && Model.DiscountPercentage != "" ? double.Parse(Model.DiscountPercentage) : 0;
-                                customer.DiscountAmount = Model.DiscountAmount != null && Model.DiscountAmount != "" ? double.Parse(Model.DiscountAmount) : 0;
-                            }
-                            else if (customer.DiscountOption == 2)
-                            {
-                                customer.DiscountPercentage = Model.DiscountPercentage != null && Model.DiscountPercentage != "" ? double.Parse(Model.DiscountPercentage) : 0;
                                 customer.DiscountAmount = Model.DiscountAmount != null && Model.DiscountAmount != "" ? double.Parse(Model.DiscountAmount) : 0;
                             }
                             else
                             {
-                                customer.DiscountPercentage = 0;
                                 customer.DiscountAmount = 0;
                             }
                             customer.DefaultCurrency = Model.DefaultCurrency != null && Model.DefaultCurrency != "" ? long.Parse(Model.DefaultCurrency) : 0;
