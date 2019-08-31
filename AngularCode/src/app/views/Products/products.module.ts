@@ -6,7 +6,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ProductsRoutingModule } from './products-routing.module';
-//import { ProductComponent } from './product/product.component';
+import { ProductComponent } from './product/product.component';
 import { CategoriesComponent } from './categories/categories.component';
 
 @NgModule({
@@ -26,7 +26,7 @@ import { CategoriesComponent } from './categories/categories.component';
     ReactiveFormsModule
   ],
   declarations: [
-   // ProductComponent,
+    ProductComponent,
     CategoriesComponent,
   ]
 })
