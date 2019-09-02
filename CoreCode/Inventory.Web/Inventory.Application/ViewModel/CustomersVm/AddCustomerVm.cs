@@ -17,7 +17,6 @@ namespace Inventory.Application.ViewModel.CustomersVm
         public string DefaultCreditLimit { get; set; }
         public string DiscountOption { get; set; }
         public string DiscountAmount { get; set; }
-        public string DiscountPercentage { get; set; }
         public string DefaultCurrency { get; set; }
         public AddressList AddressList { get; set; }
         public ContactList ContactList { get; set; }

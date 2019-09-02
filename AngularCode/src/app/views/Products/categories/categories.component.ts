@@ -17,7 +17,6 @@ const Toast = Swal.mixin({
   styleUrls: ['./categories.component.scss']
 })
 export class CategoriesComponent implements OnInit {
-
   @ViewChild('largeModal', { static: false }) public largeModal: ModalDirective;
   constructor(private FormBuilder: FormBuilder, private ProductCategoriesService: ProductCategoriesService) { }
 

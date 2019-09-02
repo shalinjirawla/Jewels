@@ -10,7 +10,6 @@ export class CustomerModel{
     DefaultCreditLimit : string;
     DiscountOption : number;
     DiscountAmount : number;
-    DiscountPercentage : number;
     DefaultCurrency : string;
 
 }

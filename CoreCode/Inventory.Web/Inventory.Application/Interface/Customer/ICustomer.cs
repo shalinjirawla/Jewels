@@ -10,7 +10,9 @@ namespace Inventory.Application.Interface
     public interface ICustomer
     {
         Task<long> AddCustomer(AddCustomerVm Model);
+        List<CustomerVm> GetCustomerListAsyn();
         List<CurrencyVm> GetCurrencyList();
+        AddCustomerVm GetCustomerByIdAsyc(int Id);
         List<CustomerTypeVm> GetCustomerTypeList();
         List<CountryVm> GetCountryList();
     }

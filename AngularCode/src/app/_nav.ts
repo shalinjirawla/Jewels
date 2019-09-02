@@ -104,7 +104,7 @@ export const navItems: NavData[] = [
       },
       {
         name: 'Brands',
-        url: '/base/carousels',
+        url: '/products/brand',
         icon: 'icon-handbag'
       },
     ]

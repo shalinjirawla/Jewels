@@ -217,6 +217,8 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<long>("CustomerId");
 
+                    b.Property<bool>("DefaultContact");
+
                     b.Property<string>("Designation");
 
                     b.Property<string>("Email");

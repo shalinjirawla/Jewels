@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AbstractType } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { CustomerModel } from '../../../Models/Customer-Model';
 import { CustomerService } from '../../../Services/customer.service';
@@ -7,6 +7,17 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { map } from 'rxjs/operators';
 import { nextTick } from 'q';
 import { JsonPipe } from '@angular/common';
+import Swal from 'sweetalert2'
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+
+})
+const reg = /^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/;
+
+
 @Component({
   selector: 'app-customer',
   templateUrl: './customer.component.html',
@@ -19,6 +30,9 @@ export class CustomerComponent implements OnInit {
   Result: any;
   savebtntitle: string = "Save & Next";
   copyAddress: string;
+  modeltitle: string = "Add Customer";
+
+
   BillingShippingAddress: boolean = false;
   submitted: boolean = false;
   contactsubmitted: boolean = false;
@@ -34,15 +48,16 @@ export class CustomerComponent implements OnInit {
   ContactDefaultFlag: boolean = true;
   DefaultFlag: boolean = true;
   CheckboxFlag: boolean = false;
+  LoderoutCustomer: boolean = true;
 
   CurrencyList: any;
   CountryList: any;
   CustomerTypeList: any;
   DiscountTypeList: any;
+  CustomerList: any = { "Customer": [] };
 
   secondAddress: any;
   NewCondAddress: any;
-
   Address: any;
   Contact: any;
   ContactList: any = { "Contact": [] };
@@ -50,10 +65,11 @@ export class CustomerComponent implements OnInit {
   AddCustomervalue: any = [];
   ngOnInit() {
     this.onLoad();
-    this.GetCurrencyList();
     this.GetCustomerType();
+    this.GetCurrencyList();
     this.GetCountry();
     this.GetDiscountType();
+
   }
   onLoad() {
     this.AddCustomerForm = this.formBuilder.group({
@@ -61,21 +77,20 @@ export class CustomerComponent implements OnInit {
       customerName: ['', Validators.required],
       customerTypeId: [''],
       customerCode: [''],
-      website: [''],
+      website: ['', Validators.pattern(reg)],
       taxRegistrationNumber: [''],
       remarks: [''],
       defaultCreditTerms: [''],
       defaultCreditLimit: [''],
       discountOption: ['0'],
       discountAmount: [''],
-      discountPercentage: [''],
       defaultCurrency: ['0'],
 
     })
 
     this.AddCustomerAddressForm = this.formBuilder.group({
       addressId: ['0'],
-      addressType: ['0'],
+      addressType: ['', Validators.required],
       address: ['', Validators.required],
       countryId: ['0'],
       state: [''],
@@ -87,7 +102,7 @@ export class CustomerComponent implements OnInit {
     this.AddCustomerContactForm = this.formBuilder.group({
       contactId: ['0'],
       designation: [''],
-      email: [''],
+      email: ['',Validators.email],
       firstName: ['', Validators.required],
       lastName: [''],
       mobile: ['', Validators.maxLength(10)],
@@ -102,7 +117,36 @@ export class CustomerComponent implements OnInit {
   get con() { return this.AddCustomerContactForm.controls; }
   get add() { return this.AddCustomerAddressForm.controls; }
 
+  addnewcustomer() {
+    this.largeModal.show();
+  }
+
+  allownumberwithdot(event: any) {
+    const pattern = /[0-9\+\.\ ]/;
+    let inputChar = String.fromCharCode(event.charCode);
+    if (!pattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+  allownumber(event: any) {
+    const pattern = /[0-9\ ]/;
+    let inputChar = String.fromCharCode(event.charCode);
+    if (!pattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+
+  allowalpha(event: any) {
+    const pattern = /[a-z\+\A-Z\+]/;
+    let inputChar = String.fromCharCode(event.charCode);
+    if (!pattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+
+
   AddCustomer(AddCustomerForm: FormControl) {
+    debugger
     this.submitted = true;
     if (this.AddCustomerForm.invalid) {
       document.getElementById("customerDetail-link").click();
@@ -122,23 +166,43 @@ export class CustomerComponent implements OnInit {
     this.AddCustomervalue.AddressList = this.AddressList;
     this.AddCustomervalue.ContactList = this.ContactList;
     this.customerservice.AddCustomer(this.AddCustomervalue).subscribe((responce: any) => {
-      debugger
       this.Result = responce;
-      //responce.body.status
+      if (responce.body.status) {
+        this.GetCustomerList();
+        if (this.AddCustomerForm.value.customerId == 0) {
+          Swal.fire(
+            'Customer Add Successfully',
+            responce.message,
+            'success'
+          )
+        }
+        else if (this.AddCustomerForm.value.customerId >= 0) {
+          Swal.fire(
+            'Customer Update Successfully',
+            responce.message,
+            'success'
+          )
+        }
+
+      }
+      this.largeModal.hide();
       this.onLoad();
       this.CheckboxFlag = false;
+      this.ContactLenghtcount = false;
       this.Addresssubmitted = false;
       this.AddressLenghtcount = true;
       this.Address = null;
+      this.DefaultFlag = true;
+      this.AddressLenghtcount = false;
       this.ContactList = { "Contact": [] };
       this.AddressList = { "Address": [] };
+      document.getElementById("customerDetail-link").click();
     });
   }
   CheckAddress(event) {
     this.BillingShippingAddress = event;
   }
   changeaddresstype(event) {
-    debugger
     if (event == "1") {
       this.CheckboxFlag = true;
       this.copyAddress = "Shiping Address is same as Billing Address"
@@ -149,7 +213,8 @@ export class CustomerComponent implements OnInit {
     }
     else {
       this.CheckboxFlag = false;
-      // document.getElementById("copyaddress").checked = false;
+      let ele: any = document.getElementById("copyaddress");
+      ele.checked = false;
     }
   }
   AddCustomerAddress(AddCustomerAddressForm: FormControl) {
@@ -172,7 +237,7 @@ export class CustomerComponent implements OnInit {
       if (this.Address != undefined) {
         this.AddressList.Address.push(this.Address);
         if (!this.BillingShippingAddress) {
-          if (this.AddressList.Address.lenght != 0) {
+          if (this.AddressList.Address.length != 0) {
             this.CheckboxFlag = false;
             this.Addresssubmitted = false;
             this.AddressLenghtcount = true;
@@ -191,9 +256,10 @@ export class CustomerComponent implements OnInit {
             this.secondAddress.addressType = "1";
           }
           this.secondAddress.defaultAddress = false;
-          // document.getElementById("copyaddress").checked = false;
+          let elem: any = document.getElementById("copyaddress");
+          elem.checked = false;
           this.AddressList.Address.push(this.secondAddress);
-          if (this.AddressList.Address.lenght != 0) {
+          if (this.AddressList.Address.length != 0) {
             this.CheckboxFlag = false;
             this.Addresssubmitted = false;
             this.secondAddress = null;
@@ -210,7 +276,7 @@ export class CustomerComponent implements OnInit {
       var objectFound = this.AddressList.Address[elementPos];
 
       this.AddressList.Address[elementPos] = this.Address;
-      if (this.AddressList.Address.lenght != 0) {
+      if (this.AddressList.Address.length != 0) {
         this.AddressLenghtcount = true;
         this.Address = null;
       }
@@ -219,7 +285,17 @@ export class CustomerComponent implements OnInit {
   }
   AddNewAddress() {
     this.AddressLenghtcount = false;
-    this.onLoad();
+    //this.onLoad();
+    this.AddCustomerAddressForm = this.formBuilder.group({
+      addressId: ['0'],
+      addressType: ['', Validators.required],
+      address: ['', Validators.required],
+      countryId: ['0'],
+      state: [''],
+      city: [''],
+      postalCode: [''],
+      defaultAddress: [false],
+    })
   }
   CancelAddCustomerAddress() {
     this.AddressLenghtcount = true;
@@ -283,6 +359,7 @@ export class CustomerComponent implements OnInit {
   }
 
   AddCustomerContact(AddCustomerContactForm: FormControl) {
+    debugger
     this.contactsubmitted = true;
     if (this.AddCustomerContactForm.invalid) {
       return;
@@ -297,7 +374,7 @@ export class CustomerComponent implements OnInit {
       this.Contact = AddCustomerContactForm.value;
       if (this.Contact != undefined) {
         this.ContactList.Contact.push(this.Contact);
-        if (this.ContactList.Contact.lenght != 0) {
+        if (this.ContactList.Contact.length != 0) {
           this.ContactLenghtcount = true;
           this.Contact = null;
         }
@@ -309,7 +386,7 @@ export class CustomerComponent implements OnInit {
       var objectFound = this.ContactList.Contact[elementPos];
 
       this.ContactList.Contact[elementPos] = this.Contact;
-      if (this.ContactList.Contact.lenght != 0) {
+      if (this.ContactList.Contact.length != 0) {
         this.ContactLenghtcount = true;
         this.Contact = null;
       }
@@ -352,7 +429,7 @@ export class CustomerComponent implements OnInit {
       if (i == index) {
         var elementPos = this.ContactList.Contact.map(function (x) { return x.contactId; }).indexOf(result.contactId);
         this.ContactList.Contact.splice(elementPos, 1)
-        if (this.ContactList.Contact.lenght == undefined) {
+        if (this.ContactList.Contact.length == 0) {
           this.ContactLenghtcount = false;
           this.onLoad();
         }
@@ -362,7 +439,19 @@ export class CustomerComponent implements OnInit {
 
   AddNewContact() {
     this.ContactLenghtcount = false;
-    this.onLoad();
+    //this.onLoad();
+    this.AddCustomerContactForm = this.formBuilder.group({
+      contactId: ['0'],
+      designation: [''],
+      email: ['',Validators.email],
+      firstName: ['', Validators.required],
+      lastName: [''],
+      mobile: ['', Validators.maxLength(10)],
+      fax: [''],
+      office: [''],
+      defaultContact: [false],
+
+    })
   }
 
   ResetForm() {
@@ -394,6 +483,7 @@ export class CustomerComponent implements OnInit {
   GetCustomerType() {
     this.customerservice.GetCustomerType().subscribe((responce: any) => {
       this.CustomerTypeList = responce.body.data;
+      this.GetCustomerList();
     });
   }
 
@@ -403,9 +493,82 @@ export class CustomerComponent implements OnInit {
     });
   }
 
+  GetCustomerList() {
+    this.customerservice.GetCustomerList().subscribe((responce: any) => {
+      let list = responce.body.data
+      this.CustomerList.Customer = [];
+      if (list.length != 0 && list.length > 0) {
+        list.map((result: any, index) => {
+          if (this.CustomerTypeList.length != 0) {
+            this.CustomerTypeList.map((res: any) => {
+              if (list[index].customerTypeId == res.customerTypeId) {
+                list[index].customerTypeId = res.customerTypeName;
+              }
+            });
+          }
+          this.CustomerList.Customer.push(result);
+        });
+      }
+      this.LoderoutCustomer = false;
+    });
+  }
+
   GetDiscountType() {
     this.customerservice.GetDiscountType().subscribe((responce: any) => {
       this.DiscountTypeList = responce.body.data;
+
     });
   }
+
+  EditCustomer(i: any) {
+    this.customerservice.GetCustomerById(i).subscribe((responce: any) => {
+      let result = responce.body.data;
+
+      this.AddCustomerForm.patchValue({
+        customerId: result.customerId,
+        customerName: result.customerName,
+        customerTypeId: result.customerTypeId,
+        customerCode: result.customerCode,
+        website: result.website,
+        taxRegistrationNumber: result.taxRegistrationNumber,
+        remarks: result.remarks,
+        defaultCreditTerms: result.defaultCreditTerms,
+        defaultCreditLimit: result.defaultCreditLimit,
+        discountOption: result.discountOption,
+        discountAmount: result.discountAmount,
+        defaultCurrency: result.defaultCurrency,
+      })
+      result.contactList.contact.map((res: any, index) => {
+        this.ContactList.Contact.push(res);
+      })
+      if (this.ContactList.Contact.length != 0) {
+        this.ContactLenghtcount = true;
+        this.ContactDefaultFlag = false;
+      }
+      else {
+        this.ContactLenghtcount = false;
+        this.ContactDefaultFlag = true;
+      }
+
+      result.addressList.address.map((res: any) => {
+        this.AddressList.Address.push(res);
+      })
+      if (this.AddressList.Address.length == 0) {
+        this.DefaultFlag = true;
+        this.AddressLenghtcount = false;
+      }
+      else {
+        this.DefaultFlag = false;
+        this.Addresssubmitted = false;
+        this.AddressLenghtcount = true;
+      }
+      this.largeModal.show();
+    })
+
+  }
+
+  DeleteCustomer(i: any) {
+    debugger
+  }
+
 }

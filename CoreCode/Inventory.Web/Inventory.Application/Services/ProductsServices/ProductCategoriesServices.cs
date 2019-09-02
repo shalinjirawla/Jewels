@@ -37,9 +37,9 @@ namespace Inventory.Application.Services.ProductsServices
                                 DisplayOrder = model.DisplayOrder,
                                 Description = model.Description,
                                 CreationTime = DateTime.Now,
-                                CreatorUserId = 001,
+                                CreatorUserId = null,
                                 LastModificationTime = DateTime.Now,
-                                LastModifierUserId = 001,
+                                LastModifierUserId = null,
                                 IsActive = true,
                             };
                             _DbContext.ProductCategories.Add(data);
@@ -165,7 +165,7 @@ namespace Inventory.Application.Services.ProductsServices
                                 check.DisplayOrder = model.DisplayOrder;
                                 check.Description = model.Description;
                                 check.LastModificationTime = DateTime.Now;
-                                check.LastModifierUserId = 001;
+                                check.LastModifierUserId = null;
                                 
                                 _DbContext.ProductCategories.Update(check);
                                 _DbContext.SaveChanges();

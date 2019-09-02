@@ -31,6 +31,20 @@ namespace Inventory.Web.Controllers
             return Ok(GetAjaxResponse(true, string.Empty, a));
         }
         [HttpGet]
+        public IActionResult GetCustomerList()
+        {
+            var customerlist =  _icustomer.GetCustomerListAsyn();
+            return Ok(GetAjaxResponse(true, string.Empty, customerlist));
+        }
+
+        [HttpGet]
+        public IActionResult GetCustomerById(int Id)
+        {
+            var customer = _icustomer.GetCustomerByIdAsyc(Id);
+            return Ok(GetAjaxResponse(true, string.Empty, customer));
+        }
+
+        [HttpGet]
         public IActionResult GetCurrency()
         {
             var Currency = _icustomer.GetCurrencyList();

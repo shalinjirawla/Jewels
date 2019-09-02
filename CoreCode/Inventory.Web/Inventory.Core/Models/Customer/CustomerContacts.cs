@@ -18,6 +18,7 @@ namespace Inventory.Core.Models.Customer
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Mobile { get; set; }
+        public bool DefaultContact { get; set; }
         public string Fax { get; set; }
         public string Office { get; set; }
 
