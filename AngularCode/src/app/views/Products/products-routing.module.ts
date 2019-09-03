@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import{CategoriesComponent} from './categories/categories.component';
 import { ProductComponent } from './product/product.component';
 import {BrandComponent} from './brand/brand.component';
-
+import {RawMaterialsComponent} from './raw-materials/raw-materials.component';
 const routes: Routes = [
   {
     path: '',
@@ -36,6 +36,13 @@ const routes: Routes = [
           title:'Product Brand'
         }
       },
+      {
+        path:'raw-materials',
+        component:RawMaterialsComponent,
+        data:{
+          title:'Raw Materails'
+        }
+      },
     ]
   }
 ];
@@ -44,4 +51,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class ProductsRoutingModule { }
+export class MastersRoutingModule { }

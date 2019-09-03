@@ -5,16 +5,15 @@ import { NgModule } from '@angular/core';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { ProductsRoutingModule } from './products-routing.module';
 import { ProductComponent } from './product/product.component';
 import { CategoriesComponent } from './categories/categories.component';
 import { BrandComponent } from './brand/brand.component';
 import { DataTablesModule } from 'angular-datatables';
+import { RawMaterialsComponent } from './raw-materials/raw-materials.component';
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    ProductsRoutingModule,
     ModalModule.forRoot(),
     // BsDropdownModule.forRoot(),
     TabsModule,
@@ -31,6 +30,7 @@ import { DataTablesModule } from 'angular-datatables';
     ProductComponent,
     CategoriesComponent,
     BrandComponent,
+    RawMaterialsComponent,
   ]
 })
 export class ProductsModule { }

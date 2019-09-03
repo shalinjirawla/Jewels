@@ -61,12 +61,12 @@ export const navItems: NavData[] = [
   },
   {
     name: 'Suppliers',
-    url: '/base',
+    url: '/suppliers',
     icon: 'icon-people',
     children: [
       {
         name: 'Suppliers',
-        url: '/base/cards',
+        url: '/suppliers/supplier',
         icon: 'icon-user'
       },
       {
@@ -89,7 +89,7 @@ export const navItems: NavData[] = [
       },
       {
         name: 'Raw Materials',
-        url: '/base/carousels',
+        url: '/products/raw-materials',
         icon: 'fa fa-industry'
       },
       {
@@ -206,16 +206,16 @@ export const navItems: NavData[] = [
   },
   {
     title: true,
-    name: 'Account',
+    name: 'Masters',
   },
   {
-    name: 'Pages',
-    url: '/pages',
-    icon: 'icon-star',
+    name: 'Basic Setting',
+    url: '/masters',
+    icon: ' fa fa-cog',
     children: [
       {
-        name: 'Login',
-        url: '/login',
+        name: 'General Setup',
+        url: '/masters/general-setup',
         icon: 'icon-star'
       }
     ]

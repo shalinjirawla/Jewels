@@ -37,6 +37,7 @@ namespace Inventory.Web
             services.AddScoped<ICustomer,CustomerService>();
             services.AddScoped<IDiscountType, DiscountTypeService>();
             services.AddScoped<IProductCategories, ProductCategoriesServices>();
+            services.AddScoped<IProductBrand, ProductBrandServices>();
             //Configure CORS for angular2 UI
             services.AddCors(options =>
             {

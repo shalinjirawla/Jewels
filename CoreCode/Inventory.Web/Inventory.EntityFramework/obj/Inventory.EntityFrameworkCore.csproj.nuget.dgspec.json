@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.EntityFramework\\Inventory.EntityFrameworkCore.csproj": {}
+    "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.EntityFramework\\Inventory.EntityFrameworkCore.csproj": {}
   },
   "projects": {
-    "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj": {
+    "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj",
+        "projectUniqueName": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj",
         "projectName": "Inventory.Core",
-        "projectPath": "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj",
-        "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-        "outputPath": "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\obj\\",
+        "projectPath": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj",
+        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "outputPath": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -43,7 +43,7 @@
           "dependencies": {
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[2.2.0, )"
+              "version": "[2.2.6, )"
             },
             "NETStandard.Library": {
               "suppressParent": "All",
@@ -60,20 +60,20 @@
         }
       }
     },
-    "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.EntityFramework\\Inventory.EntityFrameworkCore.csproj": {
+    "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.EntityFramework\\Inventory.EntityFrameworkCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.EntityFramework\\Inventory.EntityFrameworkCore.csproj",
+        "projectUniqueName": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.EntityFramework\\Inventory.EntityFrameworkCore.csproj",
         "projectName": "Inventory.EntityFrameworkCore",
-        "projectPath": "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.EntityFramework\\Inventory.EntityFrameworkCore.csproj",
-        "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-        "outputPath": "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.EntityFramework\\obj\\",
+        "projectPath": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.EntityFramework\\Inventory.EntityFrameworkCore.csproj",
+        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "outputPath": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.EntityFramework\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -86,8 +86,8 @@
         "frameworks": {
           "netstandard2.0": {
             "projectReferences": {
-              "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj": {
-                "projectPath": "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj"
+              "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj": {
+                "projectPath": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj"
               }
             }
           }
