@@ -16,28 +16,25 @@ export class CustomerService {
 
   public AddCustomer(input: any): Observable<any> {
     let Result;
-    if (input.CustomerDetail.customerId == 0) {
+    debugger
+    let url_ = this.BaseURL + `/api/Customer/AddCustomer`;
+    url_ = url_.replace(/[?&]$/, "");
+    input.CustomerDetail.addressList = input.AddressList;
+    input.CustomerDetail.contactList = input.ContactList;
+    var j = input.CustomerDetail;
+    var content_ = JSON.stringify(j);
 
-      let url_ = this.BaseURL + `/api/Customer/AddCustomer`;
-      url_ = url_.replace(/[?&]$/, "");
-      input.CustomerDetail.addressList = input.AddressList;
-      input.CustomerDetail.contactList = input.ContactList;
-      var j = input.CustomerDetail;
-      var content_ = JSON.stringify(j);
-
-      let options_: any = {
-        observe: "response",
-        body: content_,
-        headers: new HttpHeaders({
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        })
-      };
-
+    let options_: any = {
+      observe: "response",
+      body: content_,
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      })
+    };
       return this.HttpClient.request("post", url_, options_).pipe((response_: any) => {
         return Result = response_;
       });
-    }
 
   }
 
@@ -115,4 +112,42 @@ export class CustomerService {
       return Result = response_;
     });
   }
+
+  public GetCustomerList(): Observable<any> {
+    let Result;
+    let url_ = this.BaseURL + `/api/Customer/GetCustomerList`;
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_: any = {
+      observe: "response",
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      })
+    };
+
+    return this.HttpClient.request("get", url_, options_).pipe((response_: any) => {
+      return Result = response_;
+    });
+
+  }
+
+  public GetCustomerById(i: any): Observable<any> {
+    let Result;
+    let url_ = this.BaseURL + `/api/Customer/GetCustomerById?Id=` + i;
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_: any = {
+      observe: "response",
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      })
+    };
+
+    return this.HttpClient.request("get", url_, options_).pipe((response_: any) => {
+      return Result = response_;
+    });
+  }
+
 }

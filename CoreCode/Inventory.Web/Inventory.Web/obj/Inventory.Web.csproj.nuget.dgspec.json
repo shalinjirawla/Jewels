@@ -247,7 +247,7 @@
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[4.0.1, )"
+              "version": "[5.0.0-rc2, )"
             }
           },
           "imports": [
