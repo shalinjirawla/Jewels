@@ -43,7 +43,7 @@
           "dependencies": {
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[2.2.0, )"
+              "version": "[2.2.6, )"
             },
             "NETStandard.Library": {
               "suppressParent": "All",

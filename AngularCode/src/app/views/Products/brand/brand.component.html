@@ -1,0 +1,97 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header card-header-danger">
+            <button type="button" class="btn btn-primary float-right btn-sm" id="AddBrandtbtn" data-toggle="modal"
+                (click)="largeModal.show()">
+                Add Brand
+            </button>
+            <h4 class="card-title mt-0">Brand List</h4>
+        </div>
+        <div class="card-body bg-white">
+            <div class="table-responsive animated flash">
+                <table  class="table " id="DisplayCategoriesView">
+                    <thead class="">
+                        <th>
+                            Brand Name
+                        </th>
+                        <th>
+                            Description
+                        </th>
+
+                        <th colspan="2" class="text-center">
+                            Action
+                        </th>
+                    </thead>
+                    <tbody [hidden]="BrandListEmplty">
+                        <tr *ngFor="let item of BrandList">
+                            <td class="mr-2">
+                                {{item.brandName}}
+                            </td>
+                            <td class="mr-2">
+                                {{item.description}}
+                            </td>
+                           
+
+                            <td class="text-right" (click)="BrandEdit(item.brandId)">
+
+                                <button class="btn  btn-lg"> <i class="fa fa-pencil text-success"> </i></button>
+                            </td>
+                            <td class="mb-2" (click)="BrandDelete(item.brandId)">
+                                <button class="btn  btn-lg"><i class="fa fa-trash text-danger"></i> </button>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="mt-2 text-center" [hidden]="!BrandListEmplty">
+                    <div class="spinner-border text-danger" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{ModelTitleString}}</h4>
+                <button type="button" class="close" (click)="ResetForm()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="BrandForm">
+                    <input type="hidden" formControlName="BrandId">
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label>BRAND NAME</label>
+                            <input class="form-control" id="BrandName" formControlName="BrandName"
+                                placeholder="BRAND NAME" type="text"
+                                [ngClass]="{ 'is-invalid': FormSubmitted && f.BrandName.errors }">
+                            <div *ngIf="FormSubmitted && f.BrandName.errors" class="invalid-feedback">
+                                <div *ngIf="f.BrandName.errors.required">Brand Name is required</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label>DESCRIPTION</label>
+                            <textarea class="form-control" id="Description" formControlName="Description"
+                                placeholder="DESCRIPTION" ></textarea>
+                        </div>
+                        
+                    </div>
+                   
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="ResetForm()">Close</button>
+                <button type="button" class="btn btn-primary" (click)="AddBrand(BrandForm)">Save
+                    changes</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

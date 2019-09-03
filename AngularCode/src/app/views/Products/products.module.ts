@@ -8,7 +8,6 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ProductsRoutingModule } from './products-routing.module';
 import { ProductComponent } from './product/product.component';
 import { CategoriesComponent } from './categories/categories.component';
-import { BrandComponent } from './brand/brand.component';
 import { DataTablesModule } from 'angular-datatables';
 @NgModule({
   imports: [
@@ -30,7 +29,6 @@ import { DataTablesModule } from 'angular-datatables';
   declarations: [
     ProductComponent,
     CategoriesComponent,
-    BrandComponent,
   ]
 })
 export class ProductsModule { }

@@ -37,6 +37,13 @@ namespace Inventory.Web.Controllers
             return Ok(GetAjaxResponse(true, string.Empty, customerlist));
         }
 
+        [HttpDelete]
+        public IActionResult DeleteCustomer(int Id)
+        {
+            var customer = _icustomer.DeleteCustomerAsyc(Id);
+            return Ok(GetAjaxResponse(true, string.Empty, customer));
+        }
+
         [HttpGet]
         public IActionResult GetCustomerById(int Id)
         {
@@ -45,22 +52,11 @@ namespace Inventory.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetCurrency()
-        {
-            var Currency = _icustomer.GetCurrencyList();
-            return Ok(GetAjaxResponse(true, string.Empty, Currency));
-        }
-        [HttpGet]
         public IActionResult GetCustomerType()
         {
             var CustomerType = _icustomer.GetCustomerTypeList();
             return Ok(GetAjaxResponse(true, string.Empty, CustomerType));
         }
-        [HttpGet]
-        public IActionResult GetCountryList()
-        {
-            var CountryList = _icustomer.GetCountryList();
-            return Ok(GetAjaxResponse(true, string.Empty, CountryList));
-        }
+       
     }
 }

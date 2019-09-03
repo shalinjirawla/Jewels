@@ -16,7 +16,6 @@ export class CustomerService {
 
   public AddCustomer(input: any): Observable<any> {
     let Result;
-    debugger
     let url_ = this.BaseURL + `/api/Customer/AddCustomer`;
     url_ = url_.replace(/[?&]$/, "");
     input.CustomerDetail.addressList = input.AddressList;
@@ -40,7 +39,7 @@ export class CustomerService {
 
   public GetCurrency(): Observable<any> {
     let Result;
-    let url_ = this.BaseURL + `/api/Customer/GetCurrency`;
+    let url_ = this.BaseURL + `/api/Commons/GetCurrency`;
     url_ = url_.replace(/[?&]$/, "");
 
     let options_: any = {
@@ -78,7 +77,7 @@ export class CustomerService {
 
   public GetCountry(): Observable<any> {
     let Result;
-    let url_ = this.BaseURL + `/api/Customer/GetCountryList`;
+    let url_ = this.BaseURL + `/api/Commons/GetCountryList`;
     url_ = url_.replace(/[?&]$/, "");
 
     let options_: any = {
@@ -146,6 +145,24 @@ export class CustomerService {
     };
 
     return this.HttpClient.request("get", url_, options_).pipe((response_: any) => {
+      return Result = response_;
+    });
+  }
+
+  public DeleteCustomer(i: any): Observable<any> {
+    let Result;
+    let url_ = this.BaseURL + `/api/Customer/DeleteCustomer?Id=` + i;
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_: any = {
+      observe: "response",
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      })
+    };
+
+    return this.HttpClient.request("delete", url_, options_).pipe((response_: any) => {
       return Result = response_;
     });
   }

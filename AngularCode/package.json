@@ -54,6 +54,7 @@
     "ngx-bootstrap": "^5.0.0",
     "ngx-perfect-scrollbar": "^8.0.0",
     "rxjs": "^6.5.2",
+    "save": "^2.4.0",
     "simple-line-icons": "^2.4.1",
     "sweetalert2": "^8.16.3",
     "ts-helpers": "^1.1.2",

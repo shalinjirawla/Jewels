@@ -169,22 +169,6 @@ namespace Inventory.Application.Services
                                     {
                                         var deleteaddresslist = _DbContext.customerAddersses.Where(x => x.CustomerId == customer.CustomerId).ToList();
                                         _DbContext.customerAddersses.RemoveRange(deleteaddresslist);
-                                        //long i = 0;
-                                        //var aId = long.TryParse(list.addressId, out i);
-                                        //if (aId)
-                                        //{
-                                        //    customerAdderss.CustomerAddressId = long.Parse(list.addressId);
-                                        //    customerAdderss.AddressType = list.AddressType;
-                                        //    customerAdderss.Address = list.Address;
-                                        //    customerAdderss.DefaultAddress = list.DefaultAddress;
-                                        //    customerAdderss.CustomerId = customer.CustomerId;
-                                        //    customerAdderss.CountryId = list.CountryId != null && list.CountryId != "" ? long.Parse(list.CountryId) : 0;
-                                        //    customerAdderss.State = list.State;
-                                        //    customerAdderss.City = list.City;
-                                        //    customerAdderss.PostalCode = list.PostalCode;
-                                        //    _DbContext.Update(customerAdderss);
-                                        //     _DbContext.SaveChanges();
-                                        //}
 
                                         customerAdderss.AddressType = list.AddressType;
                                         customerAdderss.Address = list.Address;
@@ -212,29 +196,7 @@ namespace Inventory.Application.Services
                                     if (list.contactId != null && list.contactId != "")
                                     {
                                         var deletecontactlist = _DbContext.customerContacts.Where(x => x.CustomerId == customer.CustomerId).ToList();
-                                        if (deletecontactlist != null)
-                                        {
-                                            _DbContext.customerContacts.RemoveRange(deletecontactlist);
-
-                                        }
-                                        //long i = 0;
-                                        //var cId = long.TryParse(list.contactId, out i);
-
-                                        //if (cId)
-                                        //{
-                                        //    CustomerContacts customerContacts = new CustomerContacts();
-                                        //    customerContacts.CustomerContactId = long.Parse(list.contactId);
-                                        //    customerContacts.CustomerId = customer.CustomerId;
-                                        //    customerContacts.Designation = list.Designation;
-                                        //    customerContacts.Email = list.Email;
-                                        //    customerContacts.FirstName = list.FirstName;
-                                        //    customerContacts.LastName = list.LastName;
-                                        //    customerContacts.Mobile = list.Mobile;
-                                        //    customerContacts.Fax = list.Fax;
-                                        //    customerContacts.Office = list.Office;
-                                        //    _DbContext.Update(customerContacts);
-                                        //    _DbContext.SaveChanges();
-                                        //}
+                                        _DbContext.customerContacts.RemoveRange(deletecontactlist);
 
                                         CustomerContacts customerContacts = new CustomerContacts();
                                         customerContacts.CustomerId = customer.CustomerId;
@@ -267,32 +229,6 @@ namespace Inventory.Application.Services
             return CustomerId;
         }
 
-        public List<CurrencyVm> GetCurrencyList()
-        {
-            List<CurrencyVm> CurrencyList = new List<CurrencyVm>();
-            try
-            {
-
-                var a = _DbContext.Currencies.ToList();
-                foreach (var c in a)
-                {
-                    CurrencyVm currency = new CurrencyVm();
-                    currency.CurrencyId = c.CurrencyId;
-                    currency.CurrencyName = c.CurrencyName;
-                    CurrencyList.Add(currency);
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-
-            }
-            return CurrencyList;
-        }
-
         public List<CustomerTypeVm> GetCustomerTypeList()
         {
             List<CustomerTypeVm> customerTypeList = new List<CustomerTypeVm>();
@@ -313,28 +249,6 @@ namespace Inventory.Application.Services
                 throw ex;
             }
             return customerTypeList;
-        }
-        public List<CountryVm> GetCountryList()
-        {
-            List<CountryVm> countryList = new List<CountryVm>();
-            try
-            {
-                var countries = _DbContext.country.ToList();
-                foreach (var a in countries)
-                {
-                    CountryVm country = new CountryVm();
-                    country.CountryId = a.CountryId;
-                    country.CountryName = a.CountryName;
-                    countryList.Add(country);
-                }
-
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-            return countryList;
         }
 
         public List<CustomerVm> GetCustomerListAsyn()
@@ -383,7 +297,6 @@ namespace Inventory.Application.Services
                 foreach (var address in customerAddressList)
                 {
                     CustomerAddressVm customeraddress = new CustomerAddressVm();
-                    //customer.AddressList.Address = new List<CustomerAddressVm>();
                     customeraddress.addressId = address.CustomerAddressId.ToString();
                     customeraddress.AddressType = address.AddressType;
                     customeraddress.Address = address.Address;
@@ -441,6 +354,30 @@ namespace Inventory.Application.Services
                 throw ex;
             }
             return customer;
+        }
+
+        public int DeleteCustomerAsyc(int Id)
+        {
+            int cId = 0;
+
+            try
+            {
+                var customerAddress = _DbContext.customerAddersses.Where(x => x.CustomerId == Id).ToList();
+                var customerContact = _DbContext.customerContacts.Where(x => x.CustomerId == Id).ToList();
+                var customer = _DbContext.Customers.Where(x => x.CustomerId == Id).FirstOrDefault();
+                _DbContext.customerAddersses.RemoveRange(customerAddress);
+                _DbContext.customerContacts.RemoveRange(customerContact);
+                _DbContext.Customers.Remove(customer);
+                _DbContext.SaveChanges();
+                cId = Id;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return cId;
         }
     }
 }

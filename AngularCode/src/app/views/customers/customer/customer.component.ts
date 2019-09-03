@@ -31,6 +31,8 @@ export class CustomerComponent implements OnInit {
   savebtntitle: string = "Save & Next";
   copyAddress: string;
   modeltitle: string = "Add Customer";
+  addcontacttitle: string = "Add";
+  addaddresstitle: string = "Add";
 
 
   BillingShippingAddress: boolean = false;
@@ -84,7 +86,7 @@ export class CustomerComponent implements OnInit {
       defaultCreditLimit: [''],
       discountOption: ['0'],
       discountAmount: [''],
-      defaultCurrency: ['0'],
+      defaultCurrency: [''],
 
     })
 
@@ -102,7 +104,7 @@ export class CustomerComponent implements OnInit {
     this.AddCustomerContactForm = this.formBuilder.group({
       contactId: ['0'],
       designation: [''],
-      email: ['',Validators.email],
+      email: ['', Validators.email],
       firstName: ['', Validators.required],
       lastName: [''],
       mobile: ['', Validators.maxLength(10)],
@@ -122,14 +124,14 @@ export class CustomerComponent implements OnInit {
   }
 
   allownumberwithdot(event: any) {
-    const pattern = /[0-9\+\.\ ]/;
+    const pattern = /[0-9\+\.]/;
     let inputChar = String.fromCharCode(event.charCode);
     if (!pattern.test(inputChar)) {
       event.preventDefault();
     }
   }
   allownumber(event: any) {
-    const pattern = /[0-9\ ]/;
+    const pattern = /0-9/;
     let inputChar = String.fromCharCode(event.charCode);
     if (!pattern.test(inputChar)) {
       event.preventDefault();
@@ -137,7 +139,7 @@ export class CustomerComponent implements OnInit {
   }
 
   allowalpha(event: any) {
-    const pattern = /[a-z\+\A-Z\+]/;
+    const pattern = /[a-z\+\A-Z\+ +\a-z\+\A-Z+]/;
     let inputChar = String.fromCharCode(event.charCode);
     if (!pattern.test(inputChar)) {
       event.preventDefault();
@@ -200,6 +202,7 @@ export class CustomerComponent implements OnInit {
     });
   }
   CheckAddress(event) {
+    debugger
     this.BillingShippingAddress = event;
   }
   changeaddresstype(event) {
@@ -296,10 +299,24 @@ export class CustomerComponent implements OnInit {
       postalCode: [''],
       defaultAddress: [false],
     })
+    this.addaddresstitle="Add";
   }
   CancelAddCustomerAddress() {
-    this.AddressLenghtcount = true;
-    this.onLoad();
+    if (this.AddressList.Address.length == 0) {
+      this.AddressLenghtcount = false;
+    } else {
+      this.AddressLenghtcount = true;
+    }
+    this.AddCustomerAddressForm = this.formBuilder.group({
+      addressId: ['0'],
+      addressType: ['', Validators.required],
+      address: ['', Validators.required],
+      countryId: ['0'],
+      state: [''],
+      city: [''],
+      postalCode: [''],
+      defaultAddress: [false],
+    })
   }
   SetDeafult(valaue: any, i: any) {
     let a = this.AddressList.Address.map((result: any, index) => {
@@ -327,6 +344,7 @@ export class CustomerComponent implements OnInit {
         })
       }
     })
+    this.addaddresstitle="Update";
     this.AddressLenghtcount = false;
   }
 
@@ -366,7 +384,13 @@ export class CustomerComponent implements OnInit {
     }
     this.contactsubmitted = false;
     if (AddCustomerContactForm.value.contactId == 0) {
+      if (this.ContactList.Contact.length == 0) {
+        this.ContactDefaultFlag = true;
+        AddCustomerContactForm.value.defaultContact = true;
+        this.ContactDefaultFlag = false;
+      }
       if (this.ContactDefaultFlag) {
+
         AddCustomerContactForm.value.defaultContact = true;
         this.ContactDefaultFlag = false;
       }
@@ -410,6 +434,7 @@ export class CustomerComponent implements OnInit {
         })
       }
     })
+    this.addcontacttitle = "Update";
     this.ContactLenghtcount = false;
   }
 
@@ -439,11 +464,11 @@ export class CustomerComponent implements OnInit {
 
   AddNewContact() {
     this.ContactLenghtcount = false;
-    //this.onLoad();
+    this.addcontacttitle = "Add";
     this.AddCustomerContactForm = this.formBuilder.group({
       contactId: ['0'],
       designation: [''],
-      email: ['',Validators.email],
+      email: ['', Validators.email],
       firstName: ['', Validators.required],
       lastName: [''],
       mobile: ['', Validators.maxLength(10)],
@@ -452,6 +477,7 @@ export class CustomerComponent implements OnInit {
       defaultContact: [false],
 
     })
+    
   }
 
   ResetForm() {
@@ -470,8 +496,25 @@ export class CustomerComponent implements OnInit {
   }
 
   CancelAddCustomerContact() {
-    this.ContactLenghtcount = true;
-    this.onLoad();
+    debugger
+    if (this.ContactList.Contact.length == 0) {
+      this.ContactLenghtcount = false;
+    }
+    else {
+      this.ContactLenghtcount = true;
+    }
+    this.AddCustomerContactForm = this.formBuilder.group({
+      contactId: ['0'],
+      designation: [''],
+      email: ['', Validators.email],
+      firstName: ['', Validators.required],
+      lastName: [''],
+      mobile: ['', Validators.maxLength(10)],
+      fax: [''],
+      office: [''],
+      defaultContact: [false],
+
+    })
   }
 
   GetCurrencyList() {
@@ -523,7 +566,7 @@ export class CustomerComponent implements OnInit {
   EditCustomer(i: any) {
     this.customerservice.GetCustomerById(i).subscribe((responce: any) => {
       let result = responce.body.data;
-
+      debugger
       this.AddCustomerForm.patchValue({
         customerId: result.customerId,
         customerName: result.customerName,
@@ -568,7 +611,31 @@ export class CustomerComponent implements OnInit {
   }
 
   DeleteCustomer(i: any) {
-    debugger
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.value) {
+        this.customerservice.DeleteCustomer(i).subscribe((responce: any) => {
+
+          this.GetCustomerList();
+          if (responce.status) {
+            Swal.fire(
+              'Deleted!',
+              responce.message,
+              'success'
+            )
+          }
+        });
+      }
+    })
+
+
   }
 
 }
