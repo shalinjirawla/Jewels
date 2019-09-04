@@ -74,7 +74,7 @@
                         <form [formGroup]="AddCustomerForm">
                             <ng-template tabHeading><i class="icon-user text-info"></i> Customer Details</ng-template>
                             <div class="row">
-                                <div class="form-group col-sm-6">
+                                <div class="form-group col-sm-4">
                                     <input type="hidden" formControlName="customerId" name="" id="">
                                     <label for="city">CUSTOMER NAME</label>
                                     <input class="form-control" (keypress)="allowalpha($event)" id="CUSTOMER-NAME"
@@ -85,6 +85,7 @@
                                         <div *ngIf="f.customerName.errors.required">Customer Name is required</div>
                                     </div>
                                 </div>
+                                <div class="form-group col-sm-2"></div>
                                 <div class="form-group col-sm-4">
                                     <label for="postal-code">CUSTOMER CODE</label>
                                     <input class="form-control" id="CUSTOMER-CODE" formControlName="customerCode"

@@ -228,28 +228,6 @@ namespace Inventory.Application.Services
             return CustomerId;
         }
 
-        public List<CustomerTypeVm> GetCustomerTypeList()
-        {
-            List<CustomerTypeVm> customerTypeList = new List<CustomerTypeVm>();
-            try
-            {
-                var a = _DbContext.CustomerTypes.ToList();
-                foreach (var h in a)
-                {
-                    CustomerTypeVm customerType = new CustomerTypeVm();
-                    customerType.CustomerTypeId = h.CustomerTypeId;
-                    customerType.CustomerTypeName = h.CustomerTypeName;
-                    customerTypeList.Add(customerType);
-                }
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-            return customerTypeList;
-        }
-
         public List<CustomerVm> GetCustomerListAsyn()
         {
             try

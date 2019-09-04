@@ -52,6 +52,11 @@ export const navItems: NavData[] = [
         icon: 'icon-user'
       },
       {
+        name: 'Customer Group',
+        url: '/customers/customergroup',
+        icon: 'icon-user'
+      },
+      {
         name: 'Import',
         url: '/base/carousels',
         icon: 'icon-cloud-download'

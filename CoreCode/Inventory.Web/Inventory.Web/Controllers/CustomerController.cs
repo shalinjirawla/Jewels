@@ -4,6 +4,8 @@ using Inventory.Web.share;
 using Inventory.Application.Interface;
 using Inventory.Application.ViewModel.CustomersVm;
 using System.Threading.Tasks;
+using Inventory.Application.Interface.Customer;
+using Inventory.Application.ViewModel;
 
 namespace Inventory.Web.Controllers
 {
@@ -13,10 +15,12 @@ namespace Inventory.Web.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly ICustomer _icustomer;
+        private readonly IcustomerType _icustomerType;
 
-        public CustomerController (ICustomer icustomer)
+        public CustomerController (ICustomer icustomer, IcustomerType icustomerType)
         {
             _icustomer = icustomer;
+            _icustomerType = icustomerType;
         }
         [NonAction]
         public ApiResponse GetAjaxResponse(bool status, string message, object data)
@@ -54,9 +58,31 @@ namespace Inventory.Web.Controllers
         [HttpGet]
         public IActionResult GetCustomerType()
         {
-            var CustomerType = _icustomer.GetCustomerTypeList();
+            var CustomerType = _icustomerType.GetCustomerTypeList();
             return Ok(GetAjaxResponse(true, string.Empty, CustomerType));
         }
-       
+
+        [HttpGet]
+        public IActionResult GetCustomerTypeById(int Id)
+        {
+            var CustomerType = _icustomerType.GetCustomerTypeById(Id);
+            return Ok(GetAjaxResponse(true, string.Empty, CustomerType));
+        }
+
+        [HttpPost]
+        public IActionResult AddCustomerType(CustomerTypeVm model)
+        {
+            var CustomerType = _icustomerType.AddCustomerTypeAsyc(model);
+            return Ok(GetAjaxResponse(true, string.Empty, CustomerType));
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteCustomerType(int Id)
+        {
+            var CustomerType = _icustomerType.DeleteCustomerTypeAsyc(Id);
+            return Ok(GetAjaxResponse(true, string.Empty, CustomerType));
+        }
+
+
     }
 }

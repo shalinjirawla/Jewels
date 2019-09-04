@@ -2572,23 +2572,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Admin\\.nuget\\packages\\": {},
+    "C:\\Users\\admin\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj",
+      "projectUniqueName": "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj",
       "projectName": "Inventory.Core",
-      "projectPath": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj",
-      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\obj\\",
+      "projectPath": "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj",
+      "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
+      "outputPath": "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

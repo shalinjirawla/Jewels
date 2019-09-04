@@ -16,6 +16,26 @@ namespace Inventory.Application.Services.CommonsServices
             _DbContext = DbContext;
         }
 
+        public CurrencyVm GetCurrencyByIDAsyc(int id)
+        {
+            CurrencyVm currencyVm = new CurrencyVm();
+            try
+            {
+                var b = _DbContext.Currencies.Where(x => x.CurrencyId == id).FirstOrDefault();
+                if (b != null)
+                {
+                    currencyVm.CurrencyId = b.CurrencyId;
+                    currencyVm.CurrencyName = b.CurrencyName;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return currencyVm;
+        }
+
         public List<CurrencyVm> GetCurrencyList()
         {
             List<CurrencyVm> CurrencyList = new List<CurrencyVm>();

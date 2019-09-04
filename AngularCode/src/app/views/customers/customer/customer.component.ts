@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, AbstractType } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { CustomerModel } from '../../../Models/Customer-Model';
-import { CustomerService } from '../../../Services/customer.service';
+import { CustomerService } from '../../../Services/Customer-Services/customer.service'
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { map } from 'rxjs/operators';
@@ -131,7 +130,7 @@ export class CustomerComponent implements OnInit {
     }
   }
   allownumber(event: any) {
-    const pattern = /0-9/;
+    const pattern = /[0-9]/;
     let inputChar = String.fromCharCode(event.charCode);
     if (!pattern.test(inputChar)) {
       event.preventDefault();

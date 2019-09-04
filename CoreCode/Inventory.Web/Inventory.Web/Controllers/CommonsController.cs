@@ -135,6 +135,13 @@ namespace Inventory.Web.Controllers
             return Ok(GetAjaxResponse(true, string.Empty, Currency));
         }
 
+        [HttpGet]
+        public IActionResult GetCurrencyByID(int Id)
+        {
+            var currency = _icurrency.GetCurrencyByIDAsyc(Id);
+            return Ok(GetAjaxResponse(true, string.Empty, currency));
+        }
+
         #endregion Currency APIs End
     }
 }
