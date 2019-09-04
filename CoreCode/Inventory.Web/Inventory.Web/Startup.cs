@@ -3,6 +3,11 @@ using Inventory.Application.Interface.Common;
 using Inventory.Application.Interface.Products;
 using Inventory.Application.Services;
 using Inventory.Application.Services.CommonsServices;
+using Inventory.Application.Interface.Customer;
+using Inventory.Application.Interface.Products;
+using Inventory.Application.Services;
+using Inventory.Application.Services.CommonsServices;
+using Inventory.Application.Services.CustomersServices;
 using Inventory.Application.Services.ProductsServices;
 using Inventory.EntityFrameworkCore.DbContext;
 using Microsoft.AspNetCore.Builder;
@@ -39,8 +44,11 @@ namespace Inventory.Web
             services.AddScoped<ICustomer,CustomerService>();
             services.AddScoped<IDiscountType, DiscountTypeService>();
             services.AddScoped<IProductCategories, ProductCategoriesServices>();
+            services.AddScoped<ICountry, CountryServices>();
+            services.AddScoped<ICurrency, CurrencyServices>();
             services.AddScoped<IProductBrand, ProductBrandServices>();
             services.AddScoped<IGenerealsetup.ICurrency, GeneralsetupServices>();
+            services.AddScoped<IcustomerType, CustomerTypeServices>();
             //Configure CORS for angular2 UI
             services.AddCors(options =>
             {

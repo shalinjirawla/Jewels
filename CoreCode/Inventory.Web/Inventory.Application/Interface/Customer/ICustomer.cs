@@ -11,9 +11,7 @@ namespace Inventory.Application.Interface
     {
         Task<long> AddCustomer(AddCustomerVm Model);
         List<CustomerVm> GetCustomerListAsyn();
-        List<CurrencyVm> GetCurrencyList();
         AddCustomerVm GetCustomerByIdAsyc(int Id);
-        List<CustomerTypeVm> GetCustomerTypeList();
-        List<CountryVm> GetCountryList();
+        int DeleteCustomerAsyc(int Id);
     }
 }

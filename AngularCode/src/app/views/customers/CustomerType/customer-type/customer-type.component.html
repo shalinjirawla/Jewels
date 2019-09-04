@@ -1,0 +1,83 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header card-header-danger">
+            <a><button type="button" class="btn btn-primary float-right btn-sm" id="AddCustomertypebtn"
+                    data-toggle="modal" (click)="addnewcustomertype()">
+                    Add Customer Group
+                </button>
+            </a>
+            <h4 class="card-title mt-0">Customer Group List</h4>
+        </div>
+        <div class="card-body bg-white">
+            <div class="table-responsive animated flash">
+                <table class="table " id="DisplayCustomerView">
+                    <thead class="">
+                        <th>
+                            Customer Group
+                        </th>
+                        <th colspan="3" class="">
+                            Action
+                        </th>
+                    </thead>
+                    <tbody class="LoderoutCustomer">
+                        <tr *ngFor="let item of CustomerTypelist">
+                            <td>{{item.customerTypeName}}</td>
+                            <td>
+                                <span class="text-primary mr-3" style="cursor: pointer;"
+                                    (click)="EditCustomerType(item.customerTypeId)">
+                                    <i class="fa fa-pencil"></i>
+                                </span>
+
+                                <span class="text-danger " style="cursor: pointer;"
+                                    (click)="DeleteCustomerType(item.customerTypeId)">
+                                    <i class="fa fa-trash"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <div class="mt-2 text-center" [hidden]="!LoderoutCustomer">
+                    <div class="spinner-border text-danger" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{modeltitle}}</h4>
+                <button type="button" class="close" (click)="largeModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="AddCustomerTypeForm">
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <input type="hidden" formControlName="customerTypeId" name="" id="">
+                            <label for="city">CUSTOMER GROUP NAME</label>
+                            <input class="form-control" id="CUSTOMER-NAME" formControlName="customerTypeName"
+                                [ngClass]="{ 'is-invalid': submitted && f.customerTypeName.errors }"
+                                placeholder="CUSTOMER NAME" type="text">
+                            <div *ngIf="submitted && f.customerTypeName.errors" class="invalid-feedback">
+                                <div *ngIf="f.customerTypeName.errors.required">Customer Group Name is required</div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="ResetForm()">Close</button>
+                    <button type="button" class="btn btn-primary"
+                        (click)="AddCustomerType(AddCustomerTypeForm)">{{savebtntitle}}</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->

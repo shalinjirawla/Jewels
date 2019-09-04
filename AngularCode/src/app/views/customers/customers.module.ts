@@ -13,6 +13,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 // // Components Routing
  import { CustomersRoutingModule } from './customers-routing.module';
+import { CustomerTypeComponent } from './CustomerType/customer-type/customer-type.component';
 
 @NgModule({
   imports: [
@@ -32,6 +33,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
   ],
   declarations: [
   CustomerComponent,
+  CustomerTypeComponent,
 ]
 })
 export class CustomerModule { }

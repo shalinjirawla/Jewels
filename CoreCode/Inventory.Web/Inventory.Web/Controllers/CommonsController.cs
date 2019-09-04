@@ -27,6 +27,13 @@ namespace Inventory.Web.Controllers
         {
             _discountType = discountType;
             _currency = currency;
+        private readonly ICountry _icountry;
+        private readonly ICurrency _icurrency;
+        public CommonsController(IDiscountType discountType, ICountry icountry, ICurrency icurrency)
+        {
+            _discountType = discountType;
+            _icountry = icountry;
+            _icurrency = icurrency;
         }
         [NonAction]
         public ApiResponse GetAjaxResponse(bool status, string message, object data)
@@ -59,7 +66,7 @@ namespace Inventory.Web.Controllers
             DiscountTypeVm discountTypeVm = new DiscountTypeVm();
             if (DiscountTypeId != 0)
             {
-                discountTypeVm =await _discountType.GetDiscountType(DiscountTypeId);
+                discountTypeVm = await _discountType.GetDiscountType(DiscountTypeId);
             }
             else {
                 return BadRequest();
@@ -71,12 +78,12 @@ namespace Inventory.Web.Controllers
         {
             if (DiscounttypeId != 0 && ModelState.IsValid)
             {
-                DiscounttypeId= await _discountType.UpdateDiscountType(DiscounttypeId, discountTypeVm);
+                DiscounttypeId = await _discountType.UpdateDiscountType(DiscounttypeId, discountTypeVm);
             }
             else {
                 return BadRequest();
             }
-            return Ok(GetAjaxResponse(true,"Discount Type Succesfully Updated..", DiscounttypeId));
+            return Ok(GetAjaxResponse(true, "Discount Type Succesfully Updated..", DiscounttypeId));
         }
         [HttpDelete]
         public async Task<IActionResult> DeteleDiscountType(long DiscountTypeId)
@@ -84,6 +91,8 @@ namespace Inventory.Web.Controllers
             if (DiscountTypeId != 0) {
                 DiscountTypeId =await _discountType.DeleteDiscountType(DiscountTypeId);
             }   
+                DiscountTypeId = await _discountType.DeleteDiscountType(DiscountTypeId);
+            }
             else { return BadRequest(); }
             return Ok(GetAjaxResponse(true, "Discount Type Delete Successfully ....", DiscountTypeId));
         }
@@ -162,5 +171,63 @@ namespace Inventory.Web.Controllers
         }
         #endregion Currency Api End
 
+        #region Country APIs Start
+
+        [HttpGet]
+        public IActionResult GetCountryList()
+        {
+            var CountryList = _icountry.GetCountryList();
+            return Ok(GetAjaxResponse(true, string.Empty, CountryList));
+        }
+        
+        [HttpGet]
+        public IActionResult GetCountry(int Id)
+        {
+            var CountryList = _icountry.GetCountryAsyc(Id);
+            return Ok(GetAjaxResponse(true, string.Empty, CountryList));
+        }
+
+        [HttpPost]
+        public IActionResult AddUpdateCountry(CountryVm model)
+        {
+            var msg = "";
+            if (model.CountryId == 0)
+            {
+                msg = "Country Added Successfully";
+            }
+            else
+            {
+                msg = "Country Updated Successfully";
+            }
+            var CountryId = _icountry.AddCountryAsyc(model);
+            return Ok(GetAjaxResponse(true, msg , CountryId));
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteCountry(int Id)
+        {
+            var CountryId = _icountry.DeleteCountryAsyc(Id);
+            return Ok(GetAjaxResponse(true, "Country Deleted Successfully", CountryId));
+        }
+
+        #endregion Country APIs End
+
+        #region Currency APIs Start
+
+        [HttpGet]
+        public IActionResult GetCurrency()
+        {
+            var Currency = _icurrency.GetCurrencyList();
+            return Ok(GetAjaxResponse(true, string.Empty, Currency));
+        }
+
+        [HttpGet]
+        public IActionResult GetCurrencyByID(int Id)
+        {
+            var currency = _icurrency.GetCurrencyByIDAsyc(Id);
+            return Ok(GetAjaxResponse(true, string.Empty, currency));
+        }
+
+        #endregion Currency APIs End
     }
 }

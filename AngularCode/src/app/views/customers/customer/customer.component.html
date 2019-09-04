@@ -74,7 +74,7 @@
                         <form [formGroup]="AddCustomerForm">
                             <ng-template tabHeading><i class="icon-user text-info"></i> Customer Details</ng-template>
                             <div class="row">
-                                <div class="form-group col-sm-6">
+                                <div class="form-group col-sm-4">
                                     <input type="hidden" formControlName="customerId" name="" id="">
                                     <label for="city">CUSTOMER NAME</label>
                                     <input class="form-control" (keypress)="allowalpha($event)" id="CUSTOMER-NAME"
@@ -85,6 +85,7 @@
                                         <div *ngIf="f.customerName.errors.required">Customer Name is required</div>
                                     </div>
                                 </div>
+                                <div class="form-group col-sm-2"></div>
                                 <div class="form-group col-sm-4">
                                     <label for="postal-code">CUSTOMER CODE</label>
                                     <input class="form-control" id="CUSTOMER-CODE" formControlName="customerCode"
@@ -181,15 +182,11 @@
                                     <label for="postal-code">DEFAULT CURRENCY
                                     </label>
                                     <select class="form-control" formControlName="defaultCurrency" id="ccyear">
-                                        <option selected value="0">--Select--</option>
+                                        <option selected value="">--Select--</option>
                                         <option *ngFor="let item of CurrencyList" [value]="item.currencyId">
                                             {{item.currencyName}}
                                         </option>
                                     </select>
-                                    <!-- <div *ngIf="submitted && f.defaultCurrency.errors" class="invalid-feedback">
-                                        <div *ngIf="f.defaultCurrency.errors.required">Customer Name is required</div>
-                                    </div>
-                                    [ngClass]="{ 'is-invalid': submitted && f.defaultCurrency.errors }"  -->
                                 </div>
                             </div>
                         </form>
@@ -309,22 +306,26 @@
                                             type="text">
                                     </div>
                                 </div>
-                                <div class="row" [hidden]="!CheckboxFlag">
-                                    <label class="form-check-label offset-1 ">
-                                        <input class="form-check-input" (change)="CheckAddress($event.target.checked)"
-                                            id="copyaddress" type="checkbox" [value]="CopyAddress">
-                                        <span class="form-check-sign">
-                                            <span class="check"></span>
-                                        </span>{{copyAddress}}
-                                    </label>
 
+                                <div class="row" [hidden]="!CheckboxFlag">
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input"
+                                            (change)="CheckAddress($event.target.checked)" id="copyaddress"
+                                            type="checkbox" [value]="CopyAddress">
+                                        <!-- <span class="form-check-sign">
+                                            <span class="check"></span>
+                                        </span> -->
+                                        <label class="custom-control-label offset-1 " for="copyaddress">
+                                            {{copyAddress}}
+                                        </label>
+                                    </div>
                                 </div>
                             </form>
 
                             <div class="row">
                                 <div class="col-sm-12">
                                     <button type="button" class="btn btn-primary btn-md pull-right"
-                                        (click)="AddCustomerAddress(AddCustomerAddressForm)">Add </button>
+                                        (click)="AddCustomerAddress(AddCustomerAddressForm)">{{addaddresstitle}}</button>
                                     <button type="button" class="btn btn-secondary btn-md mr-2 pull-right"
                                         (click)="CancelAddCustomerAddress()">Cancel </button>
 
@@ -390,9 +391,10 @@
                                         <label for="email"> Email
                                         </label>
                                         <input class="form-control" id="Customer_contact_Email" formControlName="email"
-                                            placeholder="Email"  [ngClass]="{ 'is-invalid': contactsubmitted && con.email.errors }" type="text">
-                                            <div *ngIf="contactsubmitted && con.email.errors"
-                                            class="invalid-feedback">
+                                            placeholder="Email"
+                                            [ngClass]="{ 'is-invalid': contactsubmitted && con.email.errors }"
+                                            type="text">
+                                        <div *ngIf="contactsubmitted && con.email.errors" class="invalid-feedback">
                                             <div *ngIf="con.email.errors.email">Input Valid Email Address
                                             </div>
                                         </div>
@@ -460,7 +462,7 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <button type="button" class="btn btn-primary btn-md pull-right"
-                                        (click)="AddCustomerContact(AddCustomerContactForm)">Add </button>
+                                        (click)="AddCustomerContact(AddCustomerContactForm)">{{addcontacttitle}}</button>
                                     <button type="button" class="btn btn-secondary btn-md mr-2 pull-right"
                                         (click)="CancelAddCustomerContact()">Cancel </button>
 

@@ -7,9 +7,9 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ProductComponent } from './product/product.component';
 import { CategoriesComponent } from './categories/categories.component';
-import { BrandComponent } from './brand/brand.component';
 import { DataTablesModule } from 'angular-datatables';
 import { RawMaterialsComponent } from './raw-materials/raw-materials.component';
+import {BrandComponent} from './brand/brand.component';
 @NgModule({
   imports: [
     CommonModule,
