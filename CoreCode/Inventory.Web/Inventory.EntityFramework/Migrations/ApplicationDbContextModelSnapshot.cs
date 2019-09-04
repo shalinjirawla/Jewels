@@ -15,7 +15,7 @@ namespace Inventory.EntityFrameworkCore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -70,6 +70,33 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Inventory.Core.Models.Commons.CreditTerms", b =>
+                {
+                    b.Property<long>("CreditTermId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Code");
+
+                    b.Property<DateTime?>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Duration");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.HasKey("CreditTermId");
+
+                    b.ToTable("CreditTerms");
+                });
+
             modelBuilder.Entity("Inventory.Core.Models.Commons.DiscountType", b =>
                 {
                     b.Property<long>("DsicounttTypeId")
@@ -91,6 +118,31 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasKey("DsicounttTypeId");
 
                     b.ToTable("discountTypes");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.Commons.TaxCode", b =>
+                {
+                    b.Property<long>("TaxId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("Amount");
+
+                    b.Property<string>("Code");
+
+                    b.Property<DateTime?>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.HasKey("TaxId");
+
+                    b.ToTable("TaxCode");
                 });
 
             modelBuilder.Entity("Inventory.Core.Models.Country", b =>
