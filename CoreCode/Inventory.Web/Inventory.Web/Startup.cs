@@ -18,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
+using static Inventory.Application.Interface.Common.IGenerealsetup;
 
 namespace Inventory.Web
 {
@@ -45,7 +46,6 @@ namespace Inventory.Web
             services.AddScoped<IDiscountType, DiscountTypeService>();
             services.AddScoped<IProductCategories, ProductCategoriesServices>();
             services.AddScoped<ICountry, CountryServices>();
-            services.AddScoped<ICurrency, CurrencyServices>();
             services.AddScoped<IProductBrand, ProductBrandServices>();
             services.AddScoped<IGenerealsetup.ICurrency, GeneralsetupServices>();
             services.AddScoped<IcustomerType, CustomerTypeServices>();

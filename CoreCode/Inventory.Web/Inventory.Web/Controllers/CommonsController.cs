@@ -9,6 +9,7 @@ using Inventory.Web.share;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static Inventory.Application.Interface.Common.IGenerealsetup;
 
 namespace Inventory.Web.Controllers
 {
@@ -19,21 +20,17 @@ namespace Inventory.Web.Controllers
     {
         private readonly IDiscountType _discountType;
         private readonly IGenerealsetup.ICurrency _currency;
+        private readonly ICountry _icountry;
         public Boolean Status = false;
-        public string Message="";
+        public string Message = "";
         public CommonsController(IDiscountType discountType,
-            IGenerealsetup.ICurrency currency
+            IGenerealsetup.ICurrency currency,
+            ICountry country
             )
         {
             _discountType = discountType;
             _currency = currency;
-        private readonly ICountry _icountry;
-        private readonly ICurrency _icurrency;
-        public CommonsController(IDiscountType discountType, ICountry icountry, ICurrency icurrency)
-        {
-            _discountType = discountType;
-            _icountry = icountry;
-            _icurrency = icurrency;
+            _icountry = country;
         }
         [NonAction]
         public ApiResponse GetAjaxResponse(bool status, string message, object data)
@@ -68,7 +65,8 @@ namespace Inventory.Web.Controllers
             {
                 discountTypeVm = await _discountType.GetDiscountType(DiscountTypeId);
             }
-            else {
+            else
+            {
                 return BadRequest();
             }
             return Ok(GetAjaxResponse(true, string.Empty, discountTypeVm));
@@ -80,7 +78,8 @@ namespace Inventory.Web.Controllers
             {
                 DiscounttypeId = await _discountType.UpdateDiscountType(DiscounttypeId, discountTypeVm);
             }
-            else {
+            else
+            {
                 return BadRequest();
             }
             return Ok(GetAjaxResponse(true, "Discount Type Succesfully Updated..", DiscounttypeId));
@@ -88,12 +87,15 @@ namespace Inventory.Web.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeteleDiscountType(long DiscountTypeId)
         {
-            if (DiscountTypeId != 0) {
-                DiscountTypeId =await _discountType.DeleteDiscountType(DiscountTypeId);
-            }   
+            if (DiscountTypeId != 0)
+            {
                 DiscountTypeId = await _discountType.DeleteDiscountType(DiscountTypeId);
+
             }
-            else { return BadRequest(); }
+            else
+            {
+                return BadRequest();
+            }
             return Ok(GetAjaxResponse(true, "Discount Type Delete Successfully ....", DiscountTypeId));
         }
         #endregion Discount Type APIs End
@@ -104,15 +106,17 @@ namespace Inventory.Web.Controllers
         public async Task<IActionResult> GetCurrencys()
         {
             List<CurrencyVm> list = new List<CurrencyVm>();
-            list =await _currency.GetCurrencyList();
+            list = await _currency.GetCurrencyList();
             return Ok(GetAjaxResponse(true, "List Of Currency", list));
         }
         [HttpPost]
-        public async Task<IActionResult> SaveCurrency(CurrencyVm model) {
+        public async Task<IActionResult> SaveCurrency(CurrencyVm model)
+        {
             if (ModelState.IsValid)
             {
                 Status = await _currency.SaveCurrency(model);
-                if (Status) {
+                if (Status)
+                {
                     Message = "Currency Succesfully Saved..!";
                 }
                 else
@@ -124,11 +128,14 @@ namespace Inventory.Web.Controllers
             return Ok(GetAjaxResponse(Status, Message, null));
         }
         [HttpGet]
-        public async Task<IActionResult> GetCurrency(long CurrencyId) {
+        public async Task<IActionResult> GetCurrency(long CurrencyId)
+        {
             CurrencyVm currencyVm = new CurrencyVm();
-            if (CurrencyId != 0) {
-                currencyVm =await _currency.GetCurrency(CurrencyId);
-                if (currencyVm != null) {
+            if (CurrencyId != 0)
+            {
+                currencyVm = await _currency.GetCurrency(CurrencyId);
+                if (currencyVm != null)
+                {
                     Status = true;
                 }
                 else { Status = false; }
@@ -139,8 +146,9 @@ namespace Inventory.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateCurrency(long CurrencyId, CurrencyVm model)
         {
-            if (CurrencyId != 0 && ModelState.IsValid) {
-                Status =await _currency.UpdateCurrency(CurrencyId, model);
+            if (CurrencyId != 0 && ModelState.IsValid)
+            {
+                Status = await _currency.UpdateCurrency(CurrencyId, model);
                 if (Status)
                 {
                     Message = "Currency Successfulyy Upated....!";
@@ -151,20 +159,26 @@ namespace Inventory.Web.Controllers
             return Ok(GetAjaxResponse(Status, Message, null));
         }
         [HttpDelete]
-        public async Task<IActionResult> DeleteCurrency(long CurrencyId) {
-            if (CurrencyId != 0) {
+        public async Task<IActionResult> DeleteCurrency(long CurrencyId)
+        {
+            if (CurrencyId != 0)
+            {
                 Status = await _currency.DeleteCurrency(CurrencyId);
                 if (Status)
                 {
                     Message = "Currency Delete Successfully";
                 }
                 else { Message = "Error Occurs"; }
-            }else { return BadRequest(); }
+            }
+            else { return BadRequest(); }
             return Ok(GetAjaxResponse(Status, Message, null));
         }
-        public async Task<IActionResult> Currencychange(long CurrencyId, Boolean Status) {
-            if (CurrencyId != 0) {
-
+        [HttpGet]
+        public async Task<IActionResult> Currencychange(long CurrencyId, Boolean Status)
+        {
+            if (CurrencyId != 0)
+            {
+                await _currency.DeleteCurrency(CurrencyId);
             }
             else { return BadRequest(); }
             return Ok(GetAjaxResponse(Status, Message, null));
@@ -179,7 +193,7 @@ namespace Inventory.Web.Controllers
             var CountryList = _icountry.GetCountryList();
             return Ok(GetAjaxResponse(true, string.Empty, CountryList));
         }
-        
+
         [HttpGet]
         public IActionResult GetCountry(int Id)
         {
@@ -200,7 +214,7 @@ namespace Inventory.Web.Controllers
                 msg = "Country Updated Successfully";
             }
             var CountryId = _icountry.AddCountryAsyc(model);
-            return Ok(GetAjaxResponse(true, msg , CountryId));
+            return Ok(GetAjaxResponse(true, msg, CountryId));
         }
 
         [HttpDelete]
@@ -212,22 +226,6 @@ namespace Inventory.Web.Controllers
 
         #endregion Country APIs End
 
-        #region Currency APIs Start
 
-        [HttpGet]
-        public IActionResult GetCurrency()
-        {
-            var Currency = _icurrency.GetCurrencyList();
-            return Ok(GetAjaxResponse(true, string.Empty, Currency));
-        }
-
-        [HttpGet]
-        public IActionResult GetCurrencyByID(int Id)
-        {
-            var currency = _icurrency.GetCurrencyByIDAsyc(Id);
-            return Ok(GetAjaxResponse(true, string.Empty, currency));
-        }
-
-        #endregion Currency APIs End
     }
 }
