@@ -218,14 +218,14 @@
                                                     <span class="text-primary " (click)="EditAddress(i)">
                                                         <i class="fa fa-pencil"></i>
                                                     </span>
-                                                    <span *ngIf="type.defaultAddress" class="text-primary ml-2">
+                                                    <!-- <span class=" ml-2" >
+                                                        <i class="fa fa-check"></i>
+                                                    </span> -->
+                                                    <span  [ngClass]="{'text-primary': type.defaultAddress}"    class="ml-2"
+                                                        (click)="SetDeafult(type.defaultAddress,i)"> 
                                                         <i class="fa fa-check"></i>
                                                     </span>
-                                                    <span *ngIf="!type.defaultAddress" class="ml-2"
-                                                        (click)="SetDeafult(type.defaultAddress,i)">
-                                                        <i class="fa fa-check"></i>
-                                                    </span>
-                                                    <span class="text-danger ml-2" (click)="DeleteAddress(i)">
+                                                    <span [hidden]="type.defaultAddress" class="text-danger ml-2" (click)="DeleteAddress(i)">
                                                         <i class="fa fa-trash"></i></span> </span>
                                             </td>
                                         </tr>
@@ -273,7 +273,7 @@
                                     <div class="form-group col-sm-4">
                                         <label for="country"> COUNTRY
                                         </label>
-                                        <select class="form-control" formControlName="countryId" id="customer_Coutry">
+                                        <select class="form-control" (change)="changeCoutry($event.target.value)"  formControlName="countryId" id="customer_Coutry">
                                             <option value="0">--Select--</option>
                                             <option *ngFor="let item of CountryList" [value]="item.countryId">
                                                 {{item.countryName}}</option>
@@ -359,7 +359,7 @@
                                                     <span class="text-primary " (click)="EditContact(i)">
                                                         <i class="fa fa-pencil"></i>
                                                     </span>
-                                                    <span *ngIf="Contact.defaultContact" class="text-primary ml-2">
+                                                    <span  *ngIf="Contact.defaultContact" class="text-primary ml-2">
                                                         <i class="fa fa-check"></i>
                                                     </span>
                                                     <span *ngIf="!Contact.defaultContact" class="ml-2"
@@ -441,11 +441,16 @@
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-2"></div>
-                                    <div class="form-group col-sm-4">
+                                    <div class="form-group  col-sm-4">
                                         <label for="fax"> FAX
                                         </label>
-                                        <input class="form-control" formControlName="fax" id="Customer_contact_Fax"
-                                            placeholder="Fax" type="text">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">{{countryCode}}</span>
+                                            </div>
+                                            <input class="form-control" formControlName="fax" id="Customer_contact_Fax"
+                                                placeholder="Fax" type="text">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">

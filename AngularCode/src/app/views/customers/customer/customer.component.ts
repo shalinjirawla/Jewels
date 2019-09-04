@@ -32,6 +32,7 @@ export class CustomerComponent implements OnInit {
   modeltitle: string = "Add Customer";
   addcontacttitle: string = "Add";
   addaddresstitle: string = "Add";
+  countryCode: string = "";
 
 
   BillingShippingAddress: boolean = false;
@@ -50,7 +51,7 @@ export class CustomerComponent implements OnInit {
   DefaultFlag: boolean = true;
   CheckboxFlag: boolean = false;
   LoderoutCustomer: boolean = true;
-
+  IsDefaultAddressDelete: boolean = false;
   CurrencyList: any;
   CountryList: any;
   CustomerTypeList: any;
@@ -220,6 +221,7 @@ export class CustomerComponent implements OnInit {
     }
   }
   AddCustomerAddress(AddCustomerAddressForm: FormControl) {
+    debugger
     this.Addresssubmitted = true;
     if (this.AddCustomerAddressForm.invalid) {
       return;
@@ -229,6 +231,13 @@ export class CustomerComponent implements OnInit {
 
       if (this.DefaultFlag) {
         AddCustomerAddressForm.value.defaultAddress = true;
+        if (AddCustomerAddressForm.value.countryId == "1") {
+          this.countryCode = "+91";
+        } else if (AddCustomerAddressForm.value.countryId == "2") {
+          this.countryCode = "+1";
+        } else {
+          this.countryCode = "";
+        }
         this.DefaultFlag = false;
       }
       let a = JSON.stringify(AddCustomerAddressForm.value);
@@ -298,7 +307,7 @@ export class CustomerComponent implements OnInit {
       postalCode: [''],
       defaultAddress: [false],
     })
-    this.addaddresstitle="Add";
+    this.addaddresstitle = "Add";
   }
   CancelAddCustomerAddress() {
     if (this.AddressList.Address.length == 0) {
@@ -318,12 +327,27 @@ export class CustomerComponent implements OnInit {
     })
   }
   SetDeafult(valaue: any, i: any) {
+    let AnyDefaultSet:boolean=false;
     let a = this.AddressList.Address.map((result: any, index) => {
-      if (result.defaultAddress) {
-        this.AddressList.Address[index].defaultAddress = false;
-      }
-      if (i == index) {
+      // if (result.defaultAddress) {
+      //   this.AddressList.Address[index].defaultAddress = false;
+      // }else{this.AddressList.Address[index].defaultAddress = true;}
+      debugger
+      if (i == index && !valaue) {
         this.AddressList.Address[index].defaultAddress = true;
+        if (this.AddressList.Address[index].countryId == "1") {
+          this.countryCode = "+91";
+        } else if (this.AddressList.Address[index].countryId == "2") {
+          this.countryCode = "+1";
+        } else {
+          this.countryCode = "";
+        }
+        AnyDefaultSet=true;
+      } else {
+        this.AddressList.Address[index].defaultAddress = false;
+        if(!AnyDefaultSet){
+        this.countryCode = "";
+        }
       }
     })
   }
@@ -343,7 +367,7 @@ export class CustomerComponent implements OnInit {
         })
       }
     })
-    this.addaddresstitle="Update";
+    this.addaddresstitle = "Update";
     this.AddressLenghtcount = false;
   }
 
@@ -476,7 +500,7 @@ export class CustomerComponent implements OnInit {
       defaultContact: [false],
 
     })
-    
+
   }
 
   ResetForm() {
@@ -518,7 +542,7 @@ export class CustomerComponent implements OnInit {
 
   GetCurrencyList() {
     this.customerservice.GetCurrency().subscribe((responce: any) => {
-      this.CurrencyList = responce.body.data;
+      this.CurrencyList = responce.data;
     });
   }
 
