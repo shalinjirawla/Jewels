@@ -18,6 +18,7 @@ export class ProductComponent implements OnInit {
   //Form List for Product End//
 
   ngOnInit() {
+    this.OnLoad();
   }
  public OnLoad()
   {

@@ -5,25 +5,356 @@
         </div>
         <div class="card-body bg-white">
             <div class="row">
-                <div class="form-group col-sm-12">
+                <div class="form-group col-sm-12" id="setbtn">
+
                     <div class="m-3">
+                        <h3 class="text-info">
+                            Sales
+                        </h3>
                         <button
                             class="btn m-2 p-4  bg-white btn-outline-primary box-shadow b-4x b-light btn-lg m-r m-t w-160"
-                            tabindex="0">
-                            <i class="fa fa-dollar fa-3x text-muted text-center"></i>
+                            tabindex="0" (click)="CurrencyModal.show()">
+                            <i class="fa fa-dollar fa-4x text-muted text-center clearfix"></i><br />
                             <label>Currency</label>
                             <p>5</p>
                         </button>
 
                         <button
-                            class="btn   p-4  bg-white btn-outline-success box-shadow b-3x b-light btn-lg m-r m-t w-160"
-                            tabindex="0">
-                            <i class="fa fa-money fa-3x text-muted text-center"></i>
+                            class="btn m-2 p-4 bg-white btn-outline-success box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            tabindex="0" (click)="CreditTermModal.show()">
+                            <i class="fa fa-money fa-4x text-muted text-center"></i>
                             <label>Credit Term</label>
                             <p>5</p>
                         </button>
-                      
+                        <button
+                            class="btn m-2 p-4  bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            tabindex="0" (click)="PaymentTermModal.show()">
+                            <i class="fa fa-money fa-4x text-muted text-center clearfix"></i>
+                            <label>Payment Term</label>
+                            <p>5</p>
+                        </button>
+
+                        <button
+                            class="btn m-2 p-4 bg-white btn-outline-success box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            tabindex="0">
+                            <i class="fa fa-truck fa-4x text-muted text-center"></i>
+                            <label>Shipment Term</label>
+                            <p>5</p>
+                        </button>
+                        <button
+                            class="btn m-2 p-4  bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            tabindex="0">
+                            <i class="fa fa-hand-o-right fa-4x text-muted text-center clearfix"></i>
+                            <label>Shipment Method</label>
+                            <label>5</label>
+                        </button>
+
+                        <button
+                            class="btn m-2 p-4 bg-white btn-outline-success box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            tabindex="0">
+                            <i class="fa fa-credit-card-alt fa-4x text-muted text-center"></i>
+                            <label>Additional Charge</label>
+                            <p>5</p>
+                        </button>
+                        <button
+                            class="btn m-2 p-4 bg-white btn-outline-success box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            tabindex="0">
+                            <i class="fa fa-money fa-4x text-muted text-center"></i>
+                            <label>Sales Order Type</label>
+                            <p>5</p>
+                        </button>
                     </div>
+                    <div class="m-3">
+                        <h3 class="text-info">
+                            Basic
+                        </h3>
+                        <button
+                            class="btn m-2 p-4  bg-white btn-outline-primary box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            tabindex="0">
+                            <i class="fa fa-building-o fa-4x text-muted text-center clearfix"></i><br />
+                            <label>Industry</label>
+                            <p>5</p>
+                        </button>
+                        <button
+                            class="btn m-2 p-4  bg-white btn-outline-primary box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            tabindex="0">
+                            <i class="fa fa-flag fa-4x text-muted text-center clearfix"></i><br />
+                            <label>Country</label>
+                            <p>5</p>
+                        </button>
+                        <button
+                            class="btn m-2 p-4  bg-white btn-outline-primary box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            tabindex="0">
+                            <i class="fa fa-home fa-4x text-muted text-center clearfix"></i><br />
+                            <label> Location </label>
+                            <p>5</p>
+                        </button>
+                        <button
+                            class="btn m-2 p-4  bg-white btn-outline-primary box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            tabindex="0">
+                            <i class="fa fa-tag fa-4x text-muted text-center clearfix"></i><br />
+                            <label>Batch</label>
+                            <p>5</p>
+                        </button>
+                        <button
+                            class="btn m-2 p-4  bg-white btn-outline-primary box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            tabindex="0">
+                            <i class="fa fa-text-width fa-4x text-muted text-center clearfix"></i><br />
+                            <label>Tax Code </label>
+                            <p>5</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div bsModal #CurrencyModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Currency</h4>
+                <button type="button" class="close" (click)="CurrencyModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="divider-saveAndEdit" aria-hidden="false"></div>
+                <div class="row m-t-md">
+                    <div class="col-sm-6" aria-hidden="false">
+                        <div class="block m-b-sm text-xl ">List of Currencies</div>
+                        <div class="wrap-scroll-currencies">
+                            <table class="custom-table-s table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Currency</th>
+                                        <th>Currency Code</th>
+                                        <th>Status</th>
+                                        <th class="text-center">Action</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of CurrencyList">
+                                        <td>{{item.currencyName}}</td>
+                                        <td>{{item.code}}</td>
+                                        <td> 
+                                            <label class="switch switch-3d switch-success">
+                                            <input type="checkbox" class="switch-input" [checked]="item.status" (change)="CurrencyChange($event.target.checked,item.currencyId)">
+                                            <span class="switch-slider"></span>
+                                          </label></td>
+                                        <td>
+                                            <span class="text-primary mr-3" style="cursor: pointer;"
+                                                (click)="GetCurrency(item.currencyId)">
+                                                <i class="fa fa-pencil"></i>
+                                            </span>
+
+                                            <span class="text-danger " style="cursor: pointer;"
+                                                (click)="DeleteCurrency(item.currencyId)">
+                                                <i class="fa fa-trash"></i>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <form [formGroup]="CurrencyForm" class="formData-modal col-sm-6 ">
+                        <label for="">{{CurrencyModelTitleString}}</label>
+                        <input type="hidden" formControlName="CurrencyId">
+                        <input type="hidden" formControlName="Status">
+                        <div class="row">
+                            <div class="form-group col-sm-12">
+                                <label>CURRENCY NAME</label>
+                                <input class="form-control" id="CurrencyName" formControlName="CurrencyName"
+                                    placeholder="CREDIT TERM CODE" type="text"
+                                    [ngClass]="{ 'is-invalid': CurrencySubmiited && fCurrency.CurrencyName.errors }">
+                                <div *ngIf="CurrencySubmiited && fCurrency.CurrencyName.errors"
+                                    class="invalid-feedback">
+                                    <div *ngIf="fCurrency.CurrencyName.errors.required">Currency Name is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-12">
+                                <label>CURRENCY CODE</label>
+                                <input type="text" class="form-control" id="Code" formControlName="Code"
+                                    placeholder="Currency Code"
+                                    [ngClass]="{ 'is-invalid': CurrencySubmiited && fCurrency.Code.errors }">
+                                <div *ngIf="CurrencySubmiited && fCurrency.Code.errors" class="invalid-feedback">
+                                    <div *ngIf="fCurrency.Code.errors.required">Code is required</div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="CurrencyModal.hide()">Close</button>
+                <button type="button" class="btn btn-primary" (click)="AddCurrency(CurrencyForm)">{{CurrencybtnText}}
+                    </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div bsModal #CreditTermModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Credit Terms</h4>
+                <button type="button" class="close" (click)="CreditTermModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="DividerCreditterm">
+                <div class="divider-saveAndEdit" aria-hidden="false"></div>
+                <div class="row m-t-md">
+                    <div class="col-sm-6" aria-hidden="false">
+                        <div class="block m-b-sm text-xl ">List of Currencies</div>
+                        <div class="wrap-scroll-currencies">
+                            <table class="custom-table-s table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Credit Terms Code</th>
+                                        <th>Duration</th>
+                                        <th class="text-center">Action</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <form [formGroup]="CreditTermForm" class="formData-modal col-sm-6 ">
+                        <h2>{{CreditTermModalModelTitleString}}</h2>
+                        <input type="hidden" formControlName="CreditTermsId">
+                        <div class="row">
+                            <div class="form-group col-sm-12">
+                                <label>CREDIT TERM CODE</label>
+                                <input class="form-control" id="CreditTermsCode" formControlName="CreditTermsCode"
+                                    placeholder="CREDIT TERM CODE" type="text"
+                                    [ngClass]="{ 'is-invalid': CreditTermSubmiited && fCreditTerms.CreditTermsCode.errors }">
+                                <div *ngIf="CreditTermSubmiited && fCreditTerms.CreditTermsCode.errors"
+                                    class="invalid-feedback">
+                                    <div *ngIf="fCreditTerms.CreditTermsCode.errors.required">Credit Term Code is
+                                        required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-12">
+                                <label>DURATION</label>
+                                <input type="number" class="form-control" id="Duration" formControlName="Duration"
+                                    placeholder="DURATION"
+                                    [ngClass]="{ 'is-invalid': CreditTermSubmiited && fCreditTerms.Duration.errors }">
+                                <div *ngIf="CreditTermSubmiited && fCreditTerms.Duration.errors"
+                                    class="invalid-feedback">
+                                    <div *ngIf="fCreditTerms.Duration.errors.required">Credit Term Code is required
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-12">
+                                <label>DESCRIPTION</label>
+                                <textarea class="form-control" id="Description" formControlName="Description"
+                                    placeholder="DURATION"></textarea>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="CreditTermModal.hide()">Close</button>
+                    <button type="button" class="btn btn-primary" (click)="AddCreditTerms(CreditTermForm)">Save
+                        changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div bsModal #PaymentTermModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Payment Terms</h4>
+                <button type="button" class="close" (click)="PaymentTermModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="DividerPaymentterm">
+                <div class="divider-saveAndEdit" aria-hidden="false"></div>
+                <div class="row m-t-md">
+                    <div class="col-sm-6" aria-hidden="false">
+                        <div class="block m-b-sm text-xl ">List of Payment</div>
+                        <div class="wrap-scroll-currencies">
+                            <table class="custom-table-s table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Payment Terms code</th>
+                                        <th>Duration</th>
+                                        <th class="text-center">Action</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <form [formGroup]="PaymentTermForm" class="formData-modal col-sm-6 ">
+                        <h2>{{PaymentTermModalModelTitleString}}</h2>
+                        <input type="hidden" formControlName="PaymentTermsId">
+                        <div class="row">
+                            <div class="form-group col-sm-12">
+                                <label>PAYMENT TERM CODE</label>
+                                <input class="form-control" id="PaymentTermsCode" formControlName="PaymentTermsCode"
+                                    placeholder="PAYMENT TERM CODE" type="text"
+                                    [ngClass]="{ 'is-invalid': PaymentTermSubmiited && fPaymentTerms.PaymentTermsCode.errors }">
+                                <div *ngIf="PaymentTermSubmiited && fPaymentTerms.PaymentTermsCode.errors"
+                                    class="invalid-feedback">
+                                    <div *ngIf="fPaymentTerms.PaymentTermsCode.errors.required">Payment Term Code is
+                                        required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-12">
+                                <label>DURATION</label>
+                                <input type="number" class="form-control" id="Duration" formControlName="Duration"
+                                    placeholder="DURATION"
+                                    [ngClass]="{ 'is-invalid':PaymentTermSubmiited && fPaymentTerms.Duration.errors }">
+                                <div *ngIf="PaymentTermSubmiited && fPaymentTerms.Duration.errors"
+                                    class="invalid-feedback">
+                                    <div *ngIf="fPaymentTerms.Duration.errors.required">Duration Term Code is
+                                        required</div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-12">
+                                <label>DESCRIPTION</label>
+                                <textarea class="form-control" id="Description" formControlName="Description"
+                                    placeholder="DURATION"></textarea>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="PaymentTermModal.hide()">Close</button>
+                    <button type="button" class="btn btn-primary" (click)="AddPaymentTerms(PaymentTermForm)">Save
+                        changes</button>
                 </div>
             </div>
         </div>

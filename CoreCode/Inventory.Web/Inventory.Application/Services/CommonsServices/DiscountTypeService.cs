@@ -44,7 +44,7 @@ namespace Inventory.Application.Services
             catch (Exception e)
             {
 
-                throw;
+                throw e;
             }
             return DiscountTypeId;
         }
@@ -99,7 +99,7 @@ namespace Inventory.Application.Services
             catch (Exception e)
             {
 
-                throw;
+                throw e;
             }
             return DiscountTypeVmList;
         }
@@ -150,7 +150,7 @@ namespace Inventory.Application.Services
             catch (Exception e)
             {
 
-                throw;
+                throw e;
             }
             return DiscountTypeId;
         }

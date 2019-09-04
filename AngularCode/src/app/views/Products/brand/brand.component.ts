@@ -15,7 +15,7 @@ const Toast = Swal.mixin({
 @Component({
   selector: 'app-brand',
   templateUrl: './brand.component.html',
-  styleUrls: ['./brand.component.scss']
+  styleUrls: ['/brand.component.scss']
 })
 export class BrandComponent implements OnInit {
   @ViewChild('largeModal', { static: false }) public largeModal: ModalDirective;
@@ -45,16 +45,15 @@ export class BrandComponent implements OnInit {
     this.FormSubmitted = false;
   }
 
-  public GetProductBranbdList()
-  {
-    this.ProductBrandService.GetProductBrandList().subscribe((responce:any)=>{
-      if(responce.status){
-      this.BrandList=responce.data
-      debugger
-      this.BrandListEmplty=false;
+  public GetProductBranbdList() {
+    this.ProductBrandService.GetProductBrandList().subscribe((responce: any) => {
+      if (responce.status) {
+        this.BrandList = responce.data
+        debugger
+        this.BrandListEmplty = false;
       }
     });
-    this.BrandListEmplty=true;
+    this.BrandListEmplty = true;
   }
   public AddBrand(BrandForm: FormControl) {
     this.FormSubmitted = true;
@@ -76,7 +75,7 @@ export class BrandComponent implements OnInit {
           title: responce.message,
         })
       }
-     
+
     });
   }
   public ResetForm() {

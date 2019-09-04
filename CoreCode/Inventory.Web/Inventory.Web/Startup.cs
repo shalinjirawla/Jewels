@@ -1,6 +1,8 @@
 ﻿using Inventory.Application.Interface;
+using Inventory.Application.Interface.Common;
 using Inventory.Application.Interface.Products;
 using Inventory.Application.Services;
+using Inventory.Application.Services.CommonsServices;
 using Inventory.Application.Services.ProductsServices;
 using Inventory.EntityFrameworkCore.DbContext;
 using Microsoft.AspNetCore.Builder;
@@ -38,6 +40,7 @@ namespace Inventory.Web
             services.AddScoped<IDiscountType, DiscountTypeService>();
             services.AddScoped<IProductCategories, ProductCategoriesServices>();
             services.AddScoped<IProductBrand, ProductBrandServices>();
+            services.AddScoped<IGenerealsetup.ICurrency, GeneralsetupServices>();
             //Configure CORS for angular2 UI
             services.AddCors(options =>
             {
@@ -56,7 +59,7 @@ namespace Inventory.Web
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             //Swagger - Enable this line and the related lines in Configure method to enable swagger UI
             services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                c.SwaggerDoc("v1", new Info
                 {
                     Version = "v1",
                     Title = "Inventory API",

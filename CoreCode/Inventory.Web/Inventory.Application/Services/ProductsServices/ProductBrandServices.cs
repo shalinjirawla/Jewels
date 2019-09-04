@@ -83,7 +83,7 @@ namespace Inventory.Application.Services.ProductsServices
             catch (Exception e)
             {
 
-                throw;
+                throw e;
             }
             return IsExist;
         }
@@ -104,7 +104,7 @@ namespace Inventory.Application.Services.ProductsServices
             catch (Exception e)
             {
 
-                throw;
+                throw e;
             }
             return IsExist;
         }

@@ -37,5 +37,6 @@ namespace Inventory.EntityFrameworkCore.DbContext
         public DbSet<DiscountType> discountTypes { get; set; }
         public DbSet<ProductCategories> ProductCategories { get; set; }
         public DbSet<ProductBrand> ProductBrands { get; set; }
+        public DbSet<CreditTerms> CreditTerms { get; set; }
     }
 }
