@@ -15,7 +15,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
-using static Inventory.Application.Interface.Common.IGenerealsetup;
+using Inventory.Core.Models.ApplicationUser;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Inventory.Application.Interface.ApplicationUser;
+using Inventory.Application.Services.ApplicationUserServices;
+using IdentityServer4.AccessTokenValidation;
+using System.IO;
+using Microsoft.AspNetCore.Hosting.Internal;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace Inventory.Web
 {
@@ -39,7 +50,32 @@ namespace Inventory.Web
             {
                 options.Filters.Add(new CorsAuthorizationFilterFactory(DefaultCorsPolicyName));
             });
-            services.AddScoped<ICustomer,CustomerService>();
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+             .AddEntityFrameworkStores<ApplicationDbContext>();
+            //adding autorization policy's
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(option => {
+                option.SaveToken = true;
+                option.RequireHttpsMetadata = false;
+                option.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["Jwt:Issuer"],
+                    ValidAudience = Configuration["Jwt:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                };
+
+            });
+            
+            services.AddScoped<ICustomer, CustomerService>();
             services.AddScoped<IDiscountType, DiscountTypeService>();
             services.AddScoped<IProductCategories, ProductCategoriesServices>();
             services.AddScoped<ICountry, CountryServices>();
@@ -47,6 +83,7 @@ namespace Inventory.Web
             services.AddScoped<IGenerealsetup.ICurrency, GeneralsetupServices>();
             services.AddScoped<IGenerealsetup.ICreditTerms, GeneralsetupServices>();
             services.AddScoped<IcustomerType, CustomerTypeServices>();
+            services.AddScoped<IApplicationUser, ApplicationUserServices>();
             //Configure CORS for angular2 UI
             services.AddCors(options =>
             {
@@ -60,21 +97,33 @@ namespace Inventory.Web
                         .AllowAnyMethod();
                 });
             });
-            
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             //Swagger - Enable this line and the related lines in Configure method to enable swagger UI
-            services.AddSwaggerGen(c => {
+            services.AddSwaggerGen(c =>
+            {
                 c.SwaggerDoc("v1", new Info
                 {
                     Version = "v1",
                     Title = "Inventory API",
                     Description = "ASP.NET Core Web API With Angular 8"
                 });
+
+                c.AddSecurityDefinition("oauth2", new ApiKeyScheme
+                {
+                    Description = "Standard Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
+                    In = "header",
+                    Name = "Authorization",
+                    Type = "apiKey"
+                });
+
+                c.OperationFilter<SecurityRequirementsOperationFilter>();
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        [System.Obsolete]
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -86,16 +135,27 @@ namespace Inventory.Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseDeveloperExceptionPage();
+            app.UseFileServer();
+            app.UseIdentity();
+            //app.Run(async (context) =>
+            //{
+            //    var msg = Configuration["message"];
+            //    await context.Response.WriteAsync(msg);
+            //});
             app.UseCors(DefaultCorsPolicyName);
             app.UseHttpsRedirection();
             app.UseMvc();
             app.UseStaticFiles();
+            app.UseAuthentication();
             // Enable middleware to serve generated Swagger as a JSON endpoint
             app.UseSwagger();
-            app.UseSwaggerUI(c => {
+            app.UseSwaggerUI(c =>
+            {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Inventory API V1");
             });
-
+            SeedDatabase.initialize(app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider);
         }
     }
 }
