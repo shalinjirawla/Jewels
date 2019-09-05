@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { CurrencyService } from '../../../Services/Masters-Services/general-setup.service';
+import { CurrencyService, CreditTermsService } from '../../../Services/Masters-Services/general-setup.service';
 import Swal from 'sweetalert2'
 import { from } from 'rxjs';
 const Toast = Swal.mixin({
@@ -33,6 +33,9 @@ export class GeneralSetupComponent implements OnInit {
   CreditTermModalModelTitleString: string = "Credit Terms";
   CreditTermSubmiited: boolean = false;
   CreditTermForm: FormGroup;
+  CreditTermResponce: any;
+  CreditTermList: any[];
+  CreditTermbtnText = "Save Change";
   // Credit Term end
   // Payment Term start
   @ViewChild('PaymentTermModal', { static: false }) public PaymentTermModal: ModalDirective;
@@ -42,13 +45,11 @@ export class GeneralSetupComponent implements OnInit {
   // Payment Term end
   constructor(private FormBuilder: FormBuilder,
     private CurrencyService: CurrencyService,
-
+    private CreditTermsService: CreditTermsService,
   ) { }
 
   ngOnInit() {
     this.OnloadCurrency();
-    this.GetCurrencyList();
-
     this.OnloadCrediTTerms();
     this.OnloadPaymentTerms();
   }
@@ -61,12 +62,12 @@ export class GeneralSetupComponent implements OnInit {
       Code: ['', Validators.required],
       Status: [''],
     });
+    this.GetCurrencyList();
   }
   public GetCurrencyList() {
     this.CurrencyService.GetCurrencyList().subscribe((responce: any) => {
       if (responce.status) {
         this.CurrencyList = responce.data;
-        console.log(responce.data);
       } else {
         Toast.fire({
           type: 'error',
@@ -95,6 +96,7 @@ export class GeneralSetupComponent implements OnInit {
       }
       this.CurrencySubmiited = false;
       this.CurrencybtnText = "Save Change";
+      this.CurrencyModelTitleString = "Add Currency";
     });
 
   }
@@ -103,6 +105,7 @@ export class GeneralSetupComponent implements OnInit {
       this.CurrencyService.GetCurrency(CurrencyId).subscribe((responce: any) => {
         if (responce.status) {
           this.CurrencybtnText = "Update Change";
+          this.CurrencyModelTitleString = "Upadte Currency";
           this.CurrencyResponce = responce.data;
           this.CurrencyForm.patchValue({
             CurrencyId: this.CurrencyResponce.currencyId,
@@ -151,13 +154,13 @@ export class GeneralSetupComponent implements OnInit {
         if (responce.status) {
           this.GetCurrencyList();
           Toast.fire({
-            type:'success',
-            title:responce.message,
+            type: 'success',
+            title: responce.message,
           })
-        }else{
+        } else {
           Toast.fire({
-            type:'error',
-            title:responce.message,
+            type: 'error',
+            title: responce.message,
           })
         }
       });
@@ -167,16 +170,85 @@ export class GeneralSetupComponent implements OnInit {
   //#endregion Currency Section End 
   public OnloadCrediTTerms() {
     this.CreditTermForm = this.FormBuilder.group({
-      CreditTermsId: [0],
-      CreditTermsCode: ['', Validators.required],
+      CreditTermId: [0],
+      Code: ['', Validators.required],
       Duration: ['', Validators.required],
       Description: [''],
     });
+    this.GetCreditTermsList();
+  }
+  public GetCreditTermsList() {
+    this.CreditTermsService.GetCreditTermsist().subscribe((responce: any) => {
+      if (responce.status) {
+        this.CreditTermList = responce.data;
+      }
+    })
   }
   public AddCreditTerms(CreditTermForm: FormControl) {
     this.CreditTermSubmiited = true;
     if (CreditTermForm.invalid) {
       return;
+    }
+    this.CreditTermsService.SaveCreditTerms(CreditTermForm.value).subscribe((responce: any) => {
+      if (responce.status) {
+        this.CreditTermSubmiited = false;
+        this.OnloadCrediTTerms();
+        Toast.fire({
+          type: 'success',
+          title: responce.message,
+        });
+      } else {
+        Toast.fire({
+          type: 'error',
+          title: responce.message,
+        });
+      }
+    });
+  }
+  public GetCreditTerms(CreditTermsId: any) {
+    if (CreditTermsId != 0) {
+      this.CreditTermsService.GetCreditTerms(CreditTermsId).subscribe((responce: any) => {
+        if (responce.status) {
+          this.CreditTermResponce = responce.data;
+          this.CreditTermForm.patchValue({
+            CreditTermId:  this.CreditTermResponce.creditTermId,
+            Code:  this.CreditTermResponce.code,
+            Duration:  this.CreditTermResponce.duration,
+            Description:  this.CreditTermResponce.description,
+          });
+        } else {
+          Toast.fire({
+            type: 'error',
+            title: responce.message,
+          })
+        }
+      });
+    }
+  }
+  public DeleteCreditTerms(CreditTermsId:any){
+    if (CreditTermsId != 0) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.value) {
+          this.CreditTermsService.DeleteCreditTerms(CreditTermsId).subscribe((responce: any) => {
+            this.GetCreditTermsList();
+            if (responce.status) {
+              Swal.fire(
+                'Deleted!',
+                responce.message,
+                'success'
+              )
+            }
+          });
+        }
+      })
     }
   }
   get fCreditTerms() { return this.CreditTermForm.controls; }

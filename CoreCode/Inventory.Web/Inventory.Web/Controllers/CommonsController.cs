@@ -253,25 +253,37 @@ namespace Inventory.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCreditTermsById(long CreditTermId)
         {
-            var credit = await _icreditTerms.GetCreditTerms(CreditTermId);
-            return Ok(GetAjaxResponse(true, string.Empty, credit));
+            CreditTermsVm vm = new CreditTermsVm();
+            if (CreditTermId != 0)
+            {
+                vm = await _icreditTerms.GetCreditTerms(CreditTermId);
+            }
+            else { return BadRequest(); }
+           
+            return Ok(GetAjaxResponse(true, string.Empty, vm));
         }
 
         [HttpPost]
         public async Task<IActionResult> AddCreditTerm(CreditTermsVm model)
         {
-            Status = await _icreditTerms.SaveCreditTerms(model);
-            if (Status)
+            if(ModelState.IsValid && model != null)
             {
-                Message = "Credit Terms Added....!";
+                Status = await _icreditTerms.SaveCreditTerms(model);
+                if (Status)
+                {
+                    Message = "Credit Terms Added....!";
+                }
+                else { Message = "Error Occurss..!"; }
             }
-            else { Message = "Error Occurss..!"; }
+            else { return BadRequest(); }
+            
             return Ok(GetAjaxResponse(Status, Message, null));
         }
 
         [HttpPost]
         public async Task<IActionResult> UpdateCreditTerm(long CreditTermId,CreditTermsVm model)
         {
+
             Status = await _icreditTerms.UpdateCreditTerms(CreditTermId,model);
             if (Status)
             {

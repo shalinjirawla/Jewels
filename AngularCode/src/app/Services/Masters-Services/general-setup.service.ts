@@ -62,5 +62,40 @@ export class CurrencyService {
   providedIn: 'root'
 })
 export class CreditTermsService {
+  Responce: any;
+  constructor(private HttpClient: HttpClient) { }
+  private BaseURL: string = "https://localhost:44315/api/Commons/";
 
+
+  public SaveCreditTerms(input: any): Observable<any> {
+    if (input.CreditTermId == 0) {
+      let url = this.BaseURL + `AddCreditTerm`;
+      return this.HttpClient.post(url, input, httpOption).pipe((responce: any) => {
+        return this.Responce = responce;
+      });
+    } else {
+      let url = this.BaseURL + `UpdateCreditTerm?CreditTermId=${input.CreditTermId}`;
+      return this.HttpClient.post(url, input, httpOption).pipe((responce: any) => {
+        return this.Responce = responce;
+      });
+    }
+  }
+  public GetCreditTermsist(): Observable<any> {
+    let url = this.BaseURL + `GetCreditTermsList`;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    })
+  }
+  public GetCreditTerms(CreditTermsId: any): Observable<any> {
+    let url = this.BaseURL + `GetCreditTermsById?CreditTermId=${CreditTermsId}`;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+  public DeleteCreditTerms(CreditTermsId: any): Observable<any> {
+    let url = this.BaseURL + `DeleteCreditTerm?CreditTermId=${CreditTermsId}`;
+    return this.HttpClient.delete(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
 }
