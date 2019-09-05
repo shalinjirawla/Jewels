@@ -273,37 +273,49 @@
                                     <div class="form-group col-sm-4">
                                         <label for="country"> COUNTRY
                                         </label>
-                                        <select class="form-control" (change)="changeCoutry($event.target.value)"  formControlName="countryId" id="customer_Coutry">
-                                            <option value="0">--Select--</option>
+                                        <select class="form-control"  [ngClass]="{ 'is-invalid': Addresssubmitted && add.countryId.errors }" (change)="changeCoutry($event.target.value)"  formControlName="countryId" id="customer_Coutry">
+                                            <option value="">--Select--</option>
                                             <option *ngFor="let item of CountryList" [value]="item.countryId">
                                                 {{item.countryName}}</option>
 
                                         </select>
+                                        <div *ngIf="Addresssubmitted && add.countryId.errors" class="invalid-feedback">
+                                            <div *ngIf="add.countryId.errors.required">Country is required</div>
+                                        </div>
                                     </div>
                                     <div class="form-group col-sm-2"></div>
                                     <div class="form-group col-sm-4">
                                         <label for="state">STATE
                                         </label>
-                                        <input class="form-control" (keypress)="allowalpha($event)"
+                                        <input class="form-control" (keypress)="allowalpha($event)" [ngClass]="{ 'is-invalid': Addresssubmitted && add.state.errors }"
                                             formControlName="state" autocomplete="off" id="customer_State"
                                             placeholder="State" type="text">
+                                            <div *ngIf="Addresssubmitted && add.state.errors" class="invalid-feedback">
+                                                <div *ngIf="add.state.errors.required">State is required</div>
+                                            </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-sm-4">
                                         <label for="city"> CITY / TOWN
                                         </label>
-                                        <input class="form-control" (keypress)="allowalpha($event)"
+                                        <input class="form-control"  [ngClass]="{ 'is-invalid': Addresssubmitted && add.city.errors }" (keypress)="allowalpha($event)"
                                             formControlName="city" autocomplete="off" id="Customer_City"
                                             placeholder="City" type="text">
+                                            <div *ngIf="Addresssubmitted && add.city.errors" class="invalid-feedback">
+                                                <div *ngIf="add.city.errors.required">City is required</div>
+                                            </div>
                                     </div>
                                     <div class="form-group col-sm-2"></div>
                                     <div class="form-group col-sm-4">
                                         <label for="postal-code">POSTAL CODE
                                         </label>
-                                        <input class="form-control" (keypress)="allownumber($event)" autocomplete="off"
+                                        <input class="form-control"  [ngClass]="{ 'is-invalid': Addresssubmitted && add.postalCode.errors }" (keypress)="allownumber($event)" autocomplete="off"
                                             formControlName="postalCode" id="Customer_Code" placeholder="Postal Code"
                                             type="text">
+                                            <div *ngIf="Addresssubmitted && add.postalCode.errors" class="invalid-feedback">
+                                                <div *ngIf="add.postalCode.errors.required">Postal Code is required</div>
+                                            </div>
                                     </div>
                                 </div>
 
@@ -448,7 +460,7 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" id="basic-addon1">{{countryCode}}</span>
                                             </div>
-                                            <input class="form-control" formControlName="fax" id="Customer_contact_Fax"
+                                            <input class="form-control" autocomplete="off" formControlName="fax" id="Customer_contact_Fax"  (keypress)="allownumber($event)" 
                                                 placeholder="Fax" type="text">
                                         </div>
                                     </div>
@@ -457,7 +469,7 @@
                                     <div class="form-group col-sm-4">
                                         <label for="office"> OFFICE
                                         </label>
-                                        <input class="form-control" id="Customer_contact_Office"
+                                        <input class="form-control" autocomplete="off" (keypress)="allownumber($event)"  id="Customer_contact_Office"
                                             formControlName="office" placeholder="Office" type="text">
                                     </div>
                                 </div>

@@ -4,14 +4,16 @@ using Inventory.EntityFrameworkCore.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Inventory.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190905050247_Chanegs_in_Country_Entity")]
+    partial class Chanegs_in_Country_Entity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,31 +120,6 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasKey("DsicounttTypeId");
 
                     b.ToTable("discountTypes");
-                });
-
-            modelBuilder.Entity("Inventory.Core.Models.Commons.TaxCode", b =>
-                {
-                    b.Property<long>("TaxId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<double>("Amount");
-
-                    b.Property<string>("Code");
-
-                    b.Property<DateTime?>("CreationTime");
-
-                    b.Property<long?>("CreatorUserId");
-
-                    b.Property<bool>("IsActive");
-
-                    b.Property<DateTime?>("LastModificationTime");
-
-                    b.Property<long?>("LastModifierUserId");
-
-                    b.HasKey("TaxId");
-
-                    b.ToTable("TaxCode");
                 });
 
             modelBuilder.Entity("Inventory.Core.Models.Country", b =>
