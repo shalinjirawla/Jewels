@@ -268,6 +268,7 @@ namespace Inventory.Application.Services.CommonsServices
             Boolean IsExist = false;
             try
             {
+               
                 if (model != null)
                 {
                     IsExist = await IsCreditTermsExist(model.Code);
@@ -291,6 +292,7 @@ namespace Inventory.Application.Services.CommonsServices
                     else
                     {
                         Result = false;
+                       
                     }
                 }
             }
