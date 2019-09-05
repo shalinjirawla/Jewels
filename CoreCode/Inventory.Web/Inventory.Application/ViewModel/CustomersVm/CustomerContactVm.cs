@@ -13,6 +13,7 @@ namespace Inventory.Application.ViewModel.CustomersVm
         public string LastName { get; set; }
         public bool DefaultContact { get; set; }
         public string Mobile { get; set; }
+        public Nullable<long> CountryId { get; set; }
         public string Fax { get; set; }
         public string Office { get; set; }
     }

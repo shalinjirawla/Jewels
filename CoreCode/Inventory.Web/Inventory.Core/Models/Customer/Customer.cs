@@ -19,7 +19,8 @@ namespace Inventory.Core.Models.Customer
         public string Website { get; set; }
         public string TaxRegistrationNumber { get; set; }
         public string Remarks { get; set; }
-        public string DefaultCreditTerms { get; set; }
+        [ForeignKey("creditTerms")]
+        public Nullable<long> CreditTermId { get; set; }
         public double DefaultCreditLimit { get; set; }
         [ForeignKey("discountType")]
         public Nullable<long> DiscountOption { get; set; }
@@ -34,6 +35,7 @@ namespace Inventory.Core.Models.Customer
 
 
         public CustomerType CustomerType { get; set; }
+        public CreditTerms creditTerms { get; set; }
         public Currency.Currency Currency { get; set; }
         public DiscountType discountType { get; set; }
     }

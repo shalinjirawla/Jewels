@@ -125,8 +125,16 @@
                                 <div class="form-group col-sm-4">
                                     <label for="city">TAX REGISTRATION NUMBER</label>
                                     <input class="form-control" id="TAX-REGISTRATION-NUMBER"
-                                        placeholder="TAX REGISTRATION NUMBER" formControlName="taxRegistrationNumber"
+                                        placeholder="TAX REGISTRATION NUMBER" formControlName="taxRegistrationNumber" [ngClass]="{ 'is-invalid': submitted && f.taxRegistrationNumber.errors }"
                                         type="text">
+                                    <div *ngIf="submitted && f.taxRegistrationNumber.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="f.taxRegistrationNumber.errors.maxlength">Tax Registration Number is allow only(9)
+                                        </div>
+                                        <div *ngIf="f.taxRegistrationNumber.errors.minlength">Tax Registration Number is allow only(9)
+                                        </div>
+
+                                    </div>
                                 </div>
                                 <div class="form-group col-sm-2"></div>
                                 <div class="form-group col-sm-4">
@@ -142,8 +150,14 @@
                                             tooltip="Selecting a default credit term saves you time when a document is created"
                                             placement="right"></i>
                                     </label>
-                                    <input class="form-control" formControlName="defaultCreditTerms"
-                                        id="DEFAULT-CREDIT-TERMS" placeholder="DEFAULT CREDIT TERMS" type="text">
+                                    <select class="form-control" formControlName="defaultCreditTerms" id="ccyear">
+
+                                        <option value="">--Select--</option>
+                                        <option *ngFor="let type of CreditTermsList" [value]="type.creditTermId">
+                                            {{type.code}}
+                                        </option>
+
+                                    </select>
                                 </div>
                                 <div class="form-group col-sm-2"></div>
                                 <div class="form-group col-sm-4">
@@ -170,7 +184,7 @@
                                 <div class="form-group col-sm-4">
                                     <label for="postal-code">DISCOUNT AMOUNT
                                     </label>
-                                    <input class="form-control" pattern="[0-9]*" digitOnly
+                                    <input class="form-control" digitOnly
                                         formControlName="discountAmount" id="DEFAULT-CREDIT-LIMIT"
                                         (keypress)="allownumberwithdot($event)" autocomplete="off"
                                         placeholder="DISCOUNT AMOUNT" type="text">
@@ -221,11 +235,12 @@
                                                     <!-- <span class=" ml-2" >
                                                         <i class="fa fa-check"></i>
                                                     </span> -->
-                                                    <span  [ngClass]="{'text-primary': type.defaultAddress}"    class="ml-2"
-                                                        (click)="SetDeafult(type.defaultAddress,i)"> 
+                                                    <span [ngClass]="{'text-primary': type.defaultAddress}" class="ml-2"
+                                                        (click)="SetDeafult(type.defaultAddress,i)">
                                                         <i class="fa fa-check"></i>
                                                     </span>
-                                                    <span [hidden]="type.defaultAddress" class="text-danger ml-2" (click)="DeleteAddress(i)">
+                                                    <span [hidden]="type.defaultAddress" class="text-danger ml-2"
+                                                        (click)="DeleteAddress(i)">
                                                         <i class="fa fa-trash"></i></span> </span>
                                             </td>
                                         </tr>
@@ -273,7 +288,10 @@
                                     <div class="form-group col-sm-4">
                                         <label for="country"> COUNTRY
                                         </label>
-                                        <select class="form-control"  [ngClass]="{ 'is-invalid': Addresssubmitted && add.countryId.errors }" (change)="changeCoutry($event.target.value)"  formControlName="countryId" id="customer_Coutry">
+                                        <select class="form-control"
+                                            [ngClass]="{ 'is-invalid': Addresssubmitted && add.countryId.errors }"
+                                            (change)="changeCoutry($event.target.value)" formControlName="countryId"
+                                            id="customer_Coutry">
                                             <option value="">--Select--</option>
                                             <option *ngFor="let item of CountryList" [value]="item.countryId">
                                                 {{item.countryName}}</option>
@@ -287,35 +305,39 @@
                                     <div class="form-group col-sm-4">
                                         <label for="state">STATE
                                         </label>
-                                        <input class="form-control" (keypress)="allowalpha($event)" [ngClass]="{ 'is-invalid': Addresssubmitted && add.state.errors }"
+                                        <input class="form-control" (keypress)="allowalpha($event)"
+                                            [ngClass]="{ 'is-invalid': Addresssubmitted && add.state.errors }"
                                             formControlName="state" autocomplete="off" id="customer_State"
                                             placeholder="State" type="text">
-                                            <div *ngIf="Addresssubmitted && add.state.errors" class="invalid-feedback">
-                                                <div *ngIf="add.state.errors.required">State is required</div>
-                                            </div>
+                                        <div *ngIf="Addresssubmitted && add.state.errors" class="invalid-feedback">
+                                            <div *ngIf="add.state.errors.required">State is required</div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-sm-4">
                                         <label for="city"> CITY / TOWN
                                         </label>
-                                        <input class="form-control"  [ngClass]="{ 'is-invalid': Addresssubmitted && add.city.errors }" (keypress)="allowalpha($event)"
-                                            formControlName="city" autocomplete="off" id="Customer_City"
-                                            placeholder="City" type="text">
-                                            <div *ngIf="Addresssubmitted && add.city.errors" class="invalid-feedback">
-                                                <div *ngIf="add.city.errors.required">City is required</div>
-                                            </div>
+                                        <input class="form-control"
+                                            [ngClass]="{ 'is-invalid': Addresssubmitted && add.city.errors }"
+                                            (keypress)="allowalpha($event)" formControlName="city" autocomplete="off"
+                                            id="Customer_City" placeholder="City" type="text">
+                                        <div *ngIf="Addresssubmitted && add.city.errors" class="invalid-feedback">
+                                            <div *ngIf="add.city.errors.required">City is required</div>
+                                        </div>
                                     </div>
                                     <div class="form-group col-sm-2"></div>
                                     <div class="form-group col-sm-4">
                                         <label for="postal-code">POSTAL CODE
                                         </label>
-                                        <input class="form-control"  [ngClass]="{ 'is-invalid': Addresssubmitted && add.postalCode.errors }" (keypress)="allownumber($event)" autocomplete="off"
+                                        <input class="form-control"
+                                            [ngClass]="{ 'is-invalid': Addresssubmitted && add.postalCode.errors }"
+                                            (keypress)="allownumber($event)" autocomplete="off"
                                             formControlName="postalCode" id="Customer_Code" placeholder="Postal Code"
                                             type="text">
-                                            <div *ngIf="Addresssubmitted && add.postalCode.errors" class="invalid-feedback">
-                                                <div *ngIf="add.postalCode.errors.required">Postal Code is required</div>
-                                            </div>
+                                        <div *ngIf="Addresssubmitted && add.postalCode.errors" class="invalid-feedback">
+                                            <div *ngIf="add.postalCode.errors.required">Postal Code is required</div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -367,11 +389,11 @@
                                             <td>{{Contact.mobile}}</td>
                                             <td>{{Contact.email}}</td>
                                             <td>
-                                                <span style="cursor: pointer;" class="btn-lg mr-5">
+                                                <span style="cursor: pointer;" class="btn-lg">
                                                     <span class="text-primary " (click)="EditContact(i)">
                                                         <i class="fa fa-pencil"></i>
                                                     </span>
-                                                    <span  *ngIf="Contact.defaultContact" class="text-primary ml-2">
+                                                    <span *ngIf="Contact.defaultContact" class="text-primary ml-2">
                                                         <i class="fa fa-check"></i>
                                                     </span>
                                                     <span *ngIf="!Contact.defaultContact" class="ml-2"
@@ -443,13 +465,22 @@
                                     <div class="form-group col-sm-4">
                                         <label for="mobile"> MOBILE
                                         </label>
-                                        <input class="form-control"
-                                            [ngClass]="{ 'is-invalid': contactsubmitted && con.mobile.errors }"
-                                            (keypress)="allownumber($event)" id="Customer_contact_Mobile"
-                                            autocomplete="off" formControlName="mobile" placeholder="Mobile"
-                                            type="text">
-                                        <div *ngIf="contactsubmitted && con.mobile.errors" class="invalid-feedback">
-                                            <div *ngIf="con.mobile.errors.maxlength">Mobile Number is Maximum(10)</div>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">{{countryCode}}</span>
+                                            </div>
+                                            <input class="form-control"
+                                                [ngClass]="{ 'is-invalid': contactsubmitted && con.mobile.errors }"
+                                                (keypress)="allownumber($event)" id="Customer_contact_Mobile"
+                                                autocomplete="off" formControlName="mobile" placeholder="Mobile"
+                                                type="text">
+                                            <div *ngIf="contactsubmitted && con.mobile.errors" class="invalid-feedback">
+                                                <div *ngIf="con.mobile.errors.maxlength">Mobile Number is Maximum(10)
+                                                </div>
+                                                <div *ngIf="con.mobile.errors.minlength">Mobile Number is Minimum(10)
+                                                </div>
+
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-2"></div>
@@ -460,17 +491,42 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" id="basic-addon1">{{countryCode}}</span>
                                             </div>
-                                            <input class="form-control" autocomplete="off" formControlName="fax" id="Customer_contact_Fax"  (keypress)="allownumber($event)" 
-                                                placeholder="Fax" type="text">
+                                            <input class="form-control" autocomplete="off" formControlName="fax"
+                                                id="Customer_contact_Fax"
+                                                [ngClass]="{ 'is-invalid': contactsubmitted && con.fax.errors }"
+                                                (keypress)="allownumber($event)" placeholder="Area Code & Fax Number "
+                                                type="text">
+                                            <div *ngIf="contactsubmitted && con.fax.errors" class="invalid-feedback">
+                                                <div *ngIf="con.fax.errors.maxlength">Fax Number is Maximum(13)
+                                                </div>
+                                                <div *ngIf="con.fax.errors.minlength">Fax Number is Minimum(9)
+                                                </div>
+
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-sm-4">
-                                        <label for="office"> OFFICE
+                                        <label for="office"> PHONE
                                         </label>
-                                        <input class="form-control" autocomplete="off" (keypress)="allownumber($event)"  id="Customer_contact_Office"
-                                            formControlName="office" placeholder="Office" type="text">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">{{countryCode}}</span>
+                                            </div>
+                                            <input class="form-control" autocomplete="off"
+                                                (keypress)="allownumber($event)"
+                                                [ngClass]="{ 'is-invalid': contactsubmitted && con.office.errors }"
+                                                id="Customer_contact_Office" formControlName="office"
+                                                placeholder="Area Code & Phone Number" type="text">
+                                            <div *ngIf="contactsubmitted && con.office.errors" class="invalid-feedback">
+                                                <div *ngIf="con.office.errors.maxlength">Phone Number is Maximum(13)
+                                                </div>
+                                                <div *ngIf="con.office.errors.minlength">Phone Number is Minimum(8)
+                                                </div>
+
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 

@@ -4,14 +4,16 @@ using Inventory.EntityFrameworkCore.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Inventory.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190905092813_Changes_Customer_Entity")]
+    partial class Changes_Customer_Entity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -385,9 +387,6 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
-
                     b.Property<string>("Name")
                         .HasMaxLength(256);
 
@@ -402,8 +401,6 @@ namespace Inventory.EntityFrameworkCore.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityRole");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -416,9 +413,6 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<string>("ClaimValue");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
-
                     b.Property<string>("RoleId")
                         .IsRequired();
 
@@ -427,8 +421,6 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetRoleClaims");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityRoleClaim<string>");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -441,9 +433,6 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<string>("ClaimValue");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
-
                     b.Property<string>("UserId")
                         .IsRequired();
 
@@ -452,8 +441,6 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserClaims");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUserClaim<string>");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -461,9 +448,6 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.Property<string>("LoginProvider");
 
                     b.Property<string>("ProviderKey");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
 
                     b.Property<string>("ProviderDisplayName");
 
@@ -475,8 +459,6 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("AspNetUserLogins");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUserLogin<string>");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -485,16 +467,11 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<string>("RoleId");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
-
                     b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUserRole<string>");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -505,82 +482,11 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
-
                     b.Property<string>("Value");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUserToken<string>");
-                });
-
-            modelBuilder.Entity("Inventory.Core.Models.ApplicationUser.ApplicationRole", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
-
-                    b.HasDiscriminator().HasValue("ApplicationRole");
-                });
-
-            modelBuilder.Entity("Inventory.Core.Models.ApplicationUser.ApplicationRoleClaim", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>");
-
-                    b.Property<string>("RoleId1");
-
-                    b.HasIndex("RoleId1");
-
-                    b.HasDiscriminator().HasValue("ApplicationRoleClaim");
-                });
-
-            modelBuilder.Entity("Inventory.Core.Models.ApplicationUser.ApplicationUserClaim", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>");
-
-                    b.Property<string>("UserId1");
-
-                    b.HasIndex("UserId1");
-
-                    b.HasDiscriminator().HasValue("ApplicationUserClaim");
-                });
-
-            modelBuilder.Entity("Inventory.Core.Models.ApplicationUser.ApplicationUserLogin", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>");
-
-                    b.Property<string>("UserId1");
-
-                    b.HasIndex("UserId1");
-
-                    b.HasDiscriminator().HasValue("ApplicationUserLogin");
-                });
-
-            modelBuilder.Entity("Inventory.Core.Models.ApplicationUser.ApplicationUserRole", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserRole<string>");
-
-                    b.Property<string>("RoleId1");
-
-                    b.Property<string>("UserId1");
-
-                    b.HasIndex("RoleId1");
-
-                    b.HasIndex("UserId1");
-
-                    b.HasDiscriminator().HasValue("ApplicationUserRole");
-                });
-
-            modelBuilder.Entity("Inventory.Core.Models.ApplicationUser.ApplicationUserToken", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUserToken<string>");
-
-                    b.Property<string>("UserId1");
-
-                    b.HasIndex("UserId1");
-
-                    b.HasDiscriminator().HasValue("ApplicationUserToken");
                 });
 
             modelBuilder.Entity("Inventory.Core.Models.Customer.Customer", b =>
@@ -668,45 +574,6 @@ namespace Inventory.EntityFrameworkCore.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Inventory.Core.Models.ApplicationUser.ApplicationRoleClaim", b =>
-                {
-                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationRole", "Role")
-                        .WithMany("RoleClaims")
-                        .HasForeignKey("RoleId1");
-                });
-
-            modelBuilder.Entity("Inventory.Core.Models.ApplicationUser.ApplicationUserClaim", b =>
-                {
-                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
-                        .WithMany("Claims")
-                        .HasForeignKey("UserId1");
-                });
-
-            modelBuilder.Entity("Inventory.Core.Models.ApplicationUser.ApplicationUserLogin", b =>
-                {
-                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
-                        .WithMany("Logins")
-                        .HasForeignKey("UserId1");
-                });
-
-            modelBuilder.Entity("Inventory.Core.Models.ApplicationUser.ApplicationUserRole", b =>
-                {
-                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationRole", "Role")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("RoleId1");
-
-                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("UserId1");
-                });
-
-            modelBuilder.Entity("Inventory.Core.Models.ApplicationUser.ApplicationUserToken", b =>
-                {
-                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
-                        .WithMany("Tokens")
-                        .HasForeignKey("UserId1");
                 });
 #pragma warning restore 612, 618
         }

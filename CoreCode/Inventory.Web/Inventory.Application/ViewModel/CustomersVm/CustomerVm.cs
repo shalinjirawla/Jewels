@@ -13,7 +13,7 @@ namespace Inventory.Application.ViewModel
         public string Website { get; set; }
         public string TaxRegistrationNumber { get; set; }
         public string Remarks { get; set; }
-        public string DefaultCreditTerms { get; set; }
+        public Nullable<long> DefaultCreditTerms { get; set; }
         public string DefaultCreditLimit { get; set; }
         public string DiscountOption { get; set; }
         public string DiscountAmount { get; set; }
