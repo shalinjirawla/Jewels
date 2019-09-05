@@ -43,6 +43,14 @@ export class GeneralSetupComponent implements OnInit {
   PaymentTermSubmiited: boolean = false;
   PaymentTermForm: FormGroup;
   // Payment Term end
+
+  //Country Start
+  @ViewChild('PaymentTermModal', { static: false }) public CountryModal: ModalDirective;
+  CountryModalTitle: string = "Countries"
+  Countrysubmit: boolean = false;
+  CountryForm: FormGroup;
+  CoutryList: any;
+  //Country End
   constructor(private FormBuilder: FormBuilder,
     private CurrencyService: CurrencyService,
     private CreditTermsService: CreditTermsService,
@@ -52,6 +60,7 @@ export class GeneralSetupComponent implements OnInit {
     this.OnloadCurrency();
     this.OnloadCrediTTerms();
     this.OnloadPaymentTerms();
+    this.onLoadCoutry();
   }
   //#region Currency Section Start 
 
@@ -211,10 +220,10 @@ export class GeneralSetupComponent implements OnInit {
         if (responce.status) {
           this.CreditTermResponce = responce.data;
           this.CreditTermForm.patchValue({
-            CreditTermId:  this.CreditTermResponce.creditTermId,
-            Code:  this.CreditTermResponce.code,
-            Duration:  this.CreditTermResponce.duration,
-            Description:  this.CreditTermResponce.description,
+            CreditTermId: this.CreditTermResponce.creditTermId,
+            Code: this.CreditTermResponce.code,
+            Duration: this.CreditTermResponce.duration,
+            Description: this.CreditTermResponce.description,
           });
         } else {
           Toast.fire({
@@ -225,7 +234,7 @@ export class GeneralSetupComponent implements OnInit {
       });
     }
   }
-  public DeleteCreditTerms(CreditTermsId:any){
+  public DeleteCreditTerms(CreditTermsId: any) {
     if (CreditTermsId != 0) {
       Swal.fire({
         title: 'Are you sure?',
@@ -270,4 +279,87 @@ export class GeneralSetupComponent implements OnInit {
   }
   get fPaymentTerms() { return this.PaymentTermForm.controls; }
   //#endregion Payment Section Edn
+
+  //#region Country Section Start
+
+  public onLoadCoutry() {
+    this.GetCountryList();
+    this.CountryForm = this.FormBuilder.group({
+      countryId: [0],
+      countryName: ['', Validators.required],
+      countryCode: [''],
+    })
+  }
+
+  get counform() { return this.CountryForm.controls }
+
+  public AddCoutry(CountryForm: FormControl) {
+    this.Countrysubmit = true;
+    if (CountryForm.invalid) {
+      return;
+    }
+    this.Countrysubmit = false;
+    this.CreditTermsService.AddCountry(CountryForm.value).subscribe((responce: any) => {
+      debugger
+      let result = responce.data;
+      if (responce.status) {
+        Toast.fire({
+          type: 'success',
+          title: responce.message,
+        });
+        this.onLoadCoutry();
+      }
+    })
+
+  }
+
+  public GetCountryList() {
+    this.CreditTermsService.GetCountryList().subscribe((responce: any) => {
+      let result = responce.data;
+      this.CoutryList = result;
+    })
+  }
+
+  public GetCountry(i: any) {
+    this.CreditTermsService.GetCountry(i).subscribe((responce: any) => {
+      let result = responce.data;
+      if (responce.status) {
+        this.CountryForm.patchValue({
+          countryId: result.countryId,
+          countryName: result.countryName,
+          countryCode: result.countryCode
+        })
+      }
+    })
+  }
+
+  public DeleteCountry(i: any) {
+    debugger
+    if(i!=0){
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.value) {
+          this.CreditTermsService.DeleteCountry(i).subscribe((responce: any) => {
+            if (responce.status) {
+              Swal.fire(
+                'Deleted!',
+                responce.message,
+                'success'
+              )
+              this.onLoadCoutry();
+            }
+          });
+        }
+      })
+    }
+  }
+
+  //#endregion Country Section Edn
 }
