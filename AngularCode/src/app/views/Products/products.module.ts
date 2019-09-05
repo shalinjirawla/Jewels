@@ -10,13 +10,14 @@ import { CategoriesComponent } from './categories/categories.component';
 import { DataTablesModule } from 'angular-datatables';
 import { RawMaterialsComponent } from './raw-materials/raw-materials.component';
 import {BrandComponent} from './brand/brand.component';
+import {ProductsRoutingModule} from './products-routing.module';
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ModalModule.forRoot(),
-    // BsDropdownModule.forRoot(),
     TabsModule,
+    ProductsRoutingModule,
     // CarouselModule.forRoot(),
     // CollapseModule.forRoot(),
     // PaginationModule.forRoot(),

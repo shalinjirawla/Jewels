@@ -99,7 +99,7 @@ export const navItems: NavData[] = [
       },
       {
         name: 'Services',
-        url: '/base/carousels',
+        url: '/products/carousels',
         icon: 'icon-fire'
       },
       {

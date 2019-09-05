@@ -56,6 +56,8 @@ export class CustomerComponent implements OnInit {
   CountryList: any;
   CustomerTypeList: any;
   DiscountTypeList: any;
+  CreditTermsList:any;
+
   CustomerList: any = { "Customer": [] };
 
   secondAddress: any;
@@ -71,6 +73,7 @@ export class CustomerComponent implements OnInit {
     this.GetCurrencyList();
     this.GetCountry();
     this.GetDiscountType();
+    this.GetCreditTermsList();
 
   }
   onLoad() {
@@ -80,7 +83,7 @@ export class CustomerComponent implements OnInit {
       customerTypeId: [''],
       customerCode: [''],
       website: ['', Validators.pattern(reg)],
-      taxRegistrationNumber: [''],
+      taxRegistrationNumber: ['',[Validators.maxLength(9),Validators.minLength(9)]],
       remarks: [''],
       defaultCreditTerms: [''],
       defaultCreditLimit: [''],
@@ -103,13 +106,14 @@ export class CustomerComponent implements OnInit {
 
     this.AddCustomerContactForm = this.formBuilder.group({
       contactId: ['0'],
+      CountryId: [0],
       designation: [''],
       email: ['', Validators.email],
       firstName: ['', Validators.required],
       lastName: [''],
-      mobile: ['', Validators.maxLength(10)],
-      fax: [''],
-      office: [''],
+      mobile: ['', [Validators.maxLength(10), Validators.minLength(10)]],
+      fax: ['', [Validators.maxLength(13), Validators.minLength(9)]],
+      office: ['',[Validators.maxLength(13), Validators.minLength(8)]],
       defaultContact: [false],
 
     })
@@ -202,7 +206,6 @@ export class CustomerComponent implements OnInit {
     });
   }
   CheckAddress(event) {
-    debugger
     this.BillingShippingAddress = event;
   }
   changeaddresstype(event) {
@@ -221,7 +224,6 @@ export class CustomerComponent implements OnInit {
     }
   }
   AddCustomerAddress(AddCustomerAddressForm: FormControl) {
-    debugger
     this.Addresssubmitted = true;
     if (this.AddCustomerAddressForm.invalid) {
       return;
@@ -285,7 +287,15 @@ export class CustomerComponent implements OnInit {
       var elementPos = this.AddressList.Address.map(function (x) { return x.addressId; }).indexOf(AddCustomerAddressForm.value.addressId);
       this.Address = AddCustomerAddressForm.value;
       var objectFound = this.AddressList.Address[elementPos];
-
+      if (this.Address.defaultAddress == true) {
+        if (this.Address.countryId == "1") {
+          this.countryCode = "+91";
+        } else if (this.Address.countryId == "2") {
+          this.countryCode = "+1";
+        } else {
+          this.countryCode = "";
+        }
+      }
       this.AddressList.Address[elementPos] = this.Address;
       if (this.AddressList.Address.length != 0) {
         this.AddressLenghtcount = true;
@@ -301,10 +311,10 @@ export class CustomerComponent implements OnInit {
       addressId: ['0'],
       addressType: ['', Validators.required],
       address: ['', Validators.required],
-      countryId: ['0'],
-      state: [''],
-      city: [''],
-      postalCode: [''],
+      countryId: ['', Validators.required],
+      state: ['', Validators.required],
+      city: ['', Validators.required],
+      postalCode: ['', Validators.required],
       defaultAddress: [false],
     })
     this.addaddresstitle = "Add";
@@ -319,20 +329,19 @@ export class CustomerComponent implements OnInit {
       addressId: ['0'],
       addressType: ['', Validators.required],
       address: ['', Validators.required],
-      countryId: ['0'],
-      state: [''],
-      city: [''],
-      postalCode: [''],
+      countryId: ['', Validators.required],
+      state: ['', Validators.required],
+      city: ['', Validators.required],
+      postalCode: ['', Validators.required],
       defaultAddress: [false],
     })
   }
   SetDeafult(valaue: any, i: any) {
-    let AnyDefaultSet:boolean=false;
+    let AnyDefaultSet: boolean = false;
     let a = this.AddressList.Address.map((result: any, index) => {
       // if (result.defaultAddress) {
       //   this.AddressList.Address[index].defaultAddress = false;
       // }else{this.AddressList.Address[index].defaultAddress = true;}
-      debugger
       if (i == index && !valaue) {
         this.AddressList.Address[index].defaultAddress = true;
         if (this.AddressList.Address[index].countryId == "1") {
@@ -342,11 +351,11 @@ export class CustomerComponent implements OnInit {
         } else {
           this.countryCode = "";
         }
-        AnyDefaultSet=true;
+        AnyDefaultSet = true;
       } else {
         this.AddressList.Address[index].defaultAddress = false;
-        if(!AnyDefaultSet){
-        this.countryCode = "";
+        if (!AnyDefaultSet) {
+          this.countryCode = "";
         }
       }
     })
@@ -400,7 +409,6 @@ export class CustomerComponent implements OnInit {
   }
 
   AddCustomerContact(AddCustomerContactForm: FormControl) {
-    debugger
     this.contactsubmitted = true;
     if (this.AddCustomerContactForm.invalid) {
       return;
@@ -490,13 +498,14 @@ export class CustomerComponent implements OnInit {
     this.addcontacttitle = "Add";
     this.AddCustomerContactForm = this.formBuilder.group({
       contactId: ['0'],
+      CountryId: [0],
       designation: [''],
       email: ['', Validators.email],
       firstName: ['', Validators.required],
       lastName: [''],
-      mobile: ['', Validators.maxLength(10)],
-      fax: [''],
-      office: [''],
+      mobile: ['', [Validators.maxLength(10), Validators.minLength(10)]],
+      fax: ['', [Validators.maxLength(13), Validators.minLength(9)]],
+      office: ['',[Validators.maxLength(13), Validators.minLength(8)]],
       defaultContact: [false],
 
     })
@@ -519,7 +528,6 @@ export class CustomerComponent implements OnInit {
   }
 
   CancelAddCustomerContact() {
-    debugger
     if (this.ContactList.Contact.length == 0) {
       this.ContactLenghtcount = false;
     }
@@ -528,13 +536,14 @@ export class CustomerComponent implements OnInit {
     }
     this.AddCustomerContactForm = this.formBuilder.group({
       contactId: ['0'],
+      CountryId: [0],
       designation: [''],
       email: ['', Validators.email],
       firstName: ['', Validators.required],
       lastName: [''],
-      mobile: ['', Validators.maxLength(10)],
-      fax: [''],
-      office: [''],
+      mobile: ['', [Validators.maxLength(10), Validators.minLength(10)]],
+      fax: ['', [Validators.maxLength(13), Validators.minLength(9)]],
+      office: ['',[Validators.maxLength(13), Validators.minLength(8)]],
       defaultContact: [false],
 
     })
@@ -542,7 +551,7 @@ export class CustomerComponent implements OnInit {
 
   GetCurrencyList() {
     this.customerservice.GetCurrency().subscribe((responce: any) => {
-      this.CurrencyList = responce.data;
+      this.CurrencyList = responce.body.data;
     });
   }
 
@@ -589,7 +598,7 @@ export class CustomerComponent implements OnInit {
   EditCustomer(i: any) {
     this.customerservice.GetCustomerById(i).subscribe((responce: any) => {
       let result = responce.body.data;
-      debugger
+
       this.AddCustomerForm.patchValue({
         customerId: result.customerId,
         customerName: result.customerName,
@@ -617,6 +626,16 @@ export class CustomerComponent implements OnInit {
       }
 
       result.addressList.address.map((res: any) => {
+        if (res.defaultAddress) {
+          if (res.countryId == "1") {
+            this.countryCode = "+91";
+          } else if (res.countryId == "2") {
+            this.countryCode = "+1";
+          } else {
+            this.countryCode = "";
+          }
+        }
+        debugger
         this.AddressList.Address.push(res);
       })
       if (this.AddressList.Address.length == 0) {
@@ -661,4 +680,12 @@ export class CustomerComponent implements OnInit {
 
   }
 
+  GetCreditTermsList(){
+    let result;
+    this.customerservice.GetCreditTermsList().subscribe((responce: any) => {
+      result=responce;
+      this.CreditTermsList=result.body.data;
+    });
+  }
+  
 }

@@ -6,7 +6,7 @@ export class CustomerModel{
     Website : string;
     TaxRegistrationNumber : string;
     Remarks : string;
-    DefaultCreditTerms : string;
+    DefaultCreditTerms : number;
     DefaultCreditLimit : string;
     DiscountOption : number;
     DiscountAmount : number;

@@ -167,4 +167,22 @@ export class CustomerService {
     });
   }
 
+  public GetCreditTermsList(): Observable<any> {
+    let Result;
+    let url_ = this.BaseURL + `/api/Commons/GetCreditTermsList`;
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_: any = {
+      observe: "response",
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      })
+    };
+
+    return this.HttpClient.request("get", url_, options_).pipe((response_: any) => {
+      return Result = response_;
+    });
+  }
+
 }

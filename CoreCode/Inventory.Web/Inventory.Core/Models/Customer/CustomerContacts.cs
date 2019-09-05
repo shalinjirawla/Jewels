@@ -19,9 +19,11 @@ namespace Inventory.Core.Models.Customer
         public string LastName { get; set; }
         public string Mobile { get; set; }
         public bool DefaultContact { get; set; }
+        public Nullable<long> CountryId { get; set; }
         public string Fax { get; set; }
         public string Office { get; set; }
 
         public Customer Customer { get; set; }
+        public Country country { get; set; }
     }
 }

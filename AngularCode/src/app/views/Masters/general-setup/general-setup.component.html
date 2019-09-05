@@ -141,11 +141,12 @@
                                     <tr *ngFor="let item of CurrencyList">
                                         <td>{{item.currencyName}}</td>
                                         <td>{{item.code}}</td>
-                                        <td> 
+                                        <td>
                                             <label class="switch switch-3d switch-success">
-                                            <input type="checkbox" class="switch-input" [checked]="item.status" (change)="CurrencyChange($event.target.checked,item.currencyId)">
-                                            <span class="switch-slider"></span>
-                                          </label></td>
+                                                <input type="checkbox" class="switch-input" [checked]="item.status"
+                                                    (change)="CurrencyChange($event.target.checked,item.currencyId)">
+                                                <span class="switch-slider"></span>
+                                            </label></td>
                                         <td>
                                             <span class="text-primary mr-3" style="cursor: pointer;"
                                                 (click)="GetCurrency(item.currencyId)">
@@ -195,7 +196,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" (click)="CurrencyModal.hide()">Close</button>
                 <button type="button" class="btn btn-primary" (click)="AddCurrency(CurrencyForm)">{{CurrencybtnText}}
-                    </button>
+                </button>
             </div>
         </div>
     </div>
@@ -222,27 +223,41 @@
                                         <th>Credit Terms Code</th>
                                         <th>Duration</th>
                                         <th class="text-center">Action</th>
-                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <tr *ngFor="let item of CreditTermList">
+                                        <td>{{item.code}}</td>
+                                        <td>{{item.duration}}</td>
 
+                                        <td>
+                                            <span class="text-primary mr-3" style="cursor: pointer;"
+                                                (click)="GetCreditTerms(item.creditTermId)">
+                                                <i class="fa fa-pencil"></i>
+                                            </span>
+
+                                            <span class="text-danger " style="cursor: pointer;"
+                                                (click)="DeleteCreditTerms(item.creditTermId)">
+                                                <i class="fa fa-trash"></i>
+                                            </span>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                     <form [formGroup]="CreditTermForm" class="formData-modal col-sm-6 ">
                         <h2>{{CreditTermModalModelTitleString}}</h2>
-                        <input type="hidden" formControlName="CreditTermsId">
+                        <input type="hidden" formControlName="CreditTermId">
                         <div class="row">
                             <div class="form-group col-sm-12">
                                 <label>CREDIT TERM CODE</label>
-                                <input class="form-control" id="CreditTermsCode" formControlName="CreditTermsCode"
+                                <input class="form-control" id="Code" formControlName="Code"
                                     placeholder="CREDIT TERM CODE" type="text"
-                                    [ngClass]="{ 'is-invalid': CreditTermSubmiited && fCreditTerms.CreditTermsCode.errors }">
-                                <div *ngIf="CreditTermSubmiited && fCreditTerms.CreditTermsCode.errors"
+                                    [ngClass]="{ 'is-invalid': CreditTermSubmiited && fCreditTerms.Code.errors }">
+                                <div *ngIf="CreditTermSubmiited && fCreditTerms.Code.errors"
                                     class="invalid-feedback">
-                                    <div *ngIf="fCreditTerms.CreditTermsCode.errors.required">Credit Term Code is
+                                    <div *ngIf="fCreditTerms.Code.errors.required">Credit Term Code is
                                         required</div>
                                 </div>
                             </div>

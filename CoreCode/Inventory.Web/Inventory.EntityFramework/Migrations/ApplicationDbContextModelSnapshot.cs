@@ -193,6 +193,8 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<long>("CreatorUserId");
 
+                    b.Property<long?>("CreditTermId");
+
                     b.Property<string>("CusromerCode");
 
                     b.Property<string>("CustomerName");
@@ -200,8 +202,6 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.Property<long?>("CustomerTypeId");
 
                     b.Property<double>("DefaultCreditLimit");
-
-                    b.Property<string>("DefaultCreditTerms");
 
                     b.Property<long?>("DefaultCurrency");
 
@@ -222,6 +222,8 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.Property<string>("Website");
 
                     b.HasKey("CustomerId");
+
+                    b.HasIndex("CreditTermId");
 
                     b.HasIndex("CustomerTypeId");
 
@@ -269,6 +271,8 @@ namespace Inventory.EntityFrameworkCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<long?>("CountryId");
+
                     b.Property<long>("CustomerId");
 
                     b.Property<bool>("DefaultContact");
@@ -288,6 +292,8 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.Property<string>("Office");
 
                     b.HasKey("CustomerContactId");
+
+                    b.HasIndex("CountryId");
 
                     b.HasIndex("CustomerId");
 
@@ -483,6 +489,10 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
             modelBuilder.Entity("Inventory.Core.Models.Customer.Customer", b =>
                 {
+                    b.HasOne("Inventory.Core.Models.Commons.CreditTerms", "creditTerms")
+                        .WithMany()
+                        .HasForeignKey("CreditTermId");
+
                     b.HasOne("Inventory.Core.Models.Customer.CustomerType", "CustomerType")
                         .WithMany()
                         .HasForeignKey("CustomerTypeId");
@@ -509,6 +519,10 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
             modelBuilder.Entity("Inventory.Core.Models.Customer.CustomerContacts", b =>
                 {
+                    b.HasOne("Inventory.Core.Models.Country", "country")
+                        .WithMany()
+                        .HasForeignKey("CountryId");
+
                     b.HasOne("Inventory.Core.Models.Customer.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")

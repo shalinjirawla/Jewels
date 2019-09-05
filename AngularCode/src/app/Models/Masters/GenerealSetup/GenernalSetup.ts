@@ -5,8 +5,8 @@ export class CurrencyModel{
      public Status:undefined|any;
 }
 export class CreditTermsModel{
-    CreditTermsId:undefined|any;
-    CreditTermsCode:undefined|any;
+    CreditTermId:undefined|any;
+    Code:undefined|any;
     Duration:undefined|any;
     Description:undefined|any;
 }
