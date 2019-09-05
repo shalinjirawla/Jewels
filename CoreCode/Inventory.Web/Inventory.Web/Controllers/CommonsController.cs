@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Inventory.Application.Interface;
 using Inventory.Application.Interface.Common;
 using Inventory.Application.ViewModel;
+using Inventory.Application.ViewModel.CommonsVm;
 using Inventory.Web.share;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -21,16 +22,18 @@ namespace Inventory.Web.Controllers
         private readonly IDiscountType _discountType;
         private readonly IGenerealsetup.ICurrency _currency;
         private readonly ICountry _icountry;
+        private readonly ICreditTerms _icreditTerms;
         public Boolean Status = false;
         public string Message = "";
         public CommonsController(IDiscountType discountType,
-            IGenerealsetup.ICurrency currency,
+            IGenerealsetup.ICurrency currency, ICreditTerms icreditTerms,
             ICountry country
             )
         {
             _discountType = discountType;
             _currency = currency;
             _icountry = country;
+            _icreditTerms = icreditTerms;
         }
         [NonAction]
         public ApiResponse GetAjaxResponse(bool status, string message, object data)
@@ -174,11 +177,23 @@ namespace Inventory.Web.Controllers
             return Ok(GetAjaxResponse(Status, Message, null));
         }
         [HttpGet]
-        public async Task<IActionResult> Currencychange(long CurrencyId, Boolean Status)
+        public async Task<IActionResult> Currencychange(long CurrencyId, Boolean Statuschange)
         {
             if (CurrencyId != 0)
             {
-                await _currency.DeleteCurrency(CurrencyId);
+                Status = await _currency.CurrencyChange(CurrencyId, Statuschange);
+                if (Status)
+                {
+                    if (Statuschange)
+                    {
+                        Message = "Currency is Active..!";
+                    }
+                    else
+                    {
+                        Message = "Currency is Deactive...!";
+                    }
+                }
+                else { }
             }
             else { return BadRequest(); }
             return Ok(GetAjaxResponse(Status, Message, null));
@@ -226,6 +241,58 @@ namespace Inventory.Web.Controllers
 
         #endregion Country APIs End
 
+        #region Credit Terms APIs Start
 
+        [HttpGet]
+        public async Task<IActionResult> GetCreditTermsList()
+        {
+            var credit = await _icreditTerms.GetCreditTermsList();
+            return Ok(GetAjaxResponse(true, string.Empty, credit));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCreditTermsById(long CreditTermId)
+        {
+            var credit = await _icreditTerms.GetCreditTerms(CreditTermId);
+            return Ok(GetAjaxResponse(true, string.Empty, credit));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddCreditTerm(CreditTermsVm model)
+        {
+            Status = await _icreditTerms.SaveCreditTerms(model);
+            if (Status)
+            {
+                Message = "Credit Terms Added....!";
+            }
+            else { Message = "Error Occurss..!"; }
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateCreditTerm(long CreditTermId,CreditTermsVm model)
+        {
+            Status = await _icreditTerms.UpdateCreditTerms(CreditTermId,model);
+            if (Status)
+            {
+                Message = "Credit Terms is Updated....!";
+            }
+            else { Message = "Error Occurss..!"; }
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteCreditTerm(long CreditTermId)
+        {
+            Status = await _icreditTerms.DeleteCreditTerms(CreditTermId);
+            if (Status)
+            {
+                Message = "Credit Terms is Deleted...!";
+            }
+            else { Message = "Error Occurss..!"; }
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        #endregion Credit Terms APIs End
     }
 }

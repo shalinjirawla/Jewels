@@ -52,7 +52,7 @@ export class CurrencyService {
     });
   }
   public CureencyStatusChange(CurrencyId,Status):Observable<any>{
-    let url=this.BaseURL+``;
+    let url=this.BaseURL+`Currencychange?CurrencyId=${CurrencyId}&Statuschange=${Status}`;
     return this.HttpClient.get(url,httpOption).pipe((responce:any)=>{
       return this.Responce=responce;
     });

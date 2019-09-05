@@ -30,6 +30,7 @@ namespace Inventory.Application.Services.CommonsServices
                     {
                         Country country = new Country();
                         country.CountryName = model.CountryName;
+                        country.CountryCode = model.CountryCode;
                         _DbContext.country.Add(country);
                         _DbContext.SaveChanges();
                         CountryId = int.Parse(country.CountryId.ToString());
@@ -39,6 +40,7 @@ namespace Inventory.Application.Services.CommonsServices
                         Country country = new Country();
                         country.CountryId = model.CountryId;
                         country.CountryName = model.CountryName;
+                        country.CountryCode = model.CountryCode;
                         _DbContext.Update(country);
                         _DbContext.SaveChanges();
                         CountryId = int.Parse(country.CountryId.ToString());
@@ -79,6 +81,7 @@ namespace Inventory.Application.Services.CommonsServices
                 var a = _DbContext.country.Where(x => x.CountryId == id).FirstOrDefault();
                 country.CountryId = a.CountryId;
                 country.CountryName = a.CountryName;
+                country.CountryCode = a.CountryCode;
             }
             catch (Exception ex)
             {
@@ -98,6 +101,7 @@ namespace Inventory.Application.Services.CommonsServices
                     CountryVm country = new CountryVm();
                     country.CountryId = a.CountryId;
                     country.CountryName = a.CountryName;
+                    country.CountryCode = a.CountryCode;
                     countryList.Add(country);
                 }
 

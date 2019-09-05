@@ -94,10 +94,10 @@ export class CustomerComponent implements OnInit {
       addressId: ['0'],
       addressType: ['', Validators.required],
       address: ['', Validators.required],
-      countryId: ['0'],
-      state: [''],
-      city: [''],
-      postalCode: [''],
+      countryId: ['', Validators.required],
+      state: ['', Validators.required],
+      city: ['', Validators.required],
+      postalCode: ['', Validators.required],
       defaultAddress: [false],
     })
 
