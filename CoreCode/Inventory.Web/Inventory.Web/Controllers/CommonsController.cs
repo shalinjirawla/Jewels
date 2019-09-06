@@ -112,7 +112,15 @@ namespace Inventory.Web.Controllers
             list = await _currency.GetCurrencyList();
             return Ok(GetAjaxResponse(true, "List Of Currency", list));
         }
-        [HttpPost]
+        [HttpGet]
+        public async Task<IActionResult> GetActiveCurrencys()
+        {
+            List<CurrencyVm> list = new List<CurrencyVm>();
+            list = await _currency.GetActiveCurrencyList();
+            return Ok(GetAjaxResponse(true, "List Of Currency", list));
+        }
+        
+       [HttpPost]
         public async Task<IActionResult> SaveCurrency(CurrencyVm model)
         {
             if (ModelState.IsValid)

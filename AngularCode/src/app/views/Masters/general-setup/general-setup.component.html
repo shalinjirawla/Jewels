@@ -77,14 +77,14 @@
                         </button>
                         <button
                             class="btn m-2 p-4  bg-white btn-outline-primary box-shadow b-4x b-light btn-lg m-r m-t w-160"
-                            tabindex="0" (click)="CountryModal.show()">
+                            tabindex="0" (click)="OpenCountryModal()">
                             <i class="fa fa-flag fa-4x text-muted text-center clearfix"></i><br />
                             <label>Country</label>
                             <p>5</p>
                         </button>
                         <button
                             class="btn m-2 p-4  bg-white btn-outline-primary box-shadow b-4x b-light btn-lg m-r m-t w-160"
-                            tabindex="0">
+                            tabindex="0" (click)="OpenLocationModal()">
                             <i class="fa fa-home fa-4x text-muted text-center clearfix"></i><br />
                             <label> Location </label>
                             <p>5</p>
@@ -459,7 +459,97 @@
                 </tabset>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="CountryModal.hide()">Close</button>
+                <button type="button" class="btn btn-secondary" (click)="CountryReset()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal #LocationModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Location</h4>
+                <button type="button" class="close" (click)="LocationModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="" >
+                <tabset (click)="locationtabclick($event.target.id)">
+                    <tab id="locationList">
+                        <ng-template tabHeading><i class="fa fa-list text-info"></i> Location List </ng-template>
+                        <div class="table-responsive animated flash">
+                            <table class="table " id="AddressList">
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Name</th>
+                                        <th class="text-center">Action</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- <tr *ngFor="let item of CoutryList">
+                                        <td>{{item.countryName}}</td>
+                                        <td>+{{item.countryCode}}</td>
+                                        <td>
+                                            <span style="margin-left: 25%;">
+                                                <span class="text-primary mr-3" style="cursor: pointer;"
+                                                    (click)="GetCountry(item.countryId)">
+                                                    <i class="fa fa-pencil"></i>
+                                                </span>
+
+                                                <span class="text-danger " style="cursor: pointer;"
+                                                    (click)="DeleteCountry(item.countryId)">
+                                                    <i class="fa fa-trash"></i>
+                                                </span>
+                                            </span>
+                                        </td>
+                                    </tr> -->
+                                </tbody>
+                            </table>
+                          
+                        </div>
+                    </tab>
+                    <tab id="locationForm">
+                        <ng-template tabHeading><i class="fa fa-plus text-info"> Location Form</i>
+                        </ng-template>
+                        <form [formGroup]="LocationForm" class="formData-modal col-sm-12">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <input type="hidden" formControlName="countryId">
+                                    <label for="city">LOCATION NAME</label>
+                                    <input class="form-control" formControlName="countryName"
+                                        (keypress)="allowalpha($event)"
+                                        [ngClass]="{ 'is-invalid': Countrysubmit && counform.countryName.errors }"
+                                        placeholder="Country Name" type="text">
+                                    <div *ngIf="Countrysubmit && counform.countryName.errors" class="invalid-feedback">
+                                        <div *ngIf="counform.countryName.errors.required">Country Name is required</div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label for="postal-code">CODE</label>
+                                    <input class="form-control" id="" formControlName="countryCode"
+                                        [ngClass]="{ 'is-invalid': Countrysubmit && counform.countryCode.errors }"
+                                        (keypress)="allownumber($event)" placeholder="Country Code" type="text">
+                                    <div *ngIf="Countrysubmit && counform.countryCode.errors" class="invalid-feedback">
+                                        <div *ngIf="counform.countryCode.errors.required">Country Name is required</div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                        <div class="form-group col-sm-12">
+                            <button type="button" class="btn btn-primary pull-right"
+                                (click)="AddCoutry(CountryForm)">Save
+                                changes</button><br />
+                        </div>
+                    </tab>
+                </tabset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="LocationReset()">Close</button>
             </div>
         </div>
     </div>

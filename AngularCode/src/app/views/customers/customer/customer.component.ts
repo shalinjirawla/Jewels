@@ -125,6 +125,7 @@ export class CustomerComponent implements OnInit {
 
   addnewcustomer() {
     this.largeModal.show();
+    this.onLoad();
   }
 
   allownumberwithdot(event: any) {
@@ -585,6 +586,7 @@ export class CustomerComponent implements OnInit {
 
   GetCurrencyList() {
     this.customerservice.GetCurrency().subscribe((responce: any) => {
+      debugger
       this.CurrencyList = responce.body.data;
     });
   }

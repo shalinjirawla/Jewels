@@ -45,13 +45,22 @@ export class GeneralSetupComponent implements OnInit {
   // Payment Term end
 
   //Country Start
-  @ViewChild('PaymentTermModal', { static: false }) public CountryModal: ModalDirective;
+  @ViewChild('CountryModal', { static: false }) public CountryModal: ModalDirective;
   CountryModalTitle: string = "Countries"
   Countrysubmit: boolean = false;
   CountryForm: FormGroup;
   tabflag: boolean = false;
   CoutryList: any;
   //Country End
+
+  //Location Start
+  @ViewChild('LocationModal', { static: false }) public LocationModal: ModalDirective;
+  LocationTitle: string = "Location"
+  Locationsubmit: boolean = false;
+  LocationForm: FormGroup;
+  CLocationList: any;
+  //Location End
+
   constructor(private FormBuilder: FormBuilder,
     private CurrencyService: CurrencyService,
     private CreditTermsService: CreditTermsService,
@@ -300,6 +309,19 @@ export class GeneralSetupComponent implements OnInit {
     }
   }
 
+  OpenCountryModal(){
+    this.CountryModal.show();
+    document.getElementById("CountryList-link").click();
+  }
+
+  CountryReset(){
+    debugger
+    this.onLoadCoutry();
+    this.Countrysubmit = false;
+    this.CountryModal.hide();
+    
+  }
+
   public AddCoutry(CountryForm: FormControl) {
     this.Countrysubmit = true;
     if (CountryForm.invalid) {
@@ -369,7 +391,21 @@ export class GeneralSetupComponent implements OnInit {
     }
   }
 
-  //#endregion Country Section Edn
+  //#endregion Country Section End
+
+  //#region Location Section Start
+
+  OpenLocationModal(){
+    this.LocationModal.show();
+  }
+
+  LocationReset(){
+    this.LocationModal.hide();
+  }
+
+  locationtabclick(event){
+  }
+  //#endregion Location Section End
 
   allowalpha(event: any) {
     const pattern = /[a-z\+\A-Z\+ +\a-z\+\A-Z+]/;

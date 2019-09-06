@@ -147,6 +147,38 @@ namespace Inventory.Application.Services.CommonsServices
             return list;
         }
 
+        public async Task<List<CurrencyVm>> GetActiveCurrencyList()
+        {
+            List<CurrencyVm> list = new List<CurrencyVm>();
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var data = _DbContext.Currencies.Where(x=>x.IsActive==true).ToList();
+                    if (data != null && data.Count > 0)
+                    {
+                        foreach (var item in data)
+                        {
+                            CurrencyVm Currency = new CurrencyVm
+                            {
+                                CurrencyId = item.CurrencyId,
+                                CurrencyName = item.CurrencyName,
+                                Code = item.Code,
+                                Status = item.IsActive,
+                            };
+                            list.Add(Currency);
+                        }
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+            return list;
+        }
+
         public async Task<bool> UpdateCurrency(long CurrencyId, CurrencyVm currencyVm)
         {
             try
