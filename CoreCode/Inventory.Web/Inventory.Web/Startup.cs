@@ -27,6 +27,8 @@ using IdentityServer4.AccessTokenValidation;
 using System.IO;
 using Microsoft.AspNetCore.Hosting.Internal;
 using Swashbuckle.AspNetCore.Filters;
+using Microsoft.AspNetCore.Diagnostics;
+using Newtonsoft.Json;
 
 namespace Inventory.Web
 {
@@ -96,6 +98,7 @@ namespace Inventory.Web
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
+
             });
 
 
@@ -144,17 +147,51 @@ namespace Inventory.Web
             //    var msg = Configuration["message"];
             //    await context.Response.WriteAsync(msg);
             //});
-            app.UseCors(DefaultCorsPolicyName);
-            app.UseHttpsRedirection();
-            app.UseMvc();
-            app.UseStaticFiles();
-            app.UseAuthentication();
+           
             // Enable middleware to serve generated Swagger as a JSON endpoint
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Inventory API V1");
             });
+            app.UseExceptionHandler(appBuilder =>
+            {
+                appBuilder.Use(async (context, next) =>
+                {
+                    var error = context.Features[typeof(IExceptionHandlerFeature)] as IExceptionHandlerFeature;
+
+                    //when authorization has failed, should retrun a json message to client
+                    if (error != null && error.Error is SecurityTokenExpiredException)
+                    {
+                        context.Response.StatusCode = 401;
+                        context.Response.ContentType = "application/json";
+
+                        await context.Response.WriteAsync(JsonConvert.SerializeObject(new
+                        {
+                            State = "Unauthorized",
+                            Msg = "token expired"
+                        }));
+                    }
+                    //when orther error, retrun a error message json to client
+                    else if (error != null && error.Error != null)
+                    {
+                        context.Response.StatusCode = 500;
+                        context.Response.ContentType = "application/json";
+                        await context.Response.WriteAsync(JsonConvert.SerializeObject(new
+                        {
+                            State = "Internal Server Error",
+                            Msg = error.Error.Message
+                        }));
+                    }
+                    //when no error, do next.
+                    else await next();
+                });
+            });
+            app.UseCors(DefaultCorsPolicyName);
+            app.UseHttpsRedirection();
+            app.UseMvc();
+            app.UseStaticFiles();
+            app.UseAuthentication();
             SeedDatabase.initialize(app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider);
         }
     }

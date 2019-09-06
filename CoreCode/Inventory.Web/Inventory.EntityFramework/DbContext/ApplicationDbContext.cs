@@ -4,6 +4,7 @@ using Inventory.Core.Models.Commons;
 using Inventory.Core.Models.Currency;
 using Inventory.Core.Models.Customer;
 using Inventory.Core.Models.Products;
+using Inventory.Core.Models.Tenants;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,6 +29,7 @@ namespace Inventory.EntityFrameworkCore.DbContext
         }
 
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<Tenants> Tenants { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<CustomerType> CustomerTypes { get; set; }
         public DbSet<Currency> Currencies { get; set; }

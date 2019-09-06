@@ -2,11 +2,12 @@ import { Component, OnInit, ViewChild, AbstractType } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { CustomerService } from '../../../Services/Customer-Services/customer.service'
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-
 import { map } from 'rxjs/operators';
 import { nextTick } from 'q';
 import { JsonPipe } from '@angular/common';
 import Swal from 'sweetalert2'
+import { from } from 'rxjs';
+import * as $ from 'jquery';
 const Toast = Swal.mixin({
   toast: true,
   position: 'top-end',
@@ -68,14 +69,16 @@ export class CustomerComponent implements OnInit {
   AddressList: any = { "Address": [] };
   AddCustomervalue: any = [];
   ngOnInit() {
+   
     this.onLoad();
     this.GetCustomerType();
     this.GetCurrencyList();
     this.GetCountry();
     this.GetDiscountType();
     this.GetCreditTermsList();
-
+    
   }
+  
   onLoad() {
     this.AddCustomerForm = this.formBuilder.group({
       customerId: [0],
@@ -127,7 +130,7 @@ export class CustomerComponent implements OnInit {
     this.largeModal.show();
     this.onLoad();
   }
-
+ 
   allownumberwithdot(event: any) {
     const pattern = /[0-9\+\.]/;
     let inputChar = String.fromCharCode(event.charCode);
@@ -149,6 +152,9 @@ export class CustomerComponent implements OnInit {
     if (!pattern.test(inputChar)) {
       event.preventDefault();
     }
+  }
+  click(event){
+    debugger
   }
 
 

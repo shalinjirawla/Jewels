@@ -4,14 +4,16 @@ using Inventory.EntityFrameworkCore.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Inventory.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190906073058_Inevntory_Tenant")]
+    partial class Inevntory_Tenant
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -377,39 +379,6 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasKey("CategoriesId");
 
                     b.ToTable("ProductCategories");
-                });
-
-            modelBuilder.Entity("Inventory.Core.Models.Tenants.Tenants", b =>
-                {
-                    b.Property<long>("TenantId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("BusinessRegisterNumber");
-
-                    b.Property<DateTime?>("CreationTime");
-
-                    b.Property<long?>("CreatorUserId");
-
-                    b.Property<bool>("IsActive");
-
-                    b.Property<bool?>("IsInTrialPeriod");
-
-                    b.Property<DateTime?>("LastModificationTime");
-
-                    b.Property<long?>("LastModifierUserId");
-
-                    b.Property<string>("Logo");
-
-                    b.Property<DateTime?>("SubscriptionEndDateUtc");
-
-                    b.Property<string>("TagRegisterNumber");
-
-                    b.Property<string>("TenantName");
-
-                    b.HasKey("TenantId");
-
-                    b.ToTable("Tenants");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
