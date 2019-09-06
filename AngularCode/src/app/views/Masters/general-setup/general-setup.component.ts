@@ -49,6 +49,7 @@ export class GeneralSetupComponent implements OnInit {
   CountryModalTitle: string = "Countries"
   Countrysubmit: boolean = false;
   CountryForm: FormGroup;
+  tabflag: boolean = false;
   CoutryList: any;
   //Country End
   constructor(private FormBuilder: FormBuilder,
@@ -287,11 +288,17 @@ export class GeneralSetupComponent implements OnInit {
     this.CountryForm = this.FormBuilder.group({
       countryId: [0],
       countryName: ['', Validators.required],
-      countryCode: [''],
+      countryCode: ['', Validators.required],
     })
-  }
+  };
 
   get counform() { return this.CountryForm.controls }
+
+  tabclick(event){
+    if(event=="CountryList-link"){
+      this.onLoadCoutry();
+    }
+  }
 
   public AddCoutry(CountryForm: FormControl) {
     this.Countrysubmit = true;
@@ -300,7 +307,6 @@ export class GeneralSetupComponent implements OnInit {
     }
     this.Countrysubmit = false;
     this.CreditTermsService.AddCountry(CountryForm.value).subscribe((responce: any) => {
-      debugger
       let result = responce.data;
       if (responce.status) {
         Toast.fire({
@@ -308,7 +314,9 @@ export class GeneralSetupComponent implements OnInit {
           title: responce.message,
         });
         this.onLoadCoutry();
+        document.getElementById("CountryList-link").click();
       }
+
     })
 
   }
@@ -330,12 +338,12 @@ export class GeneralSetupComponent implements OnInit {
           countryCode: result.countryCode
         })
       }
+      document.getElementById("CountryForm-link").click();
     })
   }
 
   public DeleteCountry(i: any) {
-    debugger
-    if(i!=0){
+    if (i != 0) {
       Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
@@ -362,4 +370,21 @@ export class GeneralSetupComponent implements OnInit {
   }
 
   //#endregion Country Section Edn
+
+  allowalpha(event: any) {
+    const pattern = /[a-z\+\A-Z\+ +\a-z\+\A-Z+]/;
+    let inputChar = String.fromCharCode(event.charCode);
+    if (!pattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+
+  allownumber(event: any) {
+    const pattern = /[0-9]/;
+    let inputChar = String.fromCharCode(event.charCode);
+    if (!pattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+
 }

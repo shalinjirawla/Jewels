@@ -290,7 +290,7 @@
                                         </label>
                                         <select class="form-control"
                                             [ngClass]="{ 'is-invalid': Addresssubmitted && add.countryId.errors }"
-                                            (change)="changeCoutry($event.target.value)" formControlName="countryId"
+                                            formControlName="countryId"
                                             id="customer_Coutry">
                                             <option value="">--Select--</option>
                                             <option *ngFor="let item of CountryList" [value]="item.countryId">
