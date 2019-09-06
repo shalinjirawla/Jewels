@@ -98,4 +98,30 @@ export class CreditTermsService {
       return this.Responce = responce;
     });
   }
+  public AddCountry(input):Observable<any>{
+    let url = this.BaseURL + `AddUpdateCountry`;
+    return this.HttpClient.post(url, JSON.stringify(input), httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+  public GetCountryList():Observable<any>{
+    let url = this.BaseURL + `GetCountryList`;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+
+  public GetCountry(i):Observable<any>{
+    let url = this.BaseURL + `GetCountry?Id=`+i;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+
+  public DeleteCountry(i):Observable<any>{
+    let url = this.BaseURL + `DeleteCountry?Id=`+i;
+    return this.HttpClient.delete(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
 }

@@ -43,6 +43,15 @@ export class GeneralSetupComponent implements OnInit {
   PaymentTermSubmiited: boolean = false;
   PaymentTermForm: FormGroup;
   // Payment Term end
+
+  //Country Start
+  @ViewChild('PaymentTermModal', { static: false }) public CountryModal: ModalDirective;
+  CountryModalTitle: string = "Countries"
+  Countrysubmit: boolean = false;
+  CountryForm: FormGroup;
+  tabflag: boolean = false;
+  CoutryList: any;
+  //Country End
   constructor(private FormBuilder: FormBuilder,
     private CurrencyService: CurrencyService,
     private CreditTermsService: CreditTermsService,
@@ -52,6 +61,7 @@ export class GeneralSetupComponent implements OnInit {
     this.OnloadCurrency();
     this.OnloadCrediTTerms();
     this.OnloadPaymentTerms();
+    this.onLoadCoutry();
   }
   //#region Currency Section Start 
 
@@ -211,10 +221,10 @@ export class GeneralSetupComponent implements OnInit {
         if (responce.status) {
           this.CreditTermResponce = responce.data;
           this.CreditTermForm.patchValue({
-            CreditTermId:  this.CreditTermResponce.creditTermId,
-            Code:  this.CreditTermResponce.code,
-            Duration:  this.CreditTermResponce.duration,
-            Description:  this.CreditTermResponce.description,
+            CreditTermId: this.CreditTermResponce.creditTermId,
+            Code: this.CreditTermResponce.code,
+            Duration: this.CreditTermResponce.duration,
+            Description: this.CreditTermResponce.description,
           });
         } else {
           Toast.fire({
@@ -225,7 +235,7 @@ export class GeneralSetupComponent implements OnInit {
       });
     }
   }
-  public DeleteCreditTerms(CreditTermsId:any){
+  public DeleteCreditTerms(CreditTermsId: any) {
     if (CreditTermsId != 0) {
       Swal.fire({
         title: 'Are you sure?',
@@ -270,4 +280,111 @@ export class GeneralSetupComponent implements OnInit {
   }
   get fPaymentTerms() { return this.PaymentTermForm.controls; }
   //#endregion Payment Section Edn
+
+  //#region Country Section Start
+
+  public onLoadCoutry() {
+    this.GetCountryList();
+    this.CountryForm = this.FormBuilder.group({
+      countryId: [0],
+      countryName: ['', Validators.required],
+      countryCode: ['', Validators.required],
+    })
+  };
+
+  get counform() { return this.CountryForm.controls }
+
+  tabclick(event){
+    if(event=="CountryList-link"){
+      this.onLoadCoutry();
+    }
+  }
+
+  public AddCoutry(CountryForm: FormControl) {
+    this.Countrysubmit = true;
+    if (CountryForm.invalid) {
+      return;
+    }
+    this.Countrysubmit = false;
+    this.CreditTermsService.AddCountry(CountryForm.value).subscribe((responce: any) => {
+      let result = responce.data;
+      if (responce.status) {
+        Toast.fire({
+          type: 'success',
+          title: responce.message,
+        });
+        this.onLoadCoutry();
+        document.getElementById("CountryList-link").click();
+      }
+
+    })
+
+  }
+
+  public GetCountryList() {
+    this.CreditTermsService.GetCountryList().subscribe((responce: any) => {
+      let result = responce.data;
+      this.CoutryList = result;
+    })
+  }
+
+  public GetCountry(i: any) {
+    this.CreditTermsService.GetCountry(i).subscribe((responce: any) => {
+      let result = responce.data;
+      if (responce.status) {
+        this.CountryForm.patchValue({
+          countryId: result.countryId,
+          countryName: result.countryName,
+          countryCode: result.countryCode
+        })
+      }
+      document.getElementById("CountryForm-link").click();
+    })
+  }
+
+  public DeleteCountry(i: any) {
+    if (i != 0) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.value) {
+          this.CreditTermsService.DeleteCountry(i).subscribe((responce: any) => {
+            if (responce.status) {
+              Swal.fire(
+                'Deleted!',
+                responce.message,
+                'success'
+              )
+              this.onLoadCoutry();
+            }
+          });
+        }
+      })
+    }
+  }
+
+  //#endregion Country Section Edn
+
+  allowalpha(event: any) {
+    const pattern = /[a-z\+\A-Z\+ +\a-z\+\A-Z+]/;
+    let inputChar = String.fromCharCode(event.charCode);
+    if (!pattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+
+  allownumber(event: any) {
+    const pattern = /[0-9]/;
+    let inputChar = String.fromCharCode(event.charCode);
+    if (!pattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+
 }

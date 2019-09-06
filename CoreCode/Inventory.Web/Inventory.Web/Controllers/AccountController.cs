@@ -55,6 +55,7 @@ namespace Inventory.Web.Controllers
                     Email = "hemant@gmail.com",
                     SecurityStamp = Guid.NewGuid().ToString(),
                     UserName = "hemant",
+                    
                 };
                 var result=await _UserManager.CreateAsync(user,model.Password);
 

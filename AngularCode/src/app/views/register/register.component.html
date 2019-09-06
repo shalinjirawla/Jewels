@@ -1,53 +1,58 @@
-<div class="app-body">
-  <main class="main d-flex align-items-center">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6 mx-auto">
-          <div class="card mx-4">
-            <div class="card-body p-4">
-              <form>
-                <h1>Register</h1>
-                <p class="text-muted">Create your account</p>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="icon-user"></i></span>
-                  </div>
-                  <input type="text" class="form-control" placeholder="Username" autocomplete="username" required>
-                </div>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">@</span>
-                  </div>
-                  <input type="text" class="form-control" placeholder="Email" autocomplete="email" required>
-                </div>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="icon-lock"></i></span>
-                  </div>
-                  <input type="password" class="form-control" placeholder="Password" autocomplete="new-password" required>
-                </div>
-                <div class="input-group mb-4">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="icon-lock"></i></span>
-                  </div>
-                  <input type="password" class="form-control" placeholder="Repeat password" autocomplete="new-password" required>
-                </div>
-                <button type="button" class="btn btn-block btn-success">Create Account</button>
-              </form>
+<div class="limiter">
+    <div class="container-login100">
+        <div class="wrap-login100">
+            <div class="login100-form-title" style="background-image: url(assets/images/bg-01.jpg);">
+                <span class="login100-form-title-1">
+                    Register
+                </span>
             </div>
-            <div class="card-footer p-4">
-              <div class="row">
-                <div class="col-6">
-                  <button class="btn btn-block btn-facebook" type="button"><span>facebook</span></button>
+
+            <form class="login100-form validate-form" [formGroup]="RegisterForm">
+                <input type="hidden" formControlName="TenantId">
+                <div class="wrap-input100  m-b-6">
+                    <span class="label-input100">Company</span>
+                    <input class="input100 form-control" type="text" formControlName="TenantName" name="Company"
+                        [ngClass]="{ 'is-invalid': FormSubmitted && f.TenantName.errors }" placeholder="Enter Company">
                 </div>
-                <div class="col-6">
-                  <button class="btn btn-block btn-twitter" type="button"><span>twitter</span></button>
+                <div class="wrap-input100  m-b-6" data-validate="Email Id is required">
+                    <span class="label-input100">Username</span>
+                    <input class="input100 form-control" type="text" formControlName="EmailId" name="EmailId"
+                        placeholder="Enter Email Id" [ngClass]="{ 'is-invalid': FormSubmitted && f.EmailId.errors }">
+                    <span class="focus-input100"></span>
                 </div>
-              </div>
-            </div>
-          </div>
+                <div class="wrap-input100  m-b-8" data-validate="Password is required">
+                    <span class="label-input100">Password</span>
+                    <input class="input100 form-control" type="password" formControlName="Password" name="pass"
+                        placeholder="Enter Password" [ngClass]="{ 'is-invalid': FormSubmitted && f.Password.errors }">
+                    <span class="focus-input100"></span>
+                </div>
+                <div class="wrap-input100  m-b-6" data-validate="Confirm Password is required">
+                    <span class="label-input100 ">Confirm Password</span>
+                    <input class="input100 form-control" type="text" formControlName="ConfirmPassword" name="Confirm"
+                        placeholder="Enter Confirm Password" [ngClass]="{ 'is-invalid': FormSubmitted && f.ConfirmPassword.errors }">
+                    <span class="focus-input100"></span>
+                </div>
+                <div class="flex-sb-m w-full p-t-10">
+                    <div class="contact100-form-checkbox">
+                        <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
+                        <label class="label-checkbox100" for="ckb1">
+                            Remember me
+                        </label>
+                    </div>
+
+                    <!-- <div>
+                        <a href="#" class="txt1">
+                            Forgot Password?
+                        </a>
+                    </div> -->
+                </div>
+
+                <div class="container-login100-form-btn">
+                    <button class="login100-form-btn" (click)="SaveRegsiter(RegisterForm)">
+                        Register
+                    </button>
+                </div>
+            </form>
         </div>
-      </div>
     </div>
-  </main>
 </div>

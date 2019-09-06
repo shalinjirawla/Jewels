@@ -212,8 +212,14 @@ namespace Inventory.Web.Controllers
         [HttpGet]
         public IActionResult GetCountry(int Id)
         {
+            if (Id != 0) { 
             var CountryList = _icountry.GetCountryAsyc(Id);
             return Ok(GetAjaxResponse(true, string.Empty, CountryList));
+            }
+            else
+            {
+                return Ok(GetAjaxResponse(false, string.Empty, null));
+            }
         }
 
         [HttpPost]
@@ -235,8 +241,16 @@ namespace Inventory.Web.Controllers
         [HttpDelete]
         public IActionResult DeleteCountry(int Id)
         {
-            var CountryId = _icountry.DeleteCountryAsyc(Id);
-            return Ok(GetAjaxResponse(true, "Country Deleted Successfully", CountryId));
+            if (Id != 0)
+            {
+                var CountryId = _icountry.DeleteCountryAsyc(Id);
+                return Ok(GetAjaxResponse(true, "Country Deleted Successfully", CountryId));
+            }
+            else
+            {
+                return Ok(GetAjaxResponse(false, string.Empty, null));
+            }
+           
         }
 
         #endregion Country APIs End

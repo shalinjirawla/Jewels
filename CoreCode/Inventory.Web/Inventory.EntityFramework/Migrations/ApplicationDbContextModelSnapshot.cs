@@ -52,6 +52,8 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<string>("SecurityStamp");
 
+                    b.Property<long>("TenantId");
+
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
@@ -375,6 +377,39 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasKey("CategoriesId");
 
                     b.ToTable("ProductCategories");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.Tenants.Tenants", b =>
+                {
+                    b.Property<long>("TenantId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("BusinessRegisterNumber");
+
+                    b.Property<DateTime?>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<bool?>("IsInTrialPeriod");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<string>("Logo");
+
+                    b.Property<DateTime?>("SubscriptionEndDateUtc");
+
+                    b.Property<string>("TagRegisterNumber");
+
+                    b.Property<string>("TenantName");
+
+                    b.HasKey("TenantId");
+
+                    b.ToTable("Tenants");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
