@@ -7,6 +7,18 @@
   <ItemGroup>
     <Compile Remove="Migrations\20190905092251_Changes_Customer_Entity.cs" />
     <Compile Remove="Migrations\20190905092251_Changes_Customer_Entity.Designer.cs" />
+    <Compile Remove="Migrations\20190909055225_Changes_Every_Entity.cs" />
+    <Compile Remove="Migrations\20190909055225_Changes_Every_Entity.Designer.cs" />
+    <Compile Remove="Migrations\20190909060454_Changes_Every_Entity.cs" />
+    <Compile Remove="Migrations\20190909060454_Changes_Every_Entity.Designer.cs" />
+    <Compile Remove="Migrations\20190909061420_Add_foreignkey_Customer_Entity.cs" />
+    <Compile Remove="Migrations\20190909061420_Add_foreignkey_Customer_Entity.Designer.cs" />
+    <Compile Remove="Migrations\20190909071746_Add_Field_Country_Entity.cs" />
+    <Compile Remove="Migrations\20190909071746_Add_Field_Country_Entity.Designer.cs" />
+    <Compile Remove="Migrations\20190909085527_Add_Field_Country_countryCode.cs" />
+    <Compile Remove="Migrations\20190909085527_Add_Field_Country_countryCode.Designer.cs" />
+    <Compile Remove="Migrations\20190909085757_Add_Field_Country_countryCode.cs" />
+    <Compile Remove="Migrations\20190909085757_Add_Field_Country_countryCode.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

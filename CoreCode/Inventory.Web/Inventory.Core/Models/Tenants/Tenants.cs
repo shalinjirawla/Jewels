@@ -14,6 +14,7 @@ namespace Inventory.Core.Models.Tenants
         public string TenantName { get; set; }//Company Name
         public string BusinessRegisterNumber { get; set; }
         public string TagRegisterNumber { get; set; }
+        public string EmailId { get; set; }
         public Nullable<DateTime> CreationTime { get; set; }
         public Nullable<long> CreatorUserId { get; set; }
         public Nullable<DateTime> LastModificationTime { get; set; }

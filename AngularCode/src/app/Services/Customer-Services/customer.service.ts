@@ -39,7 +39,7 @@ export class CustomerService {
 
   public GetCurrency(): Observable<any> {
     let Result;
-    let url_ = this.BaseURL + `/api/Commons/GetCurrencys`;
+    let url_ = this.BaseURL + `/api/Commons/GetActiveCurrencys`;
     url_ = url_.replace(/[?&]$/, "");
 
     let options_: any = {

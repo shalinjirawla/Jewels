@@ -24,6 +24,7 @@ namespace Inventory.Web.Controllers
         private readonly IApplicationUser _applicationUser;
         public Boolean Status = false;
         public string Message = "";
+        public object Data=null;
         public AccountController(UserManager<ApplicationUser> UserManager, IApplicationUser applicationUser)
         {
             _UserManager = UserManager;
@@ -39,7 +40,17 @@ namespace Inventory.Web.Controllers
         public async Task<IActionResult> LoginProcess(LoginModel loginModel)
         {
             if (ModelState.IsValid) {
-                Message =await _applicationUser.Login(loginModel);
+                loginModel = await _applicationUser.Login(loginModel);
+                if (loginModel != null) {
+                    Status = true;
+                    Message = "Login Successfully...!";
+                    var user = await _UserManager.FindByEmailAsync(loginModel.UserName);
+                    if(user!=null)
+                    {
+                           SetCurrentLoginUserId(user?.Id);
+                    }
+                }
+                else { Status = false; Message = "Error Occurs..!"; }
             }
             else { return BadRequest(); }
             return Ok(GetAjaxResponse(Status, Message, loginModel));
@@ -50,35 +61,42 @@ namespace Inventory.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                ApplicationUser user = new ApplicationUser()
-                {
-                    Email = "hemant@gmail.com",
-                    SecurityStamp = Guid.NewGuid().ToString(),
-                    UserName = "hemant",
-                    
-                };
-                var result=await _UserManager.CreateAsync(user,model.Password);
-
-                if (result.Succeeded)
-                {
-                  //  await _UserManager.SignInAsync(user, false);
-                    return RedirectToAction("Index", "Home");
+               Status=await _applicationUser.RegisterTenant(model);
+                if (Status) {
+                    LoginModel loginModel = new LoginModel
+                    {
+                        UserName = model.EmailId,
+                        Password = model.Password,
+                    };
+                    Data = LoginProcess(loginModel);
+                    Message = "Regsiter Successfully Completed...";
                 }
                 else
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
+                    Message = model.EmailId+ " Email Id Alredy Exist..";
                 }
             }
             else { return BadRequest(); }
-            return Ok(true);
+            return Ok(GetAjaxResponse(Status,Message, Data));
         }
         [HttpGet]
         public IActionResult GetAll()
         {
             return Ok(GetAjaxResponse(true, "ok", null));
+        }
+        [HttpGet]
+        public  Boolean SetCurrentLoginUserId(string UserId)
+        {
+            if (!string.IsNullOrEmpty(UserId)) {
+                HttpContext.Session.SetString("UserId", UserId);
+            }
+            return true;
+        }
+        [HttpGet]
+        public string GetUserId()
+        {
+            string UserId = HttpContext.Session.GetString("UserId");
+            return UserId;
         }
     }
 }

@@ -29,6 +29,7 @@ using Microsoft.AspNetCore.Hosting.Internal;
 using Swashbuckle.AspNetCore.Filters;
 using Microsoft.AspNetCore.Diagnostics;
 using Newtonsoft.Json;
+using System;
 
 namespace Inventory.Web
 {
@@ -54,6 +55,15 @@ namespace Inventory.Web
             });
             services.AddIdentity<ApplicationUser, IdentityRole>()
              .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromDays(1);
+                options.Cookie.HttpOnly = true;
+                // Make the session cookie essential
+                options.Cookie.IsEssential = true;
+            });
+            services.AddDistributedMemoryCache();
             //adding autorization policy's
             services.AddAuthentication(options =>
             {
@@ -86,6 +96,7 @@ namespace Inventory.Web
             services.AddScoped<IGenerealsetup.ICreditTerms, GeneralsetupServices>();
             services.AddScoped<IcustomerType, CustomerTypeServices>();
             services.AddScoped<IApplicationUser, ApplicationUserServices>();
+            services.AddScoped<IWarehouse, WarehouseService>();
             //Configure CORS for angular2 UI
             services.AddCors(options =>
             {
@@ -142,13 +153,7 @@ namespace Inventory.Web
             app.UseDeveloperExceptionPage();
             app.UseFileServer();
             app.UseIdentity();
-            //app.Run(async (context) =>
-            //{
-            //    var msg = Configuration["message"];
-            //    await context.Response.WriteAsync(msg);
-            //});
-           
-            // Enable middleware to serve generated Swagger as a JSON endpoint
+            app.UseSession();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

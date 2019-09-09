@@ -23,7 +23,7 @@ namespace Inventory.Application.Services.CommonsServices
             int CountryId = 0;
             try
             {
-                
+
                 if (model != null)
                 {
                     if (model.CountryId == 0)
@@ -31,19 +31,31 @@ namespace Inventory.Application.Services.CommonsServices
                         Country country = new Country();
                         country.CountryName = model.CountryName;
                         country.CountryCode = model.CountryCode;
+                        country.CreationTime = DateTime.Now;
+                        country.LastModificationTime = DateTime.Now;
+                        country.CreatorUserId = "";
+                        country.LastModifierUserId = "";
                         _DbContext.country.Add(country);
                         _DbContext.SaveChanges();
                         CountryId = int.Parse(country.CountryId.ToString());
                     }
                     else
                     {
-                        Country country = new Country();
-                        country.CountryId = model.CountryId;
-                        country.CountryName = model.CountryName;
-                        country.CountryCode = model.CountryCode;
-                        _DbContext.Update(country);
-                        _DbContext.SaveChanges();
-                        CountryId = int.Parse(country.CountryId.ToString());
+                        var a = _DbContext.country.FirstOrDefault(x => x.CountryId == model.CountryId);
+                        if (a != null)
+                        {
+                            Country country = new Country();
+                            country.CountryId = a.CountryId;
+                            country.CountryName = model.CountryName;
+                            country.CountryCode = model.CountryCode;
+                            country.CreationTime = a.CreationTime;
+                            country.LastModificationTime = DateTime.Now;
+                            country.CreatorUserId = a.CreatorUserId;
+                            country.LastModifierUserId = "";
+                            _DbContext.Update(country);
+                            _DbContext.SaveChanges();
+                            CountryId = int.Parse(country.CountryId.ToString());
+                        }
                     }
                 }
             }

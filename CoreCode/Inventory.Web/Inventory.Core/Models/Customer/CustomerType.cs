@@ -13,13 +13,14 @@ namespace Inventory.Core.Models.Customer
         public long CustomerTypeId { get; set; }
         public string CustomerTypeName { get; set; }
         public Nullable<DateTime> CreationTime { get; set; }
-        public Nullable<long> CreatorUserId { get; set; }
+        [ForeignKey("User")]
+        public string CreatorUserId { get; set; }
         public Nullable<DateTime> LastModificationTime { get; set; }
-        public Nullable<long> LastModifierUserId { get; set; }
+        [ForeignKey("UserId")]
+        public string LastModifierUserId { get; set; }
         public Boolean IsActive { get; set; }
 
-
-
-
+        public ApplicationUser.ApplicationUser User { get; set; }
+        public ApplicationUser.ApplicationUser UserId { get; set; }
     }
 }

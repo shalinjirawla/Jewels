@@ -21,6 +21,7 @@ export class CurrencyService {
 
 
   public SaveCurrency(input: any): Observable<any> {
+    debugger
     if (input.CurrencyId == 0) {
       let url = this.BaseURL + `SaveCurrency`;
       return this.HttpClient.post(url, input, httpOption).pipe((responce: any) => {
@@ -51,10 +52,10 @@ export class CurrencyService {
       return this.Responce = responce;
     });
   }
-  public CureencyStatusChange(CurrencyId,Status):Observable<any>{
-    let url=this.BaseURL+`Currencychange?CurrencyId=${CurrencyId}&Statuschange=${Status}`;
-    return this.HttpClient.get(url,httpOption).pipe((responce:any)=>{
-      return this.Responce=responce;
+  public CureencyStatusChange(CurrencyId, Status): Observable<any> {
+    let url = this.BaseURL + `Currencychange?CurrencyId=${CurrencyId}&Statuschange=${Status}`;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
     });
   }
 }
@@ -98,30 +99,45 @@ export class CreditTermsService {
       return this.Responce = responce;
     });
   }
-  public AddCountry(input):Observable<any>{
+  public AddCountry(input): Observable<any> {
     let url = this.BaseURL + `AddUpdateCountry`;
     return this.HttpClient.post(url, JSON.stringify(input), httpOption).pipe((responce: any) => {
       return this.Responce = responce;
     });
   }
-  public GetCountryList():Observable<any>{
+  public GetCountryList(): Observable<any> {
     let url = this.BaseURL + `GetCountryList`;
     return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
       return this.Responce = responce;
     });
   }
 
-  public GetCountry(i):Observable<any>{
-    let url = this.BaseURL + `GetCountry?Id=`+i;
+  public GetCountry(i): Observable<any> {
+    let url = this.BaseURL + `GetCountry?Id=` + i;
     return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
       return this.Responce = responce;
     });
   }
 
-  public DeleteCountry(i):Observable<any>{
-    let url = this.BaseURL + `DeleteCountry?Id=`+i;
+  public DeleteCountry(i): Observable<any> {
+    let url = this.BaseURL + `DeleteCountry?Id=` + i;
     return this.HttpClient.delete(url, httpOption).pipe((responce: any) => {
       return this.Responce = responce;
     });
+  }
+
+  public GetLocationList(): Observable<any> {
+    let url = this.BaseURL + `GetWarehouseList`;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+
+  public AddLocation(input: any): Observable<any> {
+    debugger
+    let url = this.BaseURL + `SaveWarehouseList`;
+    return this.HttpClient.post(url, input, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    })
   }
 }

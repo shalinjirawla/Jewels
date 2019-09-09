@@ -64,8 +64,8 @@ namespace Inventory.Application.Services
                                 customer.DefaultCurrency = long.Parse(Model.DefaultCurrency);
 
                             }
-                            customer.CreatorUserId = 1;
-                            customer.LastModifierUserId = 1;
+                            customer.CreatorUserId = "1";
+                            customer.LastModifierUserId = "1";
                             DateTime date = new DateTime();
                             customer.LastModificationTime = date;
                             customer.IsActive = true;
@@ -157,8 +157,8 @@ namespace Inventory.Application.Services
                                 customer.DefaultCurrency = long.Parse(Model.DefaultCurrency);
 
                             }
-                            customer.CreatorUserId = 1;
-                            customer.LastModifierUserId = 1;
+                            customer.CreatorUserId = "1";
+                            customer.LastModifierUserId = "1";
                             DateTime date = new DateTime();
                             customer.LastModificationTime = date;
                             customer.IsActive = true;
@@ -237,7 +237,6 @@ namespace Inventory.Application.Services
             {
                 List<CustomerVm> customerList = new List<CustomerVm>();
                 var list = _DbContext.Customers.ToList();
-
                 foreach (var a in list)
                 {
                     CustomerVm customer = new CustomerVm();

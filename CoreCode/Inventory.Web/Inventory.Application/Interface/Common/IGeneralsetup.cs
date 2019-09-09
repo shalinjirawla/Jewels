@@ -9,11 +9,12 @@ namespace Inventory.Application.Interface.Common
 {
     public class IGenerealsetup
     {
-       
+
         public interface ICurrency
         {
             Task<Boolean> SaveCurrency(CurrencyVm model);
             Task<List<CurrencyVm>> GetCurrencyList();
+            Task<List<CurrencyVm>> GetActiveCurrencyList();
             Task<CurrencyVm> GetCurrency(long CurrencyId);
             Task<Boolean> UpdateCurrency(long CurrencyId, CurrencyVm currencyVm);
             Task<Boolean> DeleteCurrency(long Currency);

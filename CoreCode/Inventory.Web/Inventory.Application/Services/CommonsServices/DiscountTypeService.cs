@@ -29,11 +29,11 @@ namespace Inventory.Application.Services
                         DiscountType discountType = new DiscountType
                         {
                             DiscountName = discountTypeVm.DiscountName,
-                            CreatorUserId = 001,
+                            CreatorUserId = "001",
                             CreationTime = DateTime.Now,
                             IsActive = true,
                             LastModificationTime = DateTime.Now,
-                            LastModifierUserId = 001,
+                            LastModifierUserId = "001",
                         };
                         _DbContext.discountTypes.Add(discountType);
                         _DbContext.SaveChanges();
@@ -115,7 +115,7 @@ namespace Inventory.Application.Services
                     {
                         data.DiscountName = discountTypeVm.DiscountName;
                         data.LastModificationTime = DateTime.Now;
-                        data.LastModifierUserId = 001;
+                        data.LastModifierUserId = "001";
                     }
                     _DbContext.Update(data);
                     _DbContext.SaveChanges();

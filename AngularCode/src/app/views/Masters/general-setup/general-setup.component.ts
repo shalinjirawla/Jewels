@@ -45,13 +45,22 @@ export class GeneralSetupComponent implements OnInit {
   // Payment Term end
 
   //Country Start
-  @ViewChild('PaymentTermModal', { static: false }) public CountryModal: ModalDirective;
+  @ViewChild('CountryModal', { static: false }) public CountryModal: ModalDirective;
   CountryModalTitle: string = "Countries"
   Countrysubmit: boolean = false;
   CountryForm: FormGroup;
   tabflag: boolean = false;
   CoutryList: any;
   //Country End
+
+  //Location Start
+  @ViewChild('LocationModal', { static: false }) public LocationModal: ModalDirective;
+  LocationTitle: string = "Location"
+  Locationsubmit: boolean = false;
+  LocationForm: FormGroup;
+  LocationList: any;
+  //Location End
+
   constructor(private FormBuilder: FormBuilder,
     private CurrencyService: CurrencyService,
     private CreditTermsService: CreditTermsService,
@@ -62,6 +71,7 @@ export class GeneralSetupComponent implements OnInit {
     this.OnloadCrediTTerms();
     this.OnloadPaymentTerms();
     this.onLoadCoutry();
+    this.onLoadLocation();
   }
   //#region Currency Section Start 
 
@@ -70,7 +80,7 @@ export class GeneralSetupComponent implements OnInit {
       CurrencyId: [0],
       CurrencyName: ['', Validators.required],
       Code: ['', Validators.required],
-      Status: [''],
+      Status: [true],
     });
     this.GetCurrencyList();
   }
@@ -294,10 +304,23 @@ export class GeneralSetupComponent implements OnInit {
 
   get counform() { return this.CountryForm.controls }
 
-  tabclick(event){
-    if(event=="CountryList-link"){
+  tabclick(event) {
+    if (event == "CountryList-link") {
       this.onLoadCoutry();
     }
+  }
+
+  OpenCountryModal() {
+    this.CountryModal.show();
+    document.getElementById("CountryList-link").click();
+  }
+
+  CountryReset() {
+    debugger
+    this.onLoadCoutry();
+    this.Countrysubmit = false;
+    this.CountryModal.hide();
+
   }
 
   public AddCoutry(CountryForm: FormControl) {
@@ -369,7 +392,64 @@ export class GeneralSetupComponent implements OnInit {
     }
   }
 
-  //#endregion Country Section Edn
+  //#endregion Country Section End
+
+  //#region Location Section Start
+
+  onLoadLocation() {
+    this.LocationForm = this.FormBuilder.group({
+      WarehouseId: [0],
+      WarehouseName: ['',Validators.required],
+      Warehousecode: [,Validators.required],
+      IsActive: [true],
+    })
+    this.getLocationList();
+  }
+
+  get locaform() { return this.LocationForm.controls }
+
+  OpenLocationModal() {
+    this.LocationModal.show();
+  }
+
+  getLocationList() {
+    this.CreditTermsService.GetLocationList().subscribe((responce: any) => {
+      if (responce.status) {
+        this.LocationList = responce.data;
+      }
+    });
+  }
+
+  AddLocation(LocationForm: FormControl) {
+    debugger
+    this.Locationsubmit = true;
+    if(LocationForm.invalid){
+      return
+    }
+    this.Locationsubmit=false;
+
+    this.CreditTermsService.AddLocation(LocationForm.value).subscribe((responce: any) => {
+      debugger
+      let result = responce.data;
+      if (responce.status) {
+        Toast.fire({
+          type: 'success',
+          title: responce.message,
+        });
+        this.onLoadLocation();
+      }
+
+    })
+  }
+
+  LocationReset() {
+    this.LocationModal.hide();
+  }
+
+  locationtabclick(event) {
+
+  }
+  //#endregion Location Section End
 
   allowalpha(event: any) {
     const pattern = /[a-z\+\A-Z\+ +\a-z\+\A-Z+]/;

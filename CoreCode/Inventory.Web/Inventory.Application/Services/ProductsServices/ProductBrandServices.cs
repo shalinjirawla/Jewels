@@ -64,9 +64,9 @@ namespace Inventory.Application.Services.ProductsServices
                                 BrandName = model.BrandName,
                                 Description = model.Description,
                                 CreationTime = DateTime.Now,
-                                CreatorUserId = 001,
+                                CreatorUserId = "001",
                                 LastModificationTime = DateTime.Now,
-                                LastModifierUserId = 001,
+                                LastModifierUserId = "001",
                                 IsActive = true,
                             };
                             _DbContext.ProductBrands.Add(brand);
@@ -148,7 +148,7 @@ namespace Inventory.Application.Services.ProductsServices
                             data.BrandName = model.BrandName;
                             data.Description = model.Description;
                             data.LastModificationTime = DateTime.Now;
-                            data.LastModifierUserId = 001;
+                            data.LastModifierUserId = "001";
                             _DbContext.ProductBrands.Update(data);
                             _DbContext.SaveChanges();
                             Result = true;

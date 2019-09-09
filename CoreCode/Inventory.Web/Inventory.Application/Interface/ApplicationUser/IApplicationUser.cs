@@ -8,6 +8,7 @@ namespace Inventory.Application.Interface.ApplicationUser
 {
     public interface IApplicationUser
     {
-        Task<string> Login(LoginModel login);
+        Task<Boolean> RegisterTenant(RegisterVm model);
+        Task<LoginModel> Login(LoginModel login);
     }
 }

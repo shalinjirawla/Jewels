@@ -1,4 +1,4 @@
-export class Register{
+export class RegisterModel{
     public TenantId:undefined|any;
     public TenantName:undefined|any //Comapany Name
     public EmailId:undefined|any;

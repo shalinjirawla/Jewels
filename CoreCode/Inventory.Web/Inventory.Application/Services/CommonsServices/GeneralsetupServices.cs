@@ -39,9 +39,9 @@ namespace Inventory.Application.Services.CommonsServices
                                 CurrencyName = model.CurrencyName,
                                 Code = model.Code,
                                 CreationTime = DateTime.Now,
-                                CreatorUserId = 001,
+                                CreatorUserId = "",
                                 LastModificationTime = DateTime.Now,
-                                LastModifierUserId = 001,
+                                LastModifierUserId = "",
                                 IsActive = true,
                             };
                             _DbContext.Currencies.Add(currency);
@@ -147,6 +147,38 @@ namespace Inventory.Application.Services.CommonsServices
             return list;
         }
 
+        public async Task<List<CurrencyVm>> GetActiveCurrencyList()
+        {
+            List<CurrencyVm> list = new List<CurrencyVm>();
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var data = _DbContext.Currencies.Where(x=>x.IsActive==true).ToList();
+                    if (data != null && data.Count > 0)
+                    {
+                        foreach (var item in data)
+                        {
+                            CurrencyVm Currency = new CurrencyVm
+                            {
+                                CurrencyId = item.CurrencyId,
+                                CurrencyName = item.CurrencyName,
+                                Code = item.Code,
+                                Status = item.IsActive,
+                            };
+                            list.Add(Currency);
+                        }
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+            return list;
+        }
+
         public async Task<bool> UpdateCurrency(long CurrencyId, CurrencyVm currencyVm)
         {
             try
@@ -161,7 +193,7 @@ namespace Inventory.Application.Services.CommonsServices
                             data.CurrencyName = currencyVm.CurrencyName;
                             data.Code = currencyVm.Code;
                             data.LastModificationTime = DateTime.Now;
-                            data.LastModifierUserId = 001;
+                            data.LastModifierUserId = "001";
                         }
                         _DbContext.Currencies.Update(data);
                         _DbContext.SaveChanges();
@@ -280,9 +312,9 @@ namespace Inventory.Application.Services.CommonsServices
                             Duration = model.Duration,
                             Description = model.Description,
                             CreationTime = DateTime.Now,
-                            CreatorUserId = 001,
+                            CreatorUserId = "001",
                             LastModificationTime = DateTime.Now,
-                            LastModifierUserId = 001,
+                            LastModifierUserId = "001",
                             IsActive = true,
                         };
                         _DbContext.CreditTerms.Add(creditTerms);
@@ -398,9 +430,9 @@ namespace Inventory.Application.Services.CommonsServices
                         creditTerms.Duration = model.Duration;
                         creditTerms.Description = model.Description;
                         creditTerms.CreationTime = DateTime.Now;
-                        creditTerms.CreatorUserId = 001;
+                        creditTerms.CreatorUserId = "001";
                         creditTerms.LastModificationTime = DateTime.Now;
-                        creditTerms.LastModifierUserId = 001;
+                        creditTerms.LastModifierUserId = "001";
                         creditTerms.IsActive = true;
 
                         _DbContext.CreditTerms.Update(creditTerms);

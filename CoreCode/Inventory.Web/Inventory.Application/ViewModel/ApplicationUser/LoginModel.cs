@@ -11,5 +11,6 @@ namespace Inventory.Application.ViewModel.ApplicationUser
         public string UserName { get; set; }
         [Required(ErrorMessage = "Password Is Required")]
         public string Password { get; set; }
+        public string AccessToken { get; set; }
     }
 }
