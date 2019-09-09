@@ -23,17 +23,19 @@ namespace Inventory.Web.Controllers
         private readonly IGenerealsetup.ICurrency _currency;
         private readonly ICountry _icountry;
         private readonly ICreditTerms _icreditTerms;
+        private readonly IWarehouse _warehouse;
         public Boolean Status = false;
         public string Message = "";
         public CommonsController(IDiscountType discountType,
             IGenerealsetup.ICurrency currency, ICreditTerms icreditTerms,
-            ICountry country
+            ICountry country, IWarehouse warehouse
             )
         {
             _discountType = discountType;
             _currency = currency;
             _icountry = country;
             _icreditTerms = icreditTerms;
+            _warehouse = warehouse;
         }
         [NonAction]
         public ApiResponse GetAjaxResponse(bool status, string message, object data)
@@ -328,5 +330,78 @@ namespace Inventory.Web.Controllers
         }
 
         #endregion Credit Terms APIs End
+
+        #region Warehouse APIs Start
+
+        [HttpGet]
+        public IActionResult GetWarehouseList()
+        {
+            var warehouse = _warehouse.GetWarehouseListAsync();
+            return Ok(GetAjaxResponse(true, string.Empty, warehouse));
+
+        }
+        [HttpGet]
+        public IActionResult GetWarehouse(long Id)
+        {
+            if (Id != 0)
+            {
+                var warehouse = _warehouse.GetWarehouseAsync(Id);
+                return Ok(GetAjaxResponse(true, string.Empty, warehouse));
+            }
+            else
+            {
+                return Ok(GetAjaxResponse(false, "your WareHouse Id not found", null));
+            }
+           
+
+        }
+        [HttpPost]
+        public IActionResult SaveWarehouseList(WarehouseVm model)
+        {
+            var warehouse = _warehouse.SaveWarehouseListAsync(model);
+            return Ok(GetAjaxResponse(true, string.Empty, warehouse));
+
+        }
+        [HttpDelete]
+        public IActionResult DeleteWarehouse(long Id)
+        {
+            var msg = "";
+            Boolean warehouse = false;
+            if (Id != 0)
+            {
+                var a = _warehouse.DeleteWarehouseAsync(Id);
+                msg = "Warehouse deleted successfully";
+                warehouse = true;
+            }
+            else
+            {
+                msg = "Your Warehouse Id is not found";
+            }
+            return Ok(GetAjaxResponse(warehouse, msg, null));
+        }
+
+        [HttpGet]
+        public IActionResult GetActiveWarehouseList()
+        {
+            var warehouse = _warehouse.GetActiveWarehouseListAsync();
+            return Ok(GetAjaxResponse(true, string.Empty, warehouse));
+
+        }
+
+        [HttpGet]
+        public IActionResult UpdateWarehouseStatus(long Id,Boolean status)
+        {
+            if (Id != 0)
+            {
+                var warehouse = _warehouse.UpdateWarehouseStatusAsync(Id, status);
+                return Ok(GetAjaxResponse(true, string.Empty, warehouse));
+            }
+            else
+            {
+                return Ok(GetAjaxResponse(false,"Your warehouse is not Found", null));
+            }
+        }
+
+        #endregion Warehouse APIs End
     }
 }

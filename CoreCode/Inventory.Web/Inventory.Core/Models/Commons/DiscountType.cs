@@ -13,9 +13,14 @@ namespace Inventory.Core.Models.Commons
         public long DsicounttTypeId { get; set; }
         public string DiscountName { get; set; }
         public Nullable<DateTime> CreationTime { get; set; }
-        public Nullable<long> CreatorUserId { get; set; }
+        [ForeignKey("User")]
+        public string CreatorUserId { get; set; }
         public Nullable<DateTime> LastModificationTime { get; set; }
-        public Nullable<long> LastModifierUserId { get; set; }
+        [ForeignKey("UserId")]
+        public string LastModifierUserId { get; set; }
         public Boolean IsActive { get; set; }
+
+        public ApplicationUser.ApplicationUser User { get; set; }
+        public ApplicationUser.ApplicationUser UserId { get; set; }
     }
 }

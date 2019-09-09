@@ -480,11 +480,11 @@
                     <tab id="locationList">
                         <ng-template tabHeading><i class="fa fa-list text-info"></i> Location List </ng-template>
                         <div class="table-responsive animated flash">
-                            <table class="table " id="AddressList">
+                            <table class="table " id="">
                                 <thead>
                                     <tr>
-                                        <th>Code</th>
                                         <th>Name</th>
+                                        <th>Code</th>
                                         <th class="text-center">Action</th>
                                         <th>Status</th>
                                     </tr>
@@ -512,29 +512,29 @@
                           
                         </div>
                     </tab>
-                    <tab id="locationForm">
+                    <tab id="locationFor">
                         <ng-template tabHeading><i class="fa fa-plus text-info"> Location Form</i>
                         </ng-template>
                         <form [formGroup]="LocationForm" class="formData-modal col-sm-12">
                             <div class="row">
                                 <div class="form-group col-sm-12">
-                                    <input type="hidden" formControlName="countryId">
+                                    <input type="hidden" formControlName="WarehouseId">
                                     <label for="city">LOCATION NAME</label>
-                                    <input class="form-control" formControlName="countryName"
+                                    <input class="form-control" formControlName="WarehouseName"
                                         (keypress)="allowalpha($event)"
-                                        [ngClass]="{ 'is-invalid': Countrysubmit && counform.countryName.errors }"
+                                        [ngClass]="{ 'is-invalid': Locationsubmit && locaform.WarehouseName.errors }"
                                         placeholder="Country Name" type="text">
-                                    <div *ngIf="Countrysubmit && counform.countryName.errors" class="invalid-feedback">
-                                        <div *ngIf="counform.countryName.errors.required">Country Name is required</div>
+                                    <div *ngIf="Locationsubmit && locaform.WarehouseName.errors" class="invalid-feedback">
+                                        <div *ngIf="locaform.WarehouseName.errors.required">Location Name is required</div>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-12">
                                     <label for="postal-code">CODE</label>
-                                    <input class="form-control" id="" formControlName="countryCode"
-                                        [ngClass]="{ 'is-invalid': Countrysubmit && counform.countryCode.errors }"
+                                    <input class="form-control" id="" formControlName="Warehousecode"
+                                        [ngClass]="{ 'is-invalid': Locationsubmit && locaform.Warehousecode.errors }"
                                         (keypress)="allownumber($event)" placeholder="Country Code" type="text">
-                                    <div *ngIf="Countrysubmit && counform.countryCode.errors" class="invalid-feedback">
-                                        <div *ngIf="counform.countryCode.errors.required">Country Name is required</div>
+                                    <div *ngIf="Locationsubmit && locaform.Warehousecode.errors" class="invalid-feedback">
+                                        <div *ngIf="locaform.Warehousecode.errors.required">Location Code is required</div>
                                     </div>
                                 </div>
 
@@ -542,7 +542,7 @@
                         </form>
                         <div class="form-group col-sm-12">
                             <button type="button" class="btn btn-primary pull-right"
-                                (click)="AddCoutry(CountryForm)">Save
+                                (click)="AddLocation(LocationForm)">Save
                                 changes</button><br />
                         </div>
                     </tab>

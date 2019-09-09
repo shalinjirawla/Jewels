@@ -39,9 +39,9 @@ namespace Inventory.Application.Services.CommonsServices
                                 CurrencyName = model.CurrencyName,
                                 Code = model.Code,
                                 CreationTime = DateTime.Now,
-                                CreatorUserId = 001,
+                                CreatorUserId = "",
                                 LastModificationTime = DateTime.Now,
-                                LastModifierUserId = 001,
+                                LastModifierUserId = "",
                                 IsActive = true,
                             };
                             _DbContext.Currencies.Add(currency);
@@ -193,7 +193,7 @@ namespace Inventory.Application.Services.CommonsServices
                             data.CurrencyName = currencyVm.CurrencyName;
                             data.Code = currencyVm.Code;
                             data.LastModificationTime = DateTime.Now;
-                            data.LastModifierUserId = 001;
+                            data.LastModifierUserId = "001";
                         }
                         _DbContext.Currencies.Update(data);
                         _DbContext.SaveChanges();
@@ -312,9 +312,9 @@ namespace Inventory.Application.Services.CommonsServices
                             Duration = model.Duration,
                             Description = model.Description,
                             CreationTime = DateTime.Now,
-                            CreatorUserId = 001,
+                            CreatorUserId = "001",
                             LastModificationTime = DateTime.Now,
-                            LastModifierUserId = 001,
+                            LastModifierUserId = "001",
                             IsActive = true,
                         };
                         _DbContext.CreditTerms.Add(creditTerms);
@@ -430,9 +430,9 @@ namespace Inventory.Application.Services.CommonsServices
                         creditTerms.Duration = model.Duration;
                         creditTerms.Description = model.Description;
                         creditTerms.CreationTime = DateTime.Now;
-                        creditTerms.CreatorUserId = 001;
+                        creditTerms.CreatorUserId = "001";
                         creditTerms.LastModificationTime = DateTime.Now;
-                        creditTerms.LastModifierUserId = 001;
+                        creditTerms.LastModifierUserId = "001";
                         creditTerms.IsActive = true;
 
                         _DbContext.CreditTerms.Update(creditTerms);

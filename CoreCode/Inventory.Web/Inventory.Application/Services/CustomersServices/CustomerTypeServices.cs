@@ -30,9 +30,9 @@ namespace Inventory.Application.Services.CustomersServices
                         CustomerType customerType = new CustomerType();
                         customerType.CustomerTypeName = model.CustomerTypeName;
                         customerType.CreationTime = DateTime.Now;
-                        customerType.CreatorUserId = 1;
+                        customerType.CreatorUserId = "1";
                         customerType.LastModificationTime = DateTime.Now;
-                        customerType.LastModifierUserId = 1;
+                        customerType.LastModifierUserId = "1";
                         customerType.IsActive = true;
 
                         _DbContext.CustomerTypes.Add(customerType);
@@ -45,9 +45,9 @@ namespace Inventory.Application.Services.CustomersServices
                         customerType.CustomerTypeId = model.CustomerTypeId;
                         customerType.CustomerTypeName = model.CustomerTypeName;
                         customerType.CreationTime = DateTime.Now;
-                        customerType.CreatorUserId = 1;
+                        customerType.CreatorUserId = "1";
                         customerType.LastModificationTime = DateTime.Now;
-                        customerType.LastModifierUserId = 1;
+                        customerType.LastModifierUserId = "1";
                         customerType.IsActive = true;
 
                         _DbContext.Update(customerType);

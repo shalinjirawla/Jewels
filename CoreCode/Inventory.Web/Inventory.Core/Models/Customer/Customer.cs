@@ -27,10 +27,11 @@ namespace Inventory.Core.Models.Customer
         public double DiscountAmount { get; set; }
         [ForeignKey("Currency")]
         public Nullable<long> DefaultCurrency { get; set; }
-
-        public long CreatorUserId { get; set; }
+        [ForeignKey("User")]
+        public string CreatorUserId { get; set; }
         public DateTime LastModificationTime { get; set; }
-        public long LastModifierUserId { get; set; }
+        [ForeignKey("UserId")]
+        public string LastModifierUserId { get; set; }
         public Boolean IsActive { get; set; }
 
 
@@ -38,5 +39,7 @@ namespace Inventory.Core.Models.Customer
         public CreditTerms creditTerms { get; set; }
         public Currency.Currency Currency { get; set; }
         public DiscountType discountType { get; set; }
+        public ApplicationUser.ApplicationUser User { get; set; }
+        public ApplicationUser.ApplicationUser UserId { get; set; }
     }
 }

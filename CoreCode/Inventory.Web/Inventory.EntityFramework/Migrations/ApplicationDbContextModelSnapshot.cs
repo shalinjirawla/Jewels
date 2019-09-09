@@ -82,7 +82,7 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<DateTime?>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId");
+                    b.Property<string>("CreatorUserId");
 
                     b.Property<string>("Description");
 
@@ -92,9 +92,13 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<DateTime?>("LastModificationTime");
 
-                    b.Property<long?>("LastModifierUserId");
+                    b.Property<string>("LastModifierUserId");
 
                     b.HasKey("CreditTermId");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("LastModifierUserId");
 
                     b.ToTable("CreditTerms");
                 });
@@ -107,7 +111,7 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<DateTime?>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId");
+                    b.Property<string>("CreatorUserId");
 
                     b.Property<string>("DiscountName");
 
@@ -115,9 +119,13 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<DateTime?>("LastModificationTime");
 
-                    b.Property<long?>("LastModifierUserId");
+                    b.Property<string>("LastModifierUserId");
 
                     b.HasKey("DsicounttTypeId");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("LastModifierUserId");
 
                     b.ToTable("discountTypes");
                 });
@@ -134,17 +142,50 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<DateTime?>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId");
+                    b.Property<string>("CreatorUserId");
 
                     b.Property<bool>("IsActive");
 
                     b.Property<DateTime?>("LastModificationTime");
 
-                    b.Property<long?>("LastModifierUserId");
+                    b.Property<string>("LastModifierUserId");
 
                     b.HasKey("TaxId");
 
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("LastModifierUserId");
+
                     b.ToTable("TaxCode");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.Commons.Warehouse", b =>
+                {
+                    b.Property<long>("WarehouseId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("CreationTime");
+
+                    b.Property<string>("CreatorUserId");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<string>("LastModifierUserId");
+
+                    b.Property<string>("Name");
+
+                    b.Property<long>("code");
+
+                    b.HasKey("WarehouseId");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("LastModifierUserId");
+
+                    b.ToTable("Warehouses");
                 });
 
             modelBuilder.Entity("Inventory.Core.Models.Country", b =>
@@ -157,7 +198,21 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<string>("CountryName");
 
+                    b.Property<DateTime?>("CreationTime");
+
+                    b.Property<string>("CreatorUserId");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<string>("LastModifierUserId");
+
                     b.HasKey("CountryId");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("LastModifierUserId");
 
                     b.ToTable("country");
                 });
@@ -172,7 +227,7 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<DateTime?>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId");
+                    b.Property<string>("CreatorUserId");
 
                     b.Property<string>("CurrencyName");
 
@@ -180,9 +235,13 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<DateTime?>("LastModificationTime");
 
-                    b.Property<long?>("LastModifierUserId");
+                    b.Property<string>("LastModifierUserId");
 
                     b.HasKey("CurrencyId");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("LastModifierUserId");
 
                     b.ToTable("Currencies");
                 });
@@ -193,7 +252,7 @@ namespace Inventory.EntityFrameworkCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("CreatorUserId");
+                    b.Property<string>("CreatorUserId");
 
                     b.Property<long?>("CreditTermId");
 
@@ -215,7 +274,7 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<DateTime>("LastModificationTime");
 
-                    b.Property<long>("LastModifierUserId");
+                    b.Property<string>("LastModifierUserId");
 
                     b.Property<string>("Remarks");
 
@@ -225,6 +284,8 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.HasKey("CustomerId");
 
+                    b.HasIndex("CreatorUserId");
+
                     b.HasIndex("CreditTermId");
 
                     b.HasIndex("CustomerTypeId");
@@ -232,6 +293,8 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasIndex("DefaultCurrency");
 
                     b.HasIndex("DiscountOption");
+
+                    b.HasIndex("LastModifierUserId");
 
                     b.ToTable("Customers");
                 });
@@ -310,7 +373,7 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<DateTime?>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId");
+                    b.Property<string>("CreatorUserId");
 
                     b.Property<string>("CustomerTypeName");
 
@@ -318,9 +381,13 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<DateTime?>("LastModificationTime");
 
-                    b.Property<long?>("LastModifierUserId");
+                    b.Property<string>("LastModifierUserId");
 
                     b.HasKey("CustomerTypeId");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("LastModifierUserId");
 
                     b.ToTable("CustomerTypes");
                 });
@@ -335,7 +402,7 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<DateTime?>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId");
+                    b.Property<string>("CreatorUserId");
 
                     b.Property<string>("Description");
 
@@ -343,9 +410,13 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<DateTime?>("LastModificationTime");
 
-                    b.Property<long?>("LastModifierUserId");
+                    b.Property<string>("LastModifierUserId");
 
                     b.HasKey("BrandId");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("LastModifierUserId");
 
                     b.ToTable("ProductBrands");
                 });
@@ -362,7 +433,7 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<DateTime?>("CreationTime");
 
-                    b.Property<long?>("CreatorUserId");
+                    b.Property<string>("CreatorUserId");
 
                     b.Property<string>("Description");
 
@@ -372,9 +443,13 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<DateTime?>("LastModificationTime");
 
-                    b.Property<long?>("LastModifierUserId");
+                    b.Property<string>("LastModifierUserId");
 
                     b.HasKey("CategoriesId");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("LastModifierUserId");
 
                     b.ToTable("ProductCategories");
                 });
@@ -618,8 +693,78 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasDiscriminator().HasValue("ApplicationUserToken");
                 });
 
+            modelBuilder.Entity("Inventory.Core.Models.Commons.CreditTerms", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.Commons.DiscountType", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.Commons.TaxCode", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.Commons.Warehouse", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.Country", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.Currency.Currency", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId");
+                });
+
             modelBuilder.Entity("Inventory.Core.Models.Customer.Customer", b =>
                 {
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
                     b.HasOne("Inventory.Core.Models.Commons.CreditTerms", "creditTerms")
                         .WithMany()
                         .HasForeignKey("CreditTermId");
@@ -635,6 +780,10 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasOne("Inventory.Core.Models.Commons.DiscountType", "discountType")
                         .WithMany()
                         .HasForeignKey("DiscountOption");
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId");
                 });
 
             modelBuilder.Entity("Inventory.Core.Models.Customer.CustomerAdderss", b =>
@@ -658,6 +807,39 @@ namespace Inventory.EntityFrameworkCore.Migrations
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.Customer.CustomerType", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.Products.ProductBrand", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.Products.ProductCategories", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

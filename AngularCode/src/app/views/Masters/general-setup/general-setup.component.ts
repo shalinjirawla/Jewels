@@ -58,7 +58,7 @@ export class GeneralSetupComponent implements OnInit {
   LocationTitle: string = "Location"
   Locationsubmit: boolean = false;
   LocationForm: FormGroup;
-  CLocationList: any;
+  LocationList: any;
   //Location End
 
   constructor(private FormBuilder: FormBuilder,
@@ -71,6 +71,7 @@ export class GeneralSetupComponent implements OnInit {
     this.OnloadCrediTTerms();
     this.OnloadPaymentTerms();
     this.onLoadCoutry();
+    this.onLoadLocation();
   }
   //#region Currency Section Start 
 
@@ -79,7 +80,7 @@ export class GeneralSetupComponent implements OnInit {
       CurrencyId: [0],
       CurrencyName: ['', Validators.required],
       Code: ['', Validators.required],
-      Status: [''],
+      Status: [true],
     });
     this.GetCurrencyList();
   }
@@ -303,23 +304,23 @@ export class GeneralSetupComponent implements OnInit {
 
   get counform() { return this.CountryForm.controls }
 
-  tabclick(event){
-    if(event=="CountryList-link"){
+  tabclick(event) {
+    if (event == "CountryList-link") {
       this.onLoadCoutry();
     }
   }
 
-  OpenCountryModal(){
+  OpenCountryModal() {
     this.CountryModal.show();
     document.getElementById("CountryList-link").click();
   }
 
-  CountryReset(){
+  CountryReset() {
     debugger
     this.onLoadCoutry();
     this.Countrysubmit = false;
     this.CountryModal.hide();
-    
+
   }
 
   public AddCoutry(CountryForm: FormControl) {
@@ -395,15 +396,58 @@ export class GeneralSetupComponent implements OnInit {
 
   //#region Location Section Start
 
-  OpenLocationModal(){
+  onLoadLocation() {
+    this.LocationForm = this.FormBuilder.group({
+      WarehouseId: [0],
+      WarehouseName: ['',Validators.required],
+      Warehousecode: [,Validators.required],
+      IsActive: [true],
+    })
+    this.getLocationList();
+  }
+
+  get locaform() { return this.LocationForm.controls }
+
+  OpenLocationModal() {
     this.LocationModal.show();
   }
 
-  LocationReset(){
+  getLocationList() {
+    this.CreditTermsService.GetLocationList().subscribe((responce: any) => {
+      if (responce.status) {
+        this.LocationList = responce.data;
+      }
+    });
+  }
+
+  AddLocation(LocationForm: FormControl) {
+    debugger
+    this.Locationsubmit = true;
+    if(LocationForm.invalid){
+      return
+    }
+    this.Locationsubmit=false;
+
+    this.CreditTermsService.AddLocation(LocationForm.value).subscribe((responce: any) => {
+      debugger
+      let result = responce.data;
+      if (responce.status) {
+        Toast.fire({
+          type: 'success',
+          title: responce.message,
+        });
+        this.onLoadLocation();
+      }
+
+    })
+  }
+
+  LocationReset() {
     this.LocationModal.hide();
   }
 
-  locationtabclick(event){
+  locationtabclick(event) {
+
   }
   //#endregion Location Section End
 
