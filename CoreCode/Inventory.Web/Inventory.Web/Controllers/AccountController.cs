@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Inventory.Application.Interface.ApplicationUser;
@@ -21,14 +22,18 @@ namespace Inventory.Web.Controllers
     {
         //private readonly ILogger<LogoutModel> _logger;
         private readonly UserManager<ApplicationUser> _UserManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IApplicationUser _applicationUser;
         public Boolean Status = false;
         public string Message = "";
-        public object Data=null;
-        public AccountController(UserManager<ApplicationUser> UserManager, IApplicationUser applicationUser)
+        public object Data = null;
+        public AccountController(UserManager<ApplicationUser> UserManager,
+            IApplicationUser applicationUser,
+             SignInManager<ApplicationUser> signInManager)
         {
             _UserManager = UserManager;
             _applicationUser = applicationUser;
+            _signInManager = signInManager;
         }
         [NonAction]
         public ApiResponse GetAjaxResponse(bool status, string message, object data)
@@ -39,30 +44,54 @@ namespace Inventory.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> LoginProcess(LoginModel loginModel)
         {
-            if (ModelState.IsValid) {
-                loginModel = await _applicationUser.Login(loginModel);
-                if (loginModel != null) {
-                    Status = true;
-                    Message = "Login Successfully...!";
-                    var user = await _UserManager.FindByEmailAsync(loginModel.UserName);
-                    if(user!=null)
+            if (ModelState.IsValid)
+            {
+                var loginRequestUser = _UserManager.Users.FirstOrDefault(x => x.UserName == loginModel.UserName);
+                if (loginRequestUser != null)
+                {
+                    var passwordValidationStatus = await _UserManager.CheckPasswordAsync(loginRequestUser, loginModel.Password);
+                    if (passwordValidationStatus)
                     {
-                           SetCurrentLoginUserId(user?.Id);
+                        Status = true;
+                        Message = "Login Successfully...!";
+                        if (loginRequestUser.Id != null)
+                        {
+                            loginModel.UserId = loginRequestUser.Id;
+                            loginModel.EmailId = loginRequestUser.Email;
+                            loginModel.UserName = loginRequestUser.UserName;
+                            loginModel.TenantId = loginRequestUser.TenantId;
+                            loginModel = await _applicationUser.Login(loginModel);
+                            SetCurrentLoginUserId(loginRequestUser.Id);
+                        }
                     }
+                    else
+                    {
+                        Status = false;
+                        Message = "Invalid Username and Password.";
+                        loginModel = null;
+                    }
+
                 }
-                else { Status = false; Message = "Error Occurs..!"; }
+                else {
+                    Status = false;
+                    Message = "Invalid Username and Password.";
+                    loginModel = null;
+                }
+                
             }
             else { return BadRequest(); }
             return Ok(GetAjaxResponse(Status, Message, loginModel));
         }
+
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterVm model)
         {
             if (ModelState.IsValid)
             {
-               Status=await _applicationUser.RegisterTenant(model);
-                if (Status) {
+                Status = await _applicationUser.RegisterTenant(model);
+                if (Status)
+                {
                     LoginModel loginModel = new LoginModel
                     {
                         UserName = model.EmailId,
@@ -73,11 +102,11 @@ namespace Inventory.Web.Controllers
                 }
                 else
                 {
-                    Message = model.EmailId+ " Email Id Alredy Exist..";
+                    Message = model.EmailId + " Email Id Alredy Exist..";
                 }
             }
             else { return BadRequest(); }
-            return Ok(GetAjaxResponse(Status,Message, Data));
+            return Ok(GetAjaxResponse(Status, Message, Data));
         }
         [HttpGet]
         public IActionResult GetAll()
@@ -85,9 +114,10 @@ namespace Inventory.Web.Controllers
             return Ok(GetAjaxResponse(true, "ok", null));
         }
         [HttpGet]
-        public  Boolean SetCurrentLoginUserId(string UserId)
+        public Boolean SetCurrentLoginUserId(string UserId)
         {
-            if (!string.IsNullOrEmpty(UserId)) {
+            if (!string.IsNullOrEmpty(UserId))
+            {
                 HttpContext.Session.SetString("UserId", UserId);
             }
             return true;

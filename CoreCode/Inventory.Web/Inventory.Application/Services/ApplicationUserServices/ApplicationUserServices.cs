@@ -22,15 +22,18 @@ namespace Inventory.Application.Services.ApplicationUserServices
     {
         private IConfiguration _config;
         private readonly UserManager<ApplicationUser> _UserManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDbContext _DbContext;
         public Boolean Status;
         public ApplicationUserServices(UserManager<ApplicationUser> UserManager, IConfiguration config,
-            ApplicationDbContext DbContext
+            ApplicationDbContext DbContext,
+            SignInManager<ApplicationUser> signInManager
             )
         {
             _UserManager = UserManager;
             _config = config;
             _DbContext = DbContext;
+            _signInManager = signInManager;
         }
 
         public async Task<Boolean> RegisterTenant(RegisterVm model)
@@ -139,36 +142,33 @@ namespace Inventory.Application.Services.ApplicationUserServices
         public async Task<LoginModel> Login(LoginModel login)
         {
             var tokenString = "";
-            if (login != null)
+            try
             {
-                await Task.Run(async () =>
+                await Task.Run(() =>
                 {
-                    string EmailId = login.UserName;
-                    DateTime Bod = DateTime.Now;
-                    var user1= await _UserManager.FindByEmailAsync(login.UserName);
-
-                    var userId = user1?.Id;
-                    string mail = user1?.Email;
-                    var user = AuthenticateUserAsync(login);
-                    if (user != null)
-                    {
-                        var userid = user?.Id;
-                        tokenString = GenerateJSONWebToken(login.UserName, EmailId, Bod);
-                    }
+                if (login != null)
+                {
+                    DateTime CurrentDateTime = DateTime.Now;
+                    tokenString = GenerateJSONWebToken(login.UserName, login.EmailId, CurrentDateTime);
+                }
+                login.AccessToken = tokenString;
+                login.Password = null;
                 });
             }
-            login.AccessToken = tokenString;
-            login.Password = null;
+            catch (Exception e)
+            {
+                throw e;
+            }
             return login;
         }
-        private string GenerateJSONWebToken(string Username, string EmailId, DateTime Bod)
+        private string GenerateJSONWebToken(string Username, string EmailId, DateTime CurrentDateTime)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[] {
                   new Claim(JwtRegisteredClaimNames.Sub, Username),
                   new Claim(JwtRegisteredClaimNames.Email, EmailId),
-                  new Claim("DateOfJoing",Bod.ToString("yyyy-MM-dd")),
+                  new Claim("DateOfJoing",CurrentDateTime.ToString("yyyy-MM-dd")),
                   new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                  };
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
@@ -181,20 +181,7 @@ namespace Inventory.Application.Services.ApplicationUserServices
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-        private async Task<LoginModel> AuthenticateUserAsync(LoginModel loginModel)
-        {
-            LoginModel users = null;
-
-            //Validate the User Credentials  
-            //Demo Purpose, I have Passed HardCoded User Information  
-            var user = await _UserManager.FindByNameAsync(loginModel.UserName);
-
-            if (user != null && await (_UserManager.CheckPasswordAsync(user, loginModel.Password)))
-            {
-                users = new LoginModel { UserName = user.UserName, Password = user.PasswordHash };
-            }
-            return users;
-        }
+       
         
 
     }
