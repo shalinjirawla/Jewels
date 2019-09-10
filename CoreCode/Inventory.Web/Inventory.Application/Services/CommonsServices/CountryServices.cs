@@ -41,16 +41,14 @@ namespace Inventory.Application.Services.CommonsServices
                     }
                     else
                     {
-                        var a = _DbContext.country.FirstOrDefault(x => x.CountryId == model.CountryId);
-                        if (a != null)
+                        Country country = new Country();
+                        country = _DbContext.country.FirstOrDefault(x => x.CountryId == model.CountryId);
+                        if (country != null)
                         {
-                            Country country = new Country();
-                            country.CountryId = a.CountryId;
+                            
                             country.CountryName = model.CountryName;
                             country.CountryCode = model.CountryCode;
-                            country.CreationTime = a.CreationTime;
                             country.LastModificationTime = DateTime.Now;
-                            country.CreatorUserId = a.CreatorUserId;
                             country.LastModifierUserId = "";
                             _DbContext.Update(country);
                             _DbContext.SaveChanges();

@@ -385,7 +385,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" id="" >
+            <div class="modal-body" id="">
                 <tabset id="countrytabset" (click)="tabclick($event.target.id)">
                     <tab id="CountryList">
                         <ng-template tabHeading><i class="fa fa-list text-info"></i> Country List </ng-template>
@@ -471,16 +471,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Location</h4>
-                <button type="button" class="close" (click)="LocationModal.hide()" aria-label="Close">
+                <button type="button" class="close"  (click)="LocationReset()" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" id="" >
+            <div class="modal-body" id="">
                 <tabset (click)="locationtabclick($event.target.id)">
                     <tab id="locationList">
                         <ng-template tabHeading><i class="fa fa-list text-info"></i> Location List </ng-template>
                         <div class="table-responsive animated flash">
-                            <table class="table " id="">
+                            <table class="table " id="locationlist">
                                 <thead>
                                     <tr>
                                         <th>Name</th>
@@ -490,26 +490,33 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- <tr *ngFor="let item of CoutryList">
-                                        <td>{{item.countryName}}</td>
-                                        <td>+{{item.countryCode}}</td>
+                                    <tr *ngFor="let item of LocationList">
+                                        <td>{{item.warehouseName}}</td>
+                                        <td>{{item.warehousecode}}</td>
                                         <td>
                                             <span style="margin-left: 25%;">
                                                 <span class="text-primary mr-3" style="cursor: pointer;"
-                                                    (click)="GetCountry(item.countryId)">
+                                                    (click)="GetLocation(item.warehouseId)">
                                                     <i class="fa fa-pencil"></i>
                                                 </span>
 
                                                 <span class="text-danger " style="cursor: pointer;"
-                                                    (click)="DeleteCountry(item.countryId)">
+                                                    (click)="DeleteLocation(item.warehouseId)">
                                                     <i class="fa fa-trash"></i>
                                                 </span>
                                             </span>
                                         </td>
-                                    </tr> -->
+                                        <td>
+                                            <label class="switch switch-3d switch-success">
+                                                <input type="checkbox" class="switch-input" [checked]="item.isActive"
+                                                    (change)="LocationChange($event.target.checked,item.warehouseId)">
+                                                <span class="switch-slider"></span>
+                                            </label></td>
+                                        <td>
+                                    </tr>
                                 </tbody>
                             </table>
-                          
+
                         </div>
                     </tab>
                     <tab id="locationFor">
@@ -524,8 +531,10 @@
                                         (keypress)="allowalpha($event)"
                                         [ngClass]="{ 'is-invalid': Locationsubmit && locaform.WarehouseName.errors }"
                                         placeholder="Country Name" type="text">
-                                    <div *ngIf="Locationsubmit && locaform.WarehouseName.errors" class="invalid-feedback">
-                                        <div *ngIf="locaform.WarehouseName.errors.required">Location Name is required</div>
+                                    <div *ngIf="Locationsubmit && locaform.WarehouseName.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="locaform.WarehouseName.errors.required">Location Name is required
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-12">
@@ -533,8 +542,10 @@
                                     <input class="form-control" id="" formControlName="Warehousecode"
                                         [ngClass]="{ 'is-invalid': Locationsubmit && locaform.Warehousecode.errors }"
                                         (keypress)="allownumber($event)" placeholder="Country Code" type="text">
-                                    <div *ngIf="Locationsubmit && locaform.Warehousecode.errors" class="invalid-feedback">
-                                        <div *ngIf="locaform.Warehousecode.errors.required">Location Code is required</div>
+                                    <div *ngIf="Locationsubmit && locaform.Warehousecode.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="locaform.Warehousecode.errors.required">Location Code is required
+                                        </div>
                                     </div>
                                 </div>
 
