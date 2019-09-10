@@ -25,6 +25,11 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.Onload();
   }
+  public LogOut()
+  {
+    localStorage.clear();
+    sessionStorage.clear();
+  }
   public Onload() {
     this.LoginForm = this.FormBuilder.group({
       UserName: ['', Validators.compose([Validators.required])],
@@ -39,6 +44,7 @@ export class LoginComponent implements OnInit {
     }
     this.ApplicationUserService.LogInProcess(LoginForm.value).subscribe((responce:any)=>{
       this.Responce=responce;
+      
     });
   }
   get f(){return this.LoginForm.controls;}
