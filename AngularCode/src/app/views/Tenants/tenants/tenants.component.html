@@ -1,0 +1,44 @@
+<div class="limiter">
+    <div class="container-login100">
+        <div class="wrap-login100">
+            <div class="login100-form-title" style="background-image: url(assets/images/bg-01.jpg);">
+                <span class="login100-form-title-1">
+                    Register
+                </span>
+            </div>
+
+            <form class="login100-form validate-form" [formGroup]="TenantsForm">
+                <input type="hidden" formControlName="TenantId">
+                <div class="wrap-input100  m-b-6">
+                    <span class="label-input100">Company</span>
+                    <input class="input100 form-control" type="text" formControlName="TenantName" name="Company"
+                        [ngClass]="{ 'is-invalid': FormSubmitted && f.TenantName.errors }"
+                       placeholder="Enter Company">
+                    <div *ngIf="FormSubmitted && f.TenantName.errors" class="invalid-feedback">
+                        <div *ngIf="f.TenantName.errors.required">Company Name is required</div>
+                    </div>
+                </div>
+                <div class="wrap-input100  m-b-6" data-validate="Email Id is required">
+                    <span class="label-input100">Email Id</span>
+                    <input class="input100 form-control" type="text" formControlName="EmailId" name="EmailId"
+                        placeholder="Enter Email Id" [ngClass]="{ 'is-invalid': FormSubmitted && f.EmailId.errors }">
+                    <div *ngIf="FormSubmitted && f.EmailId.errors" class="invalid-feedback">
+                        <div *ngIf="f.EmailId.errors.required">Email Id  is required</div>
+                        <div *ngIf="f.EmailId.errors.email">Email must be a valid email address</div>
+                    </div>
+                </div>
+               
+                
+
+                <div class="container-login100-form-btn">
+                    <button class="login100-form-btn" (click)="SaveTenants(TenantsForm)">
+                        Register
+                    </button>
+                    <a class="login100-form-btn ml-2" href="/#/login">
+                        Login
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

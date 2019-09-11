@@ -41,6 +41,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TenantsComponent } from './views/Tenants/tenants/tenants.component';
 @NgModule({
   imports: [
     BrowserModule,
@@ -67,6 +68,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     P500Component,
     LoginComponent,
     RegisterComponent,
+    TenantsComponent,
   ],
   exports:[HttpClientModule],
   providers: [{

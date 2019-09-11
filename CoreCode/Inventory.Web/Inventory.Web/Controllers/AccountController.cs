@@ -42,25 +42,25 @@ namespace Inventory.Web.Controllers
         }
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> LoginProcess(LoginModel loginModel)
+        public async Task<IActionResult> Login(LoginVm LoginVm)
         {
             if (ModelState.IsValid)
             {
-                var loginRequestUser = _UserManager.Users.FirstOrDefault(x => x.UserName == loginModel.UserName);
+                var loginRequestUser = _UserManager.Users.FirstOrDefault(x => x.UserName == LoginVm.UserName);
                 if (loginRequestUser != null)
                 {
-                    var passwordValidationStatus = await _UserManager.CheckPasswordAsync(loginRequestUser, loginModel.Password);
+                    var passwordValidationStatus = await _UserManager.CheckPasswordAsync(loginRequestUser, LoginVm.Password);
                     if (passwordValidationStatus)
                     {
                         Status = true;
                         Message = "Login Successfully...!";
                         if (loginRequestUser.Id != null)
                         {
-                            loginModel.UserId = loginRequestUser.Id;
-                            loginModel.EmailId = loginRequestUser.Email;
-                            loginModel.UserName = loginRequestUser.UserName;
-                            loginModel.TenantId = loginRequestUser.TenantId;
-                            loginModel = await _applicationUser.Login(loginModel);
+                            LoginVm.UserId = loginRequestUser.Id;
+                            LoginVm.EmailId = loginRequestUser.Email;
+                            LoginVm.UserName = loginRequestUser.UserName;
+                            LoginVm.TenantId = loginRequestUser.TenantId;
+                            LoginVm = await _applicationUser.Login(LoginVm);
                             SetCurrentLoginUserId(loginRequestUser.Id);
                         }
                     }
@@ -68,19 +68,19 @@ namespace Inventory.Web.Controllers
                     {
                         Status = false;
                         Message = "Invalid Username and Password.";
-                        loginModel = null;
+                        LoginVm = null;
                     }
 
                 }
                 else {
                     Status = false;
-                    Message = "Invalid Username and Password.";
-                    loginModel = null;
+                    Message = LoginVm.UserName+ " Username is not Exist...";
+                    LoginVm = null;
                 }
                 
             }
             else { return BadRequest(); }
-            return Ok(GetAjaxResponse(Status, Message, loginModel));
+            return Ok(GetAjaxResponse(Status, Message, LoginVm));
         }
 
         [HttpPost]
@@ -92,12 +92,12 @@ namespace Inventory.Web.Controllers
                 Status = await _applicationUser.RegisterTenant(model);
                 if (Status)
                 {
-                    LoginModel loginModel = new LoginModel
+                    LoginVm LoginVm = new LoginVm
                     {
                         UserName = model.EmailId,
                         Password = model.Password,
                     };
-                    Data = LoginProcess(loginModel);
+                    Data = Login(LoginVm);
                     Message = "Regsiter Successfully Completed...";
                 }
                 else

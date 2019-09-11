@@ -4889,7 +4889,8 @@
         "dependencies": {
           "Inventory.EntityFrameworkCore": "1.0.0",
           "Microsoft.AspNet.Providers.Core": "2.0.0",
-          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "2.2.0"
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "2.2.0",
+          "Microsoft.AspNetCore.Session": "2.2.0"
         },
         "compile": {
           "bin/placeholder/Inventory.Application.dll": {}
@@ -4902,6 +4903,7 @@
         "type": "project",
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
+          "Microsoft.AspNetCore.Session": "2.2.0",
           "Microsoft.EntityFrameworkCore": "2.2.6"
         },
         "compile": {
@@ -4916,6 +4918,7 @@
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
           "Inventory.Core": "1.0.0",
+          "Microsoft.AspNetCore.Session": "2.2.0",
           "Microsoft.Extensions.Identity.Stores": "2.2.0"
         },
         "compile": {
@@ -13346,6 +13349,7 @@
       "Inventory.EntityFrameworkCore >= 1.0.0",
       "Microsoft.AspNetCore.App >= 2.2.0",
       "Microsoft.AspNetCore.Razor.Design >= 2.2.0",
+      "Microsoft.AspNetCore.Session >= 2.2.0",
       "Microsoft.NETCore.App >= 2.2.0",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 2.2.3",
       "Swashbuckle.AspNetCore >= 4.0.1",
@@ -13412,6 +13416,10 @@
           },
           "Microsoft.AspNetCore.Razor.Design": {
             "suppressParent": "All",
+            "target": "Package",
+            "version": "[2.2.0, )"
+          },
+          "Microsoft.AspNetCore.Session": {
             "target": "Package",
             "version": "[2.2.0, )"
           },

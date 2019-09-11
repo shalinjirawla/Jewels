@@ -139,7 +139,7 @@ namespace Inventory.Application.Services.ApplicationUserServices
             }
             return Status;
         }
-        public async Task<LoginModel> Login(LoginModel login)
+        public async Task<LoginVm> Login(LoginVm login)
         {
             var tokenString = "";
             try

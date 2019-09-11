@@ -23,7 +23,7 @@ export class ApplicationUserService {
     })
   }
   public LogInProcess(input: LoginModel): Observable<any> {
-    let url = this.BaseURL + `LoginProcess`;
+    let url = this.BaseURL + `Login`;
     return this.HttpClient.post(url, input, httpOption).pipe((responce: any) => {
       return this.Responce = responce;
     });

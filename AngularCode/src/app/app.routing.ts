@@ -8,7 +8,8 @@ import { P404Component } from './views/error/404.component';
 import { P500Component } from './views/error/500.component';
 import { LoginComponent } from './views/login/login.component';
 import { RegisterComponent } from './views/register/register.component';
-
+import { TenantsComponent } from './views/Tenants/tenants/tenants.component';
+  import { from } from 'rxjs';
 export const routes: Routes = [
   {
     path: '',
@@ -39,6 +40,13 @@ export const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent,
+    data: {
+      title: 'Register Page'
+    }
+  },
+  {
+    path: 'registertenants',
+    component: TenantsComponent,
     data: {
       title: 'Register Page'
     }

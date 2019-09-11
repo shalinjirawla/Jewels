@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Inventory.Application.ViewModel.ApplicationUser
 {
-    public class LoginModel
+    public class LoginVm
     {
         public string UserId { get; set; }
         public string EmailId { get; set; }

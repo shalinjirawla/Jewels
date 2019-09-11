@@ -30,6 +30,8 @@ using Swashbuckle.AspNetCore.Filters;
 using Microsoft.AspNetCore.Diagnostics;
 using Newtonsoft.Json;
 using System;
+using Inventory.Application.Interface.Tenants;
+using Inventory.Application.Services.TenantsServices;
 
 namespace Inventory.Web
 {
@@ -133,6 +135,7 @@ namespace Inventory.Web
             services.AddScoped<IcustomerType, CustomerTypeServices>();
             services.AddScoped<IApplicationUser, ApplicationUserServices>();
             services.AddScoped<IWarehouse, WarehouseService>();
+            services.AddScoped<ITenants, TenantsServices>();
             //Configure CORS for angular2 UI
             services.AddCors(options =>
             {
