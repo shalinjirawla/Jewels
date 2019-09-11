@@ -43,33 +43,32 @@ namespace Inventory.Application.Services.ApplicationUserServices
         {
             try
             {
-                Status = await IsTenantEmailIdExist(model.EmailId);
-                if (!Status)
+                var CheckTenants = _DbContext.Tenants.FirstOrDefault(x => x.TenantId == model.TenantId && x.EmailId == model.EmailId && x.IsActive == false);
+                if (CheckTenants != null)
                 {
                     await Task.Run(async () =>
                     {
-                        Tenants tenants = new Tenants
+                        var CheckMail = _UserManager.FindByEmailAsync(model.EmailId);
+                        var checkUserName = _UserManager.FindByNameAsync(model.UserName);
+                        if (CheckMail.Result == null && checkUserName.Result == null)
                         {
-                            TenantName = model.TenantName,
-                            CreationTime = DateTime.Now,
-                            CreatorUserId = null,
-                            EmailId = model.EmailId,
-                            BusinessRegisterNumber = model.BusinessRegisterNumber,
-                            IsActive = true,
-                            IsInTrialPeriod = true,
-                            LastModificationTime = DateTime.Now,
-                            LastModifierUserId = null,
-                            Logo = string.Empty,
-                            SubscriptionEndDateUtc = DateTime.UtcNow,
-                            TagRegisterNumber = model.TagRegisterNumber
-                        };
-                        _DbContext.Tenants.Add(tenants);
-                        _DbContext.SaveChanges();
-                        var Tenant = _DbContext.Tenants.OrderByDescending(x => x.TenantId).FirstOrDefault();
-                          
-                        if (Tenant != null) {
-                            model.TenantId = Tenant.TenantId;
-                          Status=await RegisterAspnetUser(model);
+                            CheckTenants.IsActive = true;
+                            CheckTenants.IsInTrialPeriod = true;
+                            CheckTenants.LastModificationTime = DateTime.Now;
+                            CheckTenants.SubscriptionEndDateUtc = DateTime.Now.AddDays(15);
+                            //SubscriptionEndDateUtc for train version after 15 day this account is Deactived..
+                            _DbContext.Tenants.Update(CheckTenants);
+                            _DbContext.SaveChanges();
+                            model.TenantId = model.TenantId;
+                            Status = await RegisterAspnetUser(model);
+                        }
+                       else if (checkUserName != null)
+                        {
+
+                        }
+                        else
+                        {
+
                         }
                     });
                 }
@@ -118,30 +117,7 @@ namespace Inventory.Application.Services.ApplicationUserServices
             }
             return Status;
         }
-        public async Task<Boolean> IsTenantEmailIdExist(string EmailId)
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(EmailId))
-                {
-                    await Task.Run(() =>
-                    {
-                        var check = _DbContext.Tenants.FirstOrDefault(x => x.EmailId == EmailId);
-                        if (check != null)
-                        {
-                            Status = true;
-                        }
-                        else { Status = false; }
-                    });
-                }
-            }
-            catch (Exception e)
-            {
 
-                throw e;
-            }
-            return Status;
-        }
         public async Task<LoginVm> Login(LoginVm login)
         {
             var tokenString = "";
@@ -149,14 +125,14 @@ namespace Inventory.Application.Services.ApplicationUserServices
             {
                 await Task.Run(async () =>
                 {
-                if (login != null)
-                {
-                     Status=   await SetCurrentLoginUserIdandTenantId(login.UserId,login.TenantId);
-                    DateTime CurrentDateTime = DateTime.Now;
-                    tokenString = GenerateJSONWebToken(login.UserName, login.EmailId, CurrentDateTime);
-                }
-                login.AccessToken = tokenString;
-                login.Password = null;
+                    if (login != null)
+                    {
+                        Status = await SetCurrentLoginUserIdandTenantId(login.UserId, login.TenantId);
+                        DateTime CurrentDateTime = DateTime.Now;
+                        tokenString = GenerateJSONWebToken(login.UserName, login.EmailId, CurrentDateTime);
+                    }
+                    login.AccessToken = tokenString;
+                    login.Password = null;
                 });
             }
             catch (Exception e)
@@ -186,11 +162,11 @@ namespace Inventory.Application.Services.ApplicationUserServices
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<Boolean> SetCurrentLoginUserIdandTenantId(string UserId,long TenantId)
+        public async Task<Boolean> SetCurrentLoginUserIdandTenantId(string UserId, long TenantId)
         {
             try
             {
-                if (!string.IsNullOrEmpty(UserId) && TenantId!=0)
+                if (!string.IsNullOrEmpty(UserId) && TenantId != 0)
                 {
                     await Task.Run(() =>
                     {
@@ -208,14 +184,17 @@ namespace Inventory.Application.Services.ApplicationUserServices
         }
         public async Task<string> GetUserId()
         {
-            return await Task.Run(()=>{
-               return _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            return await Task.Run(() =>
+            {
+                return _httpContextAccessor.HttpContext.Session.GetString("UserId");
             });
         }
-        public async Task<long> GetTenantId() {
-            return await Task.Run(() => {
+        public async Task<long> GetTenantId()
+        {
+            return await Task.Run(() =>
+            {
                 return Convert.ToInt64(_httpContextAccessor.HttpContext.Session.GetString("TenantId"));
-               
+
             });
         }
         public async Task<Boolean> Logout()
@@ -228,6 +207,6 @@ namespace Inventory.Application.Services.ApplicationUserServices
             });
         }
 
-        
+
     }
 }

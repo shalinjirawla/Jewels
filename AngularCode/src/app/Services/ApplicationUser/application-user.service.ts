@@ -29,10 +29,5 @@ export class ApplicationUserService {
     });
   }
 
-  public GetRegisterData(Id:any): Observable<any>{
-    let url = `https://localhost:44315/api/Tenants/GetRegisterData?Id=${Id}`;
-    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
-      return this.Responce = responce;
-    });
-  }
+  
 }

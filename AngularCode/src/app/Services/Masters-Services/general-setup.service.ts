@@ -1,7 +1,6 @@
 import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs'
-debugger
 let AccessToken;
 AccessToken=localStorage.getItem('AccessToken');
 const httpOption = {

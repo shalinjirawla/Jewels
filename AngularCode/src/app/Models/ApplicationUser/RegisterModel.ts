@@ -2,6 +2,7 @@ export class RegisterModel{
     public TenantId:undefined|any;
     public TenantName:undefined|any //Comapany Name
     public EmailId:undefined|any;
+    public UserName:undefined|any;
     public Password:undefined|any;
     public ConfirmPassword:undefined|any;
     public BusinessRegisterNumber:undefined|any;

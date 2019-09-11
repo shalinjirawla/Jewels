@@ -27,7 +27,14 @@
                         <div *ngIf="f.EmailId.errors.email">Email must be a valid email address</div>
                     </div>
                 </div>
-               
+                <div class="wrap-input100  m-b-6" data-validate="Email Id is required">
+                        <span class="label-input100">User Name</span>
+                        <input class="input100 form-control"  type="text" formControlName="UserName" name="UserName"
+                            placeholder="Enter User Name" [ngClass]="{ 'is-invalid': FormSubmitted && f.UserName.errors }">
+                        <div *ngIf="FormSubmitted && f.UserName.errors" class="invalid-feedback">
+                            <div *ngIf="f.UserName.errors.required">User Name  is required</div>
+                        </div>
+                    </div>
                 <div class="wrap-input100  m-b-8" data-validate="Password is required">
                     <span class="label-input100">Password</span>
                     <input class="input100 form-control" type="password" formControlName="Password" name="pass"
@@ -52,6 +59,7 @@
                     </div>
                 </div>
                 <div>
+                  
                     <input type="hidden" formControlName="BusinessRegisterNumber">
                     <input type="hidden" formControlName="TaxRegisterNumber">
                     <input type="hidden" formControlName="IsActive">
@@ -62,7 +70,8 @@
 
                 <div class="container-login100-form-btn m-b-8">
                     <button class="login100-form-btn" (click)="SaveRegsiter(RegisterForm)">
-                        Update
+                        <span  *ngIf="!loading"> Update</span>
+                        <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
                     </button>
                 </div>
             </form>
