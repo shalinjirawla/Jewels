@@ -1,4 +1,5 @@
-﻿using Inventory.Application.ViewModel.Tenants;
+﻿using Inventory.Application.ViewModel.ApplicationUser;
+using Inventory.Application.ViewModel.Tenants;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,5 +10,7 @@ namespace Inventory.Application.Interface.Tenants
    public interface ITenants
     {
         Task<Boolean> SaveTenants(TenantsVm model);
+
+        RegisterVm GetRegisterDataAsync(long id);
     }
 }

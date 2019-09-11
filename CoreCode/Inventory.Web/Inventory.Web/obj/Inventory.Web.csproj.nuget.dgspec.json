@@ -109,7 +109,7 @@
       "frameworks": {
         "netstandard2.0": {
           "dependencies": {
-            "Microsoft.AspNetCore.Session": {
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
               "version": "[2.2.0, )"
             },

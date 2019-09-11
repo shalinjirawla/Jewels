@@ -1,4 +1,5 @@
 ﻿using Inventory.Application.Interface.Tenants;
+using Inventory.Application.ViewModel.ApplicationUser;
 using Inventory.Application.ViewModel.Tenants;
 using Inventory.Core.Models.Tenants;
 using Inventory.EntityFrameworkCore.DbContext;
@@ -40,7 +41,8 @@ namespace Inventory.Application.Services.TenantsServices
                             };
                             _DbContext.Tenants.Add(tenants);
                             _DbContext.SaveChanges();
-                          //  Result = SendMail(model.EmailId);
+                            
+                            Result = SendMail(model.EmailId, tenants.TenantId,tenants.TenantName);
                         Result = true;
                     }
                     else {
@@ -79,7 +81,7 @@ namespace Inventory.Application.Services.TenantsServices
             }
             return Result;
         }
-        public Boolean SendMail(string ToEmailId)
+        public Boolean SendMail(string ToEmailId, long TenantId,string TenantName)
         {
             try
             {
@@ -99,13 +101,54 @@ namespace Inventory.Application.Services.TenantsServices
                 //message.IsBodyHtml = true;
                 //mailClient.Send(message);
 
+                string to = ToEmailId; //To address    
+                string from = "ravi.k@ncoresoft.com"; //From address    
+                MailMessage message = new MailMessage(from, to);
+
+                string mailbody = "Your TenantId is " + TenantId;
+                string ActivationUrl = "http://localhost:4200/#/register?TenantId="+ TenantId;
+                string mailbody2 =  "Hi " + TenantName + " !\n" +
+                  "Thanks for showing interest and registring in " +
+                  " Please <a href='" + ActivationUrl + "'>click here to activate</a>  your account and enjoy our services. \nThanks!";
+                message.Subject = "Sending Email Using Asp.Net & C#";
+                message.Body = mailbody2;
+                message.BodyEncoding = Encoding.UTF8;
+                message.IsBodyHtml = true;
+                SmtpClient client = new SmtpClient("smtp.zoho.com", 587);
+                System.Net.NetworkCredential basicCredential1 = new
+                System.Net.NetworkCredential("ravi.k@ncoresoft.com", "Ncore@123");
+                client.EnableSsl = true;
+                client.UseDefaultCredentials = false;
+                client.Credentials = basicCredential1;
+                client.Timeout = 2000000;
+
+                client.Send(message);
+
             }
             catch (Exception e)
             {
 
-                throw;
+                throw e;
             }
             return true;
+        }
+
+        public RegisterVm GetRegisterDataAsync(long id)
+        {
+            RegisterVm registerdata = new RegisterVm();
+            try
+            {
+                var data = _DbContext.Tenants.FirstOrDefault(x => x.TenantId == id);
+                registerdata.TenantId = data.TenantId;
+                registerdata.TenantName = data.TenantName;
+                registerdata.EmailId = data.EmailId;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return registerdata;
         }
     }
 }

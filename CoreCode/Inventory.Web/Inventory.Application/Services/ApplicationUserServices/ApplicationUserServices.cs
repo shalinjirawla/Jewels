@@ -181,8 +181,7 @@ namespace Inventory.Application.Services.ApplicationUserServices
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-       
-        
 
+        
     }
 }

@@ -46,5 +46,17 @@ namespace Inventory.Web.Controllers
             else { return BadRequest(); }
             return Ok(GetAjaxResponse(Status, Message, null));
         }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult GetRegisterData(long Id)
+        {
+            Data = null;
+            if (Id != 0)
+            {
+                Data = _tenants.GetRegisterDataAsync(Id);
+            }
+            return Ok(GetAjaxResponse(true, "ok", Data));
+        }
     }
 }

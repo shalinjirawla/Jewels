@@ -27,9 +27,22 @@ export class RegisterComponent implements OnInit {
   RegisterForm: FormGroup;
   FormSubmitted: boolean = false;
   Responce: any;
+  UrlTenantId:number;
   ngOnInit() {
     this.Onload();
+    this.GetRegisterData(this.getQueryParameter())
   }
+
+  public getQueryParameter():number {
+    const url = window.location.href;
+    if (url.includes('?')) {
+      let httpParams = url.split('?')[1];
+      this.UrlTenantId = parseInt(httpParams.split("=")[1]);
+      return this.UrlTenantId;
+    }
+   
+  }
+
   public Onload() {
     this.RegisterForm = this.FormBuilder.group({
       TenantId: [0],
@@ -39,7 +52,7 @@ export class RegisterComponent implements OnInit {
       ConfirmPassword: ['', Validators.required],
       BusinessRegisterNumber:[0],
       TaxRegisterNumber:[0],
-      IsActive:[false],
+      IsActive:[true],
       Logo:[''],
       IsInTrialPeriod:[''],
       SubscriptionEndDateUtc:['']
@@ -60,5 +73,28 @@ export class RegisterComponent implements OnInit {
   }
   get f() {
     return this.RegisterForm.controls;
+  }
+
+  public GetRegisterData(UrlTenantId:number) {
+    this.ApplicationUserService.GetRegisterData(UrlTenantId).subscribe((responce: any) => {
+      debugger
+      let result;
+      result=responce.data;
+
+      this.RegisterForm.patchValue({
+        TenantId: result.tenantId,
+      TenantName: result.tenantName,
+      EmailId: result.emailId,
+      Password: [''],
+      ConfirmPassword: [''],
+      BusinessRegisterNumber:[0],
+      TaxRegisterNumber:[0],
+      IsActive:[true],
+      Logo:[''],
+      IsInTrialPeriod:[''],
+      SubscriptionEndDateUtc:['']
+      })
+
+    });
   }
 }

@@ -108,6 +108,8 @@ namespace Inventory.Web.Controllers
             else { return BadRequest(); }
             return Ok(GetAjaxResponse(Status, Message, Data));
         }
+
+
         [HttpGet]
         public IActionResult GetAll()
         {

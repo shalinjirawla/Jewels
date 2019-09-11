@@ -11,7 +11,7 @@
                 <input type="hidden" formControlName="TenantId">
                 <div class="wrap-input100  m-b-6">
                     <span class="label-input100">Company</span>
-                    <input class="input100 form-control" type="text" formControlName="TenantName" name="Company"
+                    <input class="input100 form-control" type="text" disabled formControlName="TenantName" name="Company"
                         [ngClass]="{ 'is-invalid': FormSubmitted && f.TenantName.errors }"
                        placeholder="Enter Company">
                     <div *ngIf="FormSubmitted && f.TenantName.errors" class="invalid-feedback">
@@ -20,13 +20,14 @@
                 </div>
                 <div class="wrap-input100  m-b-6" data-validate="Email Id is required">
                     <span class="label-input100">Email Id</span>
-                    <input class="input100 form-control" type="text" formControlName="EmailId" name="EmailId"
+                    <input class="input100 form-control" disabled type="text" formControlName="EmailId" name="EmailId"
                         placeholder="Enter Email Id" [ngClass]="{ 'is-invalid': FormSubmitted && f.EmailId.errors }">
                     <div *ngIf="FormSubmitted && f.EmailId.errors" class="invalid-feedback">
                         <div *ngIf="f.EmailId.errors.required">Email Id  is required</div>
                         <div *ngIf="f.EmailId.errors.email">Email must be a valid email address</div>
                     </div>
                 </div>
+               
                 <div class="wrap-input100  m-b-8" data-validate="Password is required">
                     <span class="label-input100">Password</span>
                     <input class="input100 form-control" type="password" formControlName="Password" name="pass"
