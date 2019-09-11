@@ -1772,6 +1772,7 @@
       "path": "remotion.linq/2.2.0",
       "files": [
         ".nupkg.metadata",
+        ".signature.p7s",
         "lib/net35/Remotion.Linq.XML",
         "lib/net35/Remotion.Linq.dll",
         "lib/net40/Remotion.Linq.XML",
@@ -3631,23 +3632,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\admin\\.nuget\\packages\\": {},
+    "C:\\Users\\Admin\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj",
+      "projectUniqueName": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj",
       "projectName": "Inventory.Core",
-      "projectPath": "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj",
-      "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-      "outputPath": "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\obj\\",
+      "projectPath": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj",
+      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+      "outputPath": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

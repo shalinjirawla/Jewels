@@ -32,6 +32,7 @@ using Newtonsoft.Json;
 using System;
 using Inventory.Application.Interface.Tenants;
 using Inventory.Application.Services.TenantsServices;
+using System.Threading.Tasks;
 
 namespace Inventory.Web
 {
@@ -122,6 +123,19 @@ namespace Inventory.Web
                     ValidAudience = Configuration["Jwt:Issuer"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                 };
+                option.Events = new JwtBearerEvents()
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        context.Response.ContentType = "application/json; charset=utf-8";
+                        var message ="An error occurred processing your authentication.";
+                        var status = StatusCodes.Status401Unauthorized;
+                        var body = "Unauthorized";
+                        var result = JsonConvert.SerializeObject(new { message,status,body });
+                        return context.Response.WriteAsync(result);
+                    }
+                };
 
             });
             
@@ -188,7 +202,29 @@ namespace Inventory.Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.UseStatusCodePages(async context =>
+            {
+                if (context.HttpContext.Request.Path.StartsWithSegments("/api"))
+                {
+                    // fallback when no content is provided in an api response
+                    if (!context.HttpContext.Response.ContentLength.HasValue ||
+                        context.HttpContext.Response.ContentLength == 0)
+                    {
+                        context.HttpContext.Response.ContentType = "text/plain";
+                        var message = "Currently User Not Login..";
+                        var status = context.HttpContext.Response.StatusCode;
+                        var body = "";
+                        var result = JsonConvert.SerializeObject(new { message, status, body });
+                        await context.HttpContext.Response.WriteAsync(result);
+                      //  await context.HttpContext.Response.WriteAsync("Currently User Not Login.." +
+                           //   $"Status Code: {context.HttpContext.Response.StatusCode}");
+                    }
+                }
+                else
+                {
+                    context.HttpContext.Response.Redirect($"/Error?code={context.HttpContext.Response.StatusCode}");
+                }
+            });
             app.UseDeveloperExceptionPage();
             app.UseFileServer();
             app.UseIdentity();
@@ -198,39 +234,7 @@ namespace Inventory.Web
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Inventory API V1");
             });
-            app.UseExceptionHandler(appBuilder =>
-            {
-                appBuilder.Use(async (context, next) =>
-                {
-                    var error = context.Features[typeof(IExceptionHandlerFeature)] as IExceptionHandlerFeature;
-
-                    //when authorization has failed, should retrun a json message to client
-                    if (error != null && error.Error is SecurityTokenExpiredException)
-                    {
-                        context.Response.StatusCode = 401;
-                        context.Response.ContentType = "application/json";
-
-                        await context.Response.WriteAsync(JsonConvert.SerializeObject(new
-                        {
-                            State = "Unauthorized",
-                            Msg = "token expired"
-                        }));
-                    }
-                    //when orther error, retrun a error message json to client
-                    else if (error != null && error.Error != null)
-                    {
-                        context.Response.StatusCode = 500;
-                        context.Response.ContentType = "application/json";
-                        await context.Response.WriteAsync(JsonConvert.SerializeObject(new
-                        {
-                            State = "Internal Server Error",
-                            Msg = error.Error.Message
-                        }));
-                    }
-                    //when no error, do next.
-                    else await next();
-                });
-            });
+           
             app.UseCors(DefaultCorsPolicyName);
             app.UseHttpsRedirection();
             app.UseMvc();

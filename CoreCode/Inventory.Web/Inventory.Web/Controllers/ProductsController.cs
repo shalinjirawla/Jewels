@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Inventory.Application.Interface.ApplicationUser;
 using Inventory.Application.Interface.Products;
 using Inventory.Application.Services.ProductsServices;
 using Inventory.Application.ViewModel.Products;
 using Inventory.Application.ViewModel.ProductsVm;
 using Inventory.Web.share;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,16 +16,25 @@ namespace Inventory.Web.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [Authorize]
     public class ProductsController : ControllerBase
     {
         private readonly IProductCategories _ProductCategoriesServices;
         private readonly IProductBrand _ProductBrandServices;
+        private readonly IApplicationUser _applicationUser;
         public Boolean Result = false;
         public string Message = "";
-        public ProductsController(IProductCategories productCategoriesServices, IProductBrand productBrand)
+        public ProductsController(IProductCategories productCategoriesServices, IProductBrand productBrand,
+             IApplicationUser applicationUser
+            )
         {
             _ProductCategoriesServices = productCategoriesServices;
             _ProductBrandServices = productBrand;
+            _applicationUser = applicationUser;
+            if (_applicationUser.GetUserId() == null && _applicationUser.GetTenantId() == null)
+            {
+                _applicationUser.Logout();
+            }
         }
         [NonAction]
         public ApiResponse GetAjaxResponse(bool status, string message, object data)

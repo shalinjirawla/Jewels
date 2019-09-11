@@ -29,11 +29,17 @@ namespace Inventory.Web.Controllers
         public object Data = null;
         public AccountController(UserManager<ApplicationUser> UserManager,
             IApplicationUser applicationUser,
-             SignInManager<ApplicationUser> signInManager)
+             SignInManager<ApplicationUser> signInManager
+             )
         {
             _UserManager = UserManager;
             _applicationUser = applicationUser;
             _signInManager = signInManager;
+            if (_applicationUser.GetUserId() == null && _applicationUser.GetTenantId()==null)
+            {
+                logout();
+            }
+
         }
         [NonAction]
         public ApiResponse GetAjaxResponse(bool status, string message, object data)
@@ -61,7 +67,7 @@ namespace Inventory.Web.Controllers
                             LoginVm.UserName = loginRequestUser.UserName;
                             LoginVm.TenantId = loginRequestUser.TenantId;
                             LoginVm = await _applicationUser.Login(LoginVm);
-                            SetCurrentLoginUserId(loginRequestUser.Id);
+                            //SetCurrentLoginUserId(loginRequestUser.Id);
                         }
                     }
                     else
@@ -72,12 +78,13 @@ namespace Inventory.Web.Controllers
                     }
 
                 }
-                else {
+                else
+                {
                     Status = false;
-                    Message = LoginVm.UserName+ " Username is not Exist...";
+                    Message = LoginVm.UserName + " Username is not Exist...";
                     LoginVm = null;
                 }
-                
+
             }
             else { return BadRequest(); }
             return Ok(GetAjaxResponse(Status, Message, LoginVm));
@@ -116,19 +123,14 @@ namespace Inventory.Web.Controllers
             return Ok(GetAjaxResponse(true, "ok", null));
         }
         [HttpGet]
-        public Boolean SetCurrentLoginUserId(string UserId)
+        [AllowAnonymous]
+        public IActionResult logout()
         {
-            if (!string.IsNullOrEmpty(UserId))
-            {
-                HttpContext.Session.SetString("UserId", UserId);
-            }
-            return true;
-        }
-        [HttpGet]
-        public string GetUserId()
-        {
-            string UserId = HttpContext.Session.GetString("UserId");
-            return UserId;
+            _applicationUser.Logout();
+            Message = "Log Out Suceessfully.";
+            Status = true;
+            Data = null;
+            return Ok(GetAjaxResponse(Status, Message, Data));
         }
     }
 }
