@@ -33,8 +33,9 @@ namespace Inventory.Core.Models.Customer
         [ForeignKey("UserId")]
         public string LastModifierUserId { get; set; }
         public Boolean IsActive { get; set; }
+        public Nullable<long> TenantsId { get; set; }
 
-
+        public Tenants.Tenants Tenants { get; set; }
         public CustomerType CustomerType { get; set; }
         public CreditTerms creditTerms { get; set; }
         public Currency.Currency Currency { get; set; }

@@ -20,7 +20,9 @@ namespace Inventory.Core.Models.Currency
         [ForeignKey("UserId")]
         public string LastModifierUserId { get; set; }
         public Boolean IsActive { get; set; }
+        public Nullable<long> TenantsId { get; set; }
 
+        public Tenants.Tenants Tenants { get; set; }
         public ApplicationUser.ApplicationUser User { get; set; }
         public ApplicationUser.ApplicationUser UserId { get; set; }
     }

@@ -49,7 +49,9 @@ namespace Inventory.Web.Controllers
             Boolean Result=false;
             string Message = "";
             if (ModelState.IsValid) {
-                Result =await _ProductCategoriesServices.SaveProductCategories(model);
+                string UserId = await _applicationUser.GetUserId();
+                long TenantId = await _applicationUser.GetTenantId();
+                Result =await _ProductCategoriesServices.SaveProductCategories(model,UserId,TenantId);
                 if (Result) { Message = "Categories Successfully Saved...!"; }
                 else { Message = model.CategoriesName + " Is Already Exist...!"; }
             }
@@ -82,7 +84,8 @@ namespace Inventory.Web.Controllers
             string Message = "";
             if (ModelState.IsValid)
             {
-                Result = await _ProductCategoriesServices.UpdateProductCategories(CategoriesId,model);
+                string UserId = await _applicationUser.GetUserId();
+                Result = await _ProductCategoriesServices.UpdateProductCategories(CategoriesId,model, UserId);
                 if (Result) { Message = "Categories Successfully Updated...!"; }
                 else { Message = model.CategoriesName + " Is Already Exist...!"; }
             }
@@ -124,7 +127,9 @@ namespace Inventory.Web.Controllers
         public async Task<IActionResult> SaveProductBrand(ProductBrandVm model)
         {
             if (ModelState.IsValid) {
-                Result= await _ProductBrandServices.SaveProductCategories(model);
+                string UserId = await _applicationUser.GetUserId();
+                long TenantId = await _applicationUser.GetTenantId();
+                Result= await _ProductBrandServices.SaveProductCategories(model,UserId,TenantId);
                 if (Result)
                 {
                     Message = "Product Brand Successfully Saved..!";
@@ -148,7 +153,8 @@ namespace Inventory.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateProductBrand(long BrandId, ProductBrandVm model) {
             if (BrandId != 0 && ModelState.IsValid) {
-                Result = await _ProductBrandServices.UpdateProductCategories(BrandId, model);
+                string UserId = await _applicationUser.GetUserId();
+                Result = await _ProductBrandServices.UpdateProductCategories(BrandId, model, UserId);
                 if (Result)
                 {
                     Message = "Product Successfully Updated..!";

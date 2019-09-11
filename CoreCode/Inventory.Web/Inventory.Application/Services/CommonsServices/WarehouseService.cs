@@ -111,7 +111,7 @@ namespace Inventory.Application.Services.CommonsServices
             return warehouseList;
         }
 
-        public string SaveWarehouseListAsync(WarehouseVm model)
+        public string SaveWarehouseListAsync(WarehouseVm model, string UserId, long TenantId)
         {
             string WarehouseId = "";
             try
@@ -123,9 +123,10 @@ namespace Inventory.Application.Services.CommonsServices
                     warehouse.code = model.Warehousecode;
                     warehouse.CreationTime = DateTime.Now;
                     warehouse.LastModificationTime = DateTime.Now;
-                    warehouse.CreatorUserId = "18584764-e39b-4633-8682-4821b967a34c";
-                    warehouse.LastModifierUserId = "18584764-e39b-4633-8682-4821b967a34c";
+                    warehouse.CreatorUserId = UserId;
+                    warehouse.LastModifierUserId = UserId;
                     warehouse.IsActive = true;
+                    warehouse.TenantsId = TenantId;
 
                     _DbContext.Warehouses.Add(warehouse);
                     _DbContext.SaveChanges();
@@ -141,7 +142,7 @@ namespace Inventory.Application.Services.CommonsServices
                         warehouse.Name = model.WarehouseName;
                         warehouse.code = model.Warehousecode;
                         warehouse.LastModificationTime = DateTime.Now;
-                        warehouse.LastModifierUserId = "18584764-e39b-4633-8682-4821b967a34c";
+                        warehouse.LastModifierUserId = UserId;
 
                         _DbContext.Update(warehouse);
                         _DbContext.SaveChanges();
@@ -158,7 +159,7 @@ namespace Inventory.Application.Services.CommonsServices
             return WarehouseId;
         }
 
-        public bool UpdateWarehouseStatusAsync(long id, bool status)
+        public bool UpdateWarehouseStatusAsync(long id, bool status, string UserId)
         {
            
             try
@@ -169,7 +170,7 @@ namespace Inventory.Application.Services.CommonsServices
                 {
                     warehouse.IsActive = status;
                     warehouse.LastModificationTime = DateTime.Now;
-                    warehouse.LastModifierUserId = "18584764-e39b-4633-8682-4821b967a34c";
+                    warehouse.LastModifierUserId = UserId;
 
                     _DbContext.Update(warehouse);
                     _DbContext.SaveChanges();

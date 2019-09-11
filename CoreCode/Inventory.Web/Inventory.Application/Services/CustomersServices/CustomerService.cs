@@ -19,7 +19,7 @@ namespace Inventory.Application.Services
             _DbContext = DbContext;
         }
 
-        public async Task<long> AddCustomer(AddCustomerVm Model)
+        public async Task<long> AddCustomer(AddCustomerVm Model, string UserId, long TenantId)
         {
             long CustomerId = 0;
             try
@@ -30,7 +30,7 @@ namespace Inventory.Application.Services
 
                     if (Model != null)
                     {
-                       Nullable<long> CountryId = 0;
+                        Nullable<long> CountryId = 0;
                         if (Model.CustomerId == 0 && Model.CustomerName != null && Model.CustomerName != "")
                         {
                             customer.CustomerName = Model.CustomerName;
@@ -64,16 +64,17 @@ namespace Inventory.Application.Services
                                 customer.DefaultCurrency = long.Parse(Model.DefaultCurrency);
 
                             }
-                            customer.CreatorUserId = "1";
-                            customer.LastModifierUserId = "1";
+                            customer.CreatorUserId = UserId;
+                            customer.LastModifierUserId = UserId;
                             DateTime date = new DateTime();
                             customer.LastModificationTime = date;
                             customer.IsActive = true;
+                            customer.TenantsId = TenantId;
 
 
                             _DbContext.Customers.Add(customer);
                             _DbContext.SaveChanges();
-                            
+
                             if (Model.AddressList != null)
                             {
 
@@ -125,53 +126,56 @@ namespace Inventory.Application.Services
 
                         else
                         {
-                            customer.CustomerId = Model.CustomerId;
-                            customer.CustomerName = Model.CustomerName;
-                            customer.CusromerCode = Model.CustomerCode;
-                            int typeid;
-                            typeid = Model.CustomerTypeId != null && Model.CustomerTypeId != "" ? int.Parse(Model.CustomerTypeId) : 0;
-                            if (typeid != 0 && typeid > 0)
+                            var alreadycustomer = _DbContext.Customers.FirstOrDefault(x => x.CustomerId == Model.CustomerId);
+                            if (alreadycustomer != null)
                             {
-                                customer.CustomerTypeId = typeid;
-                            }
-                            customer.Website = Model.Website;
-                            customer.TaxRegistrationNumber = Model.TaxRegistrationNumber;
-                            customer.Remarks = Model.Remarks;
-                            customer.CreditTermId = Model.DefaultCreditTerms;
-                            customer.DefaultCreditLimit = Model.DefaultCreditLimit != null && Model.DefaultCreditLimit != "" ? long.Parse(Model.DefaultCreditLimit) : 0;
-                            if (Model.DiscountOption != null && Model.DiscountOption != "" && Model.DiscountOption != "0")
-                            {
-                                customer.DiscountOption = long.Parse(Model.DiscountOption);
-
-                            }
-                            if (customer.DiscountOption != 0 && customer.DiscountOption != null)
-                            {
-                                customer.DiscountAmount = Model.DiscountAmount != null && Model.DiscountAmount != "" ? double.Parse(Model.DiscountAmount) : 0;
-                            }
-                            else
-                            {
-                                customer.DiscountAmount = 0;
-                            }
-                            if (Model.DefaultCurrency != null && Model.DefaultCurrency != "" && Model.DefaultCurrency != "0")
-                            {
-                                customer.DefaultCurrency = long.Parse(Model.DefaultCurrency);
-
-                            }
-                            customer.CreatorUserId = "1";
-                            customer.LastModifierUserId = "1";
-                            DateTime date = new DateTime();
-                            customer.LastModificationTime = date;
-                            customer.IsActive = true;
-
-                            _DbContext.Update(customer);
-                            _DbContext.SaveChanges();
-                            if (Model.AddressList != null)
-                            {
-                                var deleteaddresslist = _DbContext.customerAddersses.Where(x => x.CustomerId == customer.CustomerId).ToList();
-                                _DbContext.customerAddersses.RemoveRange(deleteaddresslist);
-                                foreach (var list in Model.AddressList.Address)
+                                customer.CustomerId = Model.CustomerId;
+                                customer.CustomerName = Model.CustomerName;
+                                customer.CusromerCode = Model.CustomerCode;
+                                int typeid;
+                                typeid = Model.CustomerTypeId != null && Model.CustomerTypeId != "" ? int.Parse(Model.CustomerTypeId) : 0;
+                                if (typeid != 0 && typeid > 0)
                                 {
-                                    CustomerAdderss customerAdderss = new CustomerAdderss();
+                                    customer.CustomerTypeId = typeid;
+                                }
+                                customer.Website = Model.Website;
+                                customer.TaxRegistrationNumber = Model.TaxRegistrationNumber;
+                                customer.Remarks = Model.Remarks;
+                                customer.CreditTermId = Model.DefaultCreditTerms;
+                                customer.DefaultCreditLimit = Model.DefaultCreditLimit != null && Model.DefaultCreditLimit != "" ? long.Parse(Model.DefaultCreditLimit) : 0;
+                                if (Model.DiscountOption != null && Model.DiscountOption != "" && Model.DiscountOption != "0")
+                                {
+                                    customer.DiscountOption = long.Parse(Model.DiscountOption);
+
+                                }
+                                if (customer.DiscountOption != 0 && customer.DiscountOption != null)
+                                {
+                                    customer.DiscountAmount = Model.DiscountAmount != null && Model.DiscountAmount != "" ? double.Parse(Model.DiscountAmount) : 0;
+                                }
+                                else
+                                {
+                                    customer.DiscountAmount = 0;
+                                }
+                                if (Model.DefaultCurrency != null && Model.DefaultCurrency != "" && Model.DefaultCurrency != "0")
+                                {
+                                    customer.DefaultCurrency = long.Parse(Model.DefaultCurrency);
+
+                                }
+                                customer.CreatorUserId = alreadycustomer.CreatorUserId;
+                                customer.LastModifierUserId = "1";
+                                DateTime date = new DateTime();
+                                customer.LastModificationTime = date;
+                                customer.IsActive = true;
+
+                                _DbContext.Update(customer);
+                                _DbContext.SaveChanges();
+                                if (Model.AddressList != null)
+                                {
+                                    var deleteaddresslist = _DbContext.customerAddersses.Where(x => x.CustomerId == customer.CustomerId).ToList();
+                                    _DbContext.customerAddersses.RemoveRange(deleteaddresslist);
+                                    foreach (var list in Model.AddressList.Address)
+                                    {
+                                        CustomerAdderss customerAdderss = new CustomerAdderss();
                                         customerAdderss.AddressType = list.AddressType;
                                         customerAdderss.Address = list.Address;
                                         customerAdderss.DefaultAddress = list.DefaultAddress;
@@ -187,34 +191,35 @@ namespace Inventory.Application.Services
 
                                         _DbContext.customerAddersses.Add(customerAdderss);
                                         _DbContext.SaveChanges();
-                                }
-
-                            }
-                            if (Model.ContactList != null)
-                            {
-                                var deletecontactlist = _DbContext.customerContacts.Where(x => x.CustomerId == customer.CustomerId).ToList();
-                                _DbContext.customerContacts.RemoveRange(deletecontactlist);
-                                foreach (var list in Model.ContactList.Contact)
-                                {
-
-                                    if (list.contactId != null && list.contactId != "")
-                                    {
-                                        CustomerContacts customerContacts = new CustomerContacts();
-                                        customerContacts.CustomerId = customer.CustomerId;
-                                        customerContacts.Designation = list.Designation;
-                                        customerContacts.Email = list.Email;
-                                        customerContacts.CountryId = CountryId;
-                                        customerContacts.FirstName = list.FirstName;
-                                        customerContacts.LastName = list.LastName;
-                                        customerContacts.DefaultContact = list.DefaultContact;
-                                        customerContacts.Mobile = list.Mobile;
-                                        customerContacts.Fax = list.Fax;
-                                        customerContacts.Office = list.Office;
-                                        _DbContext.customerContacts.Add(customerContacts);
-                                        _DbContext.SaveChanges();
-
                                     }
 
+                                }
+                                if (Model.ContactList != null)
+                                {
+                                    var deletecontactlist = _DbContext.customerContacts.Where(x => x.CustomerId == customer.CustomerId).ToList();
+                                    _DbContext.customerContacts.RemoveRange(deletecontactlist);
+                                    foreach (var list in Model.ContactList.Contact)
+                                    {
+
+                                        if (list.contactId != null && list.contactId != "")
+                                        {
+                                            CustomerContacts customerContacts = new CustomerContacts();
+                                            customerContacts.CustomerId = customer.CustomerId;
+                                            customerContacts.Designation = list.Designation;
+                                            customerContacts.Email = list.Email;
+                                            customerContacts.CountryId = CountryId;
+                                            customerContacts.FirstName = list.FirstName;
+                                            customerContacts.LastName = list.LastName;
+                                            customerContacts.DefaultContact = list.DefaultContact;
+                                            customerContacts.Mobile = list.Mobile;
+                                            customerContacts.Fax = list.Fax;
+                                            customerContacts.Office = list.Office;
+                                            _DbContext.customerContacts.Add(customerContacts);
+                                            _DbContext.SaveChanges();
+
+                                        }
+
+                                    }
                                 }
                             }
                         }

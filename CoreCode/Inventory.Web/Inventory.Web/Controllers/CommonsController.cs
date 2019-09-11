@@ -66,7 +66,9 @@ namespace Inventory.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _discountType.SaveDiscountType(discountTypeVm);
+                string UserId = await _applicationUser.GetUserId();
+                long TenantId = await _applicationUser.GetTenantId();
+                await _discountType.SaveDiscountType(discountTypeVm,UserId,TenantId);
             }
             else
             {
@@ -93,7 +95,8 @@ namespace Inventory.Web.Controllers
         {
             if (DiscounttypeId != 0 && ModelState.IsValid)
             {
-                DiscounttypeId = await _discountType.UpdateDiscountType(DiscounttypeId, discountTypeVm);
+                string UserId = await _applicationUser.GetUserId();
+                DiscounttypeId = await _discountType.UpdateDiscountType(DiscounttypeId, discountTypeVm,UserId);
             }
             else
             {
@@ -245,7 +248,7 @@ namespace Inventory.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddUpdateCountry(CountryVm model)
+        public async Task<IActionResult> AddUpdateCountry(CountryVm model)
         {
             var msg = "";
             if (model.CountryId == 0)
@@ -256,7 +259,9 @@ namespace Inventory.Web.Controllers
             {
                 msg = "Country Updated Successfully";
             }
-            var CountryId = _icountry.AddCountryAsyc(model);
+            string UserId = await _applicationUser.GetUserId();
+            long TenantId = await _applicationUser.GetTenantId();
+            var CountryId = _icountry.AddCountryAsyc(model,UserId,TenantId);
             return Ok(GetAjaxResponse(true, msg, CountryId));
         }
 
@@ -368,9 +373,11 @@ namespace Inventory.Web.Controllers
 
         }
         [HttpPost]
-        public IActionResult SaveWarehouseList(WarehouseVm model)
+        public async Task<IActionResult> SaveWarehouseList(WarehouseVm model)
         {
-            var warehouse = _warehouse.SaveWarehouseListAsync(model);
+            string UserId = await _applicationUser.GetUserId();
+            long TenantId = await _applicationUser.GetTenantId();
+            var warehouse = _warehouse.SaveWarehouseListAsync(model,UserId,TenantId);
             return Ok(GetAjaxResponse(true, string.Empty, warehouse));
 
         }
@@ -401,11 +408,12 @@ namespace Inventory.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult UpdateWarehouseStatus(long Id,Boolean status)
+        public async Task<IActionResult> UpdateWarehouseStatus(long Id,Boolean status)
         {
             if (Id != 0)
             {
-                var warehouse = _warehouse.UpdateWarehouseStatusAsync(Id, status);
+                string UserId = await _applicationUser.GetUserId();
+                var warehouse = _warehouse.UpdateWarehouseStatusAsync(Id, status, UserId);
                 if (status) {
                     Message = "Ware House Actived..";
                     Status = true;

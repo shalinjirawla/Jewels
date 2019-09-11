@@ -17,7 +17,7 @@ namespace Inventory.Application.Services
         {
             _DbContext = DbContext;
         }
-        public async Task<long> SaveDiscountType(DiscountTypeVm discountTypeVm)
+        public async Task<long> SaveDiscountType(DiscountTypeVm discountTypeVm, string UserId, long TenantId)
         {
             long DiscountTypeId = 0;
             try
@@ -29,11 +29,12 @@ namespace Inventory.Application.Services
                         DiscountType discountType = new DiscountType
                         {
                             DiscountName = discountTypeVm.DiscountName,
-                            CreatorUserId = "001",
+                            CreatorUserId = UserId,
                             CreationTime = DateTime.Now,
                             IsActive = true,
                             LastModificationTime = DateTime.Now,
-                            LastModifierUserId = "001",
+                            LastModifierUserId = UserId,
+                            TenantsId = TenantId
                         };
                         _DbContext.discountTypes.Add(discountType);
                         _DbContext.SaveChanges();
@@ -103,7 +104,7 @@ namespace Inventory.Application.Services
             }
             return DiscountTypeVmList;
         }
-        public async Task<long> UpdateDiscountType(long DiscountTypeId, DiscountTypeVm discountTypeVm)
+        public async Task<long> UpdateDiscountType(long DiscountTypeId, DiscountTypeVm discountTypeVm, string UserId)
         {
 
             try
@@ -115,7 +116,7 @@ namespace Inventory.Application.Services
                     {
                         data.DiscountName = discountTypeVm.DiscountName;
                         data.LastModificationTime = DateTime.Now;
-                        data.LastModifierUserId = "001";
+                        data.LastModifierUserId = UserId;
                     }
                     _DbContext.Update(data);
                     _DbContext.SaveChanges();

@@ -18,7 +18,7 @@ namespace Inventory.Application.Services.CommonsServices
             _DbContext = DbContext;
         }
 
-        public int AddCountryAsyc(CountryVm model)
+        public int AddCountryAsyc(CountryVm model, string UserId, long TenantId)
         {
             int CountryId = 0;
             try
@@ -33,8 +33,9 @@ namespace Inventory.Application.Services.CommonsServices
                         country.CountryCode = model.CountryCode;
                         country.CreationTime = DateTime.Now;
                         country.LastModificationTime = DateTime.Now;
-                        country.CreatorUserId = "";
-                        country.LastModifierUserId = "";
+                        country.CreatorUserId = UserId;
+                        country.LastModifierUserId = UserId;
+                        country.TenantsId = TenantId;
                         _DbContext.country.Add(country);
                         _DbContext.SaveChanges();
                         CountryId = int.Parse(country.CountryId.ToString());
@@ -49,7 +50,7 @@ namespace Inventory.Application.Services.CommonsServices
                             country.CountryName = model.CountryName;
                             country.CountryCode = model.CountryCode;
                             country.LastModificationTime = DateTime.Now;
-                            country.LastModifierUserId = "";
+                            country.LastModifierUserId = UserId;
                             _DbContext.Update(country);
                             _DbContext.SaveChanges();
                             CountryId = int.Parse(country.CountryId.ToString());

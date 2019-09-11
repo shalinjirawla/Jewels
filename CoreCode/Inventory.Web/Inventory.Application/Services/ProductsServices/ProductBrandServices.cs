@@ -47,7 +47,7 @@ namespace Inventory.Application.Services.ProductsServices
             return List;
         }
 
-        public async Task<bool> SaveProductCategories(ProductBrandVm model)
+        public async Task<bool> SaveProductCategories(ProductBrandVm model, string UserId, long TenantId)
         {
             Boolean IsExist = false;
             try
@@ -64,10 +64,11 @@ namespace Inventory.Application.Services.ProductsServices
                                 BrandName = model.BrandName,
                                 Description = model.Description,
                                 CreationTime = DateTime.Now,
-                                CreatorUserId = "001",
+                                CreatorUserId = UserId,
                                 LastModificationTime = DateTime.Now,
-                                LastModifierUserId = "001",
+                                LastModifierUserId = UserId,
                                 IsActive = true,
+                                TenantsId=TenantId
                             };
                             _DbContext.ProductBrands.Add(brand);
                             _DbContext.SaveChanges();
@@ -134,7 +135,7 @@ namespace Inventory.Application.Services.ProductsServices
             }
             return vm;
         }
-        public async Task<bool> UpdateProductCategories(long BrandId, ProductBrandVm model)
+        public async Task<bool> UpdateProductCategories(long BrandId, ProductBrandVm model,string UserId)
         {
             try
             {
@@ -148,7 +149,7 @@ namespace Inventory.Application.Services.ProductsServices
                             data.BrandName = model.BrandName;
                             data.Description = model.Description;
                             data.LastModificationTime = DateTime.Now;
-                            data.LastModifierUserId = "001";
+                            data.LastModifierUserId = UserId;
                             _DbContext.ProductBrands.Update(data);
                             _DbContext.SaveChanges();
                             Result = true;

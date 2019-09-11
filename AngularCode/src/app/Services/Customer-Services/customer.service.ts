@@ -1,10 +1,8 @@
 import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs'
-
-const httpOption = {
-  headers: new HttpHeaders({ 'Content-type': 'application/json' })
-};
+let AccessToken;
+AccessToken=localStorage.getItem('AccessToken');
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +27,7 @@ export class CustomerService {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         "Accept": "application/json"
-      })
+      }).set('Authorization','Bearer '+AccessToken)
     };
       return this.HttpClient.request("post", url_, options_).pipe((response_: any) => {
         return Result = response_;
@@ -47,7 +45,7 @@ export class CustomerService {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         "Accept": "application/json"
-      })
+      }).set('Authorization','Bearer '+AccessToken)
     };
 
     return this.HttpClient.request("get", url_, options_).pipe((response_: any) => {
@@ -66,7 +64,7 @@ export class CustomerService {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         "Accept": "application/json"
-      })
+      }).set('Authorization','Bearer '+AccessToken)
     };
 
     return this.HttpClient.request("get", url_, options_).pipe((response_: any) => {
@@ -85,7 +83,7 @@ export class CustomerService {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         "Accept": "application/json"
-      })
+      }).set('Authorization','Bearer '+AccessToken)
     };
 
     return this.HttpClient.request("get", url_, options_).pipe((response_: any) => {
@@ -104,7 +102,7 @@ export class CustomerService {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         "Accept": "application/json"
-      })
+      }).set('Authorization','Bearer '+AccessToken)
     };
 
     return this.HttpClient.request("get", url_, options_).pipe((response_: any) => {
@@ -122,7 +120,7 @@ export class CustomerService {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         "Accept": "application/json"
-      })
+      }).set('Authorization','Bearer '+AccessToken)
     };
 
     return this.HttpClient.request("get", url_, options_).pipe((response_: any) => {
@@ -141,7 +139,7 @@ export class CustomerService {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         "Accept": "application/json"
-      })
+      }).set('Authorization','Bearer '+AccessToken)
     };
 
     return this.HttpClient.request("get", url_, options_).pipe((response_: any) => {
@@ -159,7 +157,7 @@ export class CustomerService {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         "Accept": "application/json"
-      })
+      }).set('Authorization','Bearer '+AccessToken)
     };
 
     return this.HttpClient.request("delete", url_, options_).pipe((response_: any) => {
@@ -177,7 +175,7 @@ export class CustomerService {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         "Accept": "application/json"
-      })
+      }).set('Authorization','Bearer '+AccessToken)
     };
 
     return this.HttpClient.request("get", url_, options_).pipe((response_: any) => {

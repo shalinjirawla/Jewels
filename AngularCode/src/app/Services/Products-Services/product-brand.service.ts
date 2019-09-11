@@ -1,8 +1,10 @@
 import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs'
+let AccessToken;
+AccessToken=localStorage.getItem('AccessToken');
 const httpOption = {
-  headers: new HttpHeaders({ 'Content-type': 'application/json' })
+  headers: new HttpHeaders({ 'Content-type': 'application/json' }).set('Authorization','Bearer '+AccessToken)
 };
 
 @Injectable({

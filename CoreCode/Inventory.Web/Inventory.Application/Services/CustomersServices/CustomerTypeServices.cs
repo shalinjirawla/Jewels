@@ -18,7 +18,7 @@ namespace Inventory.Application.Services.CustomersServices
             _DbContext = DbContext;
         }
 
-        public int AddCustomerTypeAsyc(CustomerTypeVm model)
+        public int AddCustomerTypeAsyc(CustomerTypeVm model, string UserId, long TenantId)
         {
             int CustomerTypeId = 0;
             try
@@ -30,10 +30,11 @@ namespace Inventory.Application.Services.CustomersServices
                         CustomerType customerType = new CustomerType();
                         customerType.CustomerTypeName = model.CustomerTypeName;
                         customerType.CreationTime = DateTime.Now;
-                        customerType.CreatorUserId = "1";
+                        customerType.CreatorUserId = UserId;
                         customerType.LastModificationTime = DateTime.Now;
-                        customerType.LastModifierUserId = "1";
+                        customerType.LastModifierUserId = UserId;
                         customerType.IsActive = true;
+                        customerType.TenantsId = TenantId;
 
                         _DbContext.CustomerTypes.Add(customerType);
                         _DbContext.SaveChanges();
@@ -41,18 +42,26 @@ namespace Inventory.Application.Services.CustomersServices
                     }
                     else
                     {
-                        CustomerType customerType = new CustomerType();
-                        customerType.CustomerTypeId = model.CustomerTypeId;
-                        customerType.CustomerTypeName = model.CustomerTypeName;
-                        customerType.CreationTime = DateTime.Now;
-                        customerType.CreatorUserId = "1";
-                        customerType.LastModificationTime = DateTime.Now;
-                        customerType.LastModifierUserId = "1";
-                        customerType.IsActive = true;
+                        var alreadyCustomertype = _DbContext.CustomerTypes.FirstOrDefault(x => x.CustomerTypeId == model.CustomerTypeId);
+                        if (alreadyCustomertype != null)
+                        {
+                            CustomerType customerType = new CustomerType();
+                            customerType.CustomerTypeId = model.CustomerTypeId;
+                            customerType.CustomerTypeName = model.CustomerTypeName;
+                            customerType.CreationTime = alreadyCustomertype.CreationTime;
+                            customerType.CreatorUserId = alreadyCustomertype.CreatorUserId;
+                            customerType.LastModificationTime = DateTime.Now;
+                            customerType.LastModifierUserId = UserId;
+                            customerType.IsActive = true;
 
-                        _DbContext.Update(customerType);
-                        _DbContext.SaveChanges();
-                        CustomerTypeId = int.Parse(customerType.CustomerTypeId.ToString());
+                            _DbContext.Update(customerType);
+                            _DbContext.SaveChanges();
+                            CustomerTypeId = int.Parse(customerType.CustomerTypeId.ToString());
+                        }
+                        else
+                        {
+
+                        }
                     }
                 }
             }

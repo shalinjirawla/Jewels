@@ -8,10 +8,10 @@ namespace Inventory.Application.Interface
 {
     public interface IDiscountType
     {
-        Task<long> SaveDiscountType(DiscountTypeVm discountTypeVm);
+        Task<long> SaveDiscountType(DiscountTypeVm discountTypeVm, string UserId, long TenantId);
         Task<DiscountTypeVm> GetDiscountType(long DiscountTypeId);
         Task<List<DiscountTypeVm>> GetDiscounytTypeList();
-        Task<long> UpdateDiscountType(long DiscountTypeId, DiscountTypeVm discountTypeVm);
+        Task<long> UpdateDiscountType(long DiscountTypeId, DiscountTypeVm discountTypeVm,string UserId);
         Task<long> DeleteDiscountType(long DiscountTypeId);
 
     }

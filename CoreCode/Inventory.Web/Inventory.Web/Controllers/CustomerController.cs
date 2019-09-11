@@ -41,7 +41,9 @@ namespace Inventory.Web.Controllers
         public async Task<IActionResult> AddCustomer(AddCustomerVm Model)
         {
             string a = "hello";
-            var CustomerID =await _icustomer.AddCustomer(Model);
+            string UserId = await _applicationUser.GetUserId();
+            long TenantId = await _applicationUser.GetTenantId();
+            var CustomerID =await _icustomer.AddCustomer(Model,UserId,TenantId);
             return Ok(GetAjaxResponse(true, string.Empty, a));
         }
         [HttpGet]
@@ -80,9 +82,11 @@ namespace Inventory.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddCustomerType(CustomerTypeVm model)
+        public async Task<IActionResult> AddCustomerType(CustomerTypeVm model)
         {
-            var CustomerType = _icustomerType.AddCustomerTypeAsyc(model);
+            string UserId = await _applicationUser.GetUserId();
+            long TenantId = await _applicationUser.GetTenantId();
+            var CustomerType = _icustomerType.AddCustomerTypeAsyc(model, UserId, TenantId);
             return Ok(GetAjaxResponse(true, string.Empty, CustomerType));
         }
 

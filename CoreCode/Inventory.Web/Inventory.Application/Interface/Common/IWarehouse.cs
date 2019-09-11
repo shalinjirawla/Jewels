@@ -9,9 +9,9 @@ namespace Inventory.Application.Interface.Common
     {
         List<WarehouseVm> GetWarehouseListAsync();
         WarehouseVm GetWarehouseAsync(long id);
-        string SaveWarehouseListAsync(WarehouseVm model);
+        string SaveWarehouseListAsync(WarehouseVm model, string UserId, long TenantId);
         Boolean DeleteWarehouseAsync(long id);
         List<WarehouseVm> GetActiveWarehouseListAsync();
-        Boolean UpdateWarehouseStatusAsync(long id, bool status);
+        Boolean UpdateWarehouseStatusAsync(long id, bool status, string UserId);
     }
 }

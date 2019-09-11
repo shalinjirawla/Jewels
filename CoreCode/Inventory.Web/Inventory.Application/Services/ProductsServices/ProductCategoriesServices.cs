@@ -17,7 +17,7 @@ namespace Inventory.Application.Services.ProductsServices
         {
             _DbContext = DbContext;
         }
-        public async Task<Boolean> SaveProductCategories(ProductCategoriesVm model)
+        public async Task<Boolean> SaveProductCategories(ProductCategoriesVm model, string UserId, long TenantId)
         {
             Boolean Result = false;
             try
@@ -37,10 +37,11 @@ namespace Inventory.Application.Services.ProductsServices
                                 DisplayOrder = model.DisplayOrder,
                                 Description = model.Description,
                                 CreationTime = DateTime.Now,
-                                CreatorUserId = null,
+                                CreatorUserId = UserId,
                                 LastModificationTime = DateTime.Now,
-                                LastModifierUserId = null,
+                                LastModifierUserId = UserId,
                                 IsActive = true,
+                                TenantsId=TenantId
                             };
                             _DbContext.ProductCategories.Add(data);
                             _DbContext.SaveChanges();
@@ -143,7 +144,7 @@ namespace Inventory.Application.Services.ProductsServices
             }
             return model;
         }
-        public async Task<Boolean> UpdateProductCategories(long CategoriesId, ProductCategoriesVm model)
+        public async Task<Boolean> UpdateProductCategories(long CategoriesId, ProductCategoriesVm model, string UserId)
         {
             Boolean Result = false;
             try
@@ -165,7 +166,7 @@ namespace Inventory.Application.Services.ProductsServices
                                 check.DisplayOrder = model.DisplayOrder;
                                 check.Description = model.Description;
                                 check.LastModificationTime = DateTime.Now;
-                                check.LastModifierUserId = null;
+                                check.LastModifierUserId = UserId;
                                 
                                 _DbContext.ProductCategories.Update(check);
                                 _DbContext.SaveChanges();

@@ -9,7 +9,7 @@ namespace Inventory.Application.Interface.Common
     {
         List<CountryVm> GetCountryList();
         CountryVm GetCountryAsyc(int id);
-        int AddCountryAsyc(CountryVm model);
+        int AddCountryAsyc(CountryVm model, string UserId, long TenantId);
         int DeleteCountryAsyc(int id);
     }
 }

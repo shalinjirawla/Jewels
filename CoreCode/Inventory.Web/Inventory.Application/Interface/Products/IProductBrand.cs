@@ -8,10 +8,10 @@ namespace Inventory.Application.Interface.Products
 {
   public  interface IProductBrand
     {
-        Task<Boolean> SaveProductCategories(ProductBrandVm model);
+        Task<Boolean> SaveProductCategories(ProductBrandVm model, string UserId, long TenantId);
         Task<List<ProductBrandVm>> GetCategoriesList();
         Task<ProductBrandVm> GetCategories(long BrandId);
-        Task<Boolean> UpdateProductCategories(long BrandId, ProductBrandVm model);
+        Task<Boolean> UpdateProductCategories(long BrandId, ProductBrandVm model, string UserId);
         Task<Boolean> DeleteProductCategorie(long BrandId);
     }
 }
