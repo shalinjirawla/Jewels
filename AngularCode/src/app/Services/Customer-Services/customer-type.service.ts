@@ -3,8 +3,10 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpParams } from '@angular/comm
 import { Observable } from 'rxjs';
 import { JsonPipe } from '@angular/common';
 
+let AccessToken;
+AccessToken=localStorage.getItem('AccessToken');
 const httpOption = {
-  headers: new HttpHeaders({ 'Content-type': 'application/json' })
+  headers: new HttpHeaders({ 'Content-type': 'application/json' }).set('Authorization','Bearer '+AccessToken)
 };
 @Injectable({
   providedIn: 'root'

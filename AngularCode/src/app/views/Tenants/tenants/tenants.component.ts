@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import {Router} from '@angular/router'
 import Swal from 'sweetalert2'
 import { from } from 'rxjs';
 import { element } from 'protractor';
@@ -18,14 +19,15 @@ const Toast = Swal.mixin({
   styleUrls: ['./tenants.component.scss']
 })
 export class TenantsComponent implements OnInit {
-
+  private loading: boolean=false;
   constructor(private FormBuilder: FormBuilder,
-    private TenantsServicesService: TenantsServicesService
+    private TenantsServicesService: TenantsServicesService,
+    private router :Router,
+
   ) { }
   TenantsForm: FormGroup;
   FormSubmitted: boolean = false;
   Responce: any;
-
   ngOnInit() {
     this.Onload();
   }
@@ -41,14 +43,18 @@ export class TenantsComponent implements OnInit {
     if (this.TenantsForm.invalid) {
       return;
     }
+    this.loading = true;
     this.TenantsServicesService.SaveTenants(TenantsForm.value).subscribe((responce: any) => {
+      this.loading = false;
       if (responce != null && responce.status) {
         this.Responce = responce;
         Swal.fire({
           type: 'success',
           title: responce.message,
-          timer: 2000
+          timer: 5000,
+          showConfirmButton:true,
         })
+        this.router.navigateByUrl('/login');
       }else{
         Swal.fire({
           type: 'error',
@@ -57,6 +63,7 @@ export class TenantsComponent implements OnInit {
         })
       }
     });
+   
   }
   get f() {
     return this.TenantsForm.controls;

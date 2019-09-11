@@ -73,6 +73,7 @@ namespace Inventory.Application.Services.TenantsServices
                             Result = false;
                         }
                 }
+
             }
             catch (Exception e)
             {
@@ -138,10 +139,18 @@ namespace Inventory.Application.Services.TenantsServices
             RegisterVm registerdata = new RegisterVm();
             try
             {
-                var data = _DbContext.Tenants.FirstOrDefault(x => x.TenantId == id);
-                registerdata.TenantId = data.TenantId;
-                registerdata.TenantName = data.TenantName;
-                registerdata.EmailId = data.EmailId;
+                var data = _DbContext.Tenants.FirstOrDefault(x => x.TenantId == id && x.IsActive == false && x.EmailId!=null);
+                if (data != null)
+                {
+                    registerdata.TenantId = data.TenantId;
+                    registerdata.TenantName = data.TenantName;
+                    registerdata.EmailId = data.EmailId;
+                }
+                else
+                {
+                    registerdata = null;
+                }
+               
             }
             catch (Exception ex)
             {

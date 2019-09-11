@@ -49,14 +49,24 @@ namespace Inventory.Web.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult GetRegisterData(long Id)
+        public IActionResult GetRegisterData(long TenantId)
         {
             Data = null;
-            if (Id != 0)
+            if (TenantId != 0)
             {
-                Data = _tenants.GetRegisterDataAsync(Id);
+                Data = _tenants.GetRegisterDataAsync(TenantId);
+                if (Data != null)
+                {
+                    Message = "";
+                    Status = true;
+                }
+                else {
+                    Message = "Could Not Find Any Company..";
+                    Status = false;
+                }
             }
-            return Ok(GetAjaxResponse(true, "ok", Data));
+            else { return BadRequest(); }
+            return Ok(GetAjaxResponse(Status, Message, Data));
         }
     }
 }

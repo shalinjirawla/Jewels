@@ -13,7 +13,7 @@ namespace Inventory.Application.ViewModel.ApplicationUser
         public string TagRegisterNumber { get; set; }
         [Required, MaxLength(256)]
         public string EmailId { get; set; }
-
+        public string UserName { get; set; }
         [Required, DataType(DataType.Password)]
         public string Password { get; set; }
 
