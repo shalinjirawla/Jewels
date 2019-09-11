@@ -25,8 +25,10 @@ namespace Inventory.Application.Services.ApplicationUserServices
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDbContext _DbContext;
         public Boolean Status;
+        IHttpContextAccessor _httpContextAccessor;
         public ApplicationUserServices(UserManager<ApplicationUser> UserManager, IConfiguration config,
             ApplicationDbContext DbContext,
+            IHttpContextAccessor httpContextAccessor,
             SignInManager<ApplicationUser> signInManager
             )
         {
@@ -34,6 +36,7 @@ namespace Inventory.Application.Services.ApplicationUserServices
             _config = config;
             _DbContext = DbContext;
             _signInManager = signInManager;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<Boolean> RegisterTenant(RegisterVm model)
@@ -144,10 +147,11 @@ namespace Inventory.Application.Services.ApplicationUserServices
             var tokenString = "";
             try
             {
-                await Task.Run(() =>
+                await Task.Run(async () =>
                 {
                 if (login != null)
                 {
+                     Status=   await SetCurrentLoginUserIdandTenantId(login.UserId,login.TenantId);
                     DateTime CurrentDateTime = DateTime.Now;
                     tokenString = GenerateJSONWebToken(login.UserName, login.EmailId, CurrentDateTime);
                 }
@@ -181,8 +185,48 @@ namespace Inventory.Application.Services.ApplicationUserServices
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-       
-        
+
+        public async Task<Boolean> SetCurrentLoginUserIdandTenantId(string UserId,long TenantId)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(UserId) && TenantId!=0)
+                {
+                    await Task.Run(() =>
+                    {
+                        _httpContextAccessor.HttpContext.Session.SetString("UserId", UserId);
+                        _httpContextAccessor.HttpContext.Session.SetString("TenantId", Convert.ToString(TenantId));
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+            return Status;
+        }
+        public async Task<string> GetUserId()
+        {
+            return await Task.Run(()=>{
+               return _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            });
+        }
+        public async Task<long> GetTenantId() {
+            return await Task.Run(() => {
+                return Convert.ToInt64(_httpContextAccessor.HttpContext.Session.GetString("TenantId"));
+               
+            });
+        }
+        public async Task<Boolean> Logout()
+        {
+            return await Task.Run(() =>
+            {
+                _httpContextAccessor.HttpContext.Session.Clear();
+                Status = true;
+                return Status;
+            });
+        }
 
     }
 }

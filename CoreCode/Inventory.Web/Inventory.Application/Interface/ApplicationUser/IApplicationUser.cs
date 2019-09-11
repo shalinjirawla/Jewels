@@ -10,5 +10,9 @@ namespace Inventory.Application.Interface.ApplicationUser
     {
         Task<Boolean> RegisterTenant(RegisterVm model);
         Task<LoginVm> Login(LoginVm login);
+        Task<Boolean> SetCurrentLoginUserIdandTenantId(string UserId,long TenantId);
+        Task<string> GetUserId();
+        Task<long> GetTenantId();
+        Task<Boolean> Logout();
     }
 }

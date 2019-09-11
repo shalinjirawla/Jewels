@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Inventory.Application.Interface;
+using Inventory.Application.Interface.ApplicationUser;
 using Inventory.Application.Interface.Common;
 using Inventory.Application.ViewModel;
 using Inventory.Application.ViewModel.CommonsVm;
 using Inventory.Web.share;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +19,7 @@ namespace Inventory.Web.Controllers
     [Route("api/[controller]/[action]")]
     [ApiController]
     [EnableCors("localhost")]
+    [Authorize]
     public class CommonsController : ControllerBase
     {
         private readonly IDiscountType _discountType;
@@ -24,18 +27,27 @@ namespace Inventory.Web.Controllers
         private readonly ICountry _icountry;
         private readonly ICreditTerms _icreditTerms;
         private readonly IWarehouse _warehouse;
+        private readonly IApplicationUser _applicationUser;
         public Boolean Status = false;
         public string Message = "";
+        public string GetUserId = "";
         public CommonsController(IDiscountType discountType,
             IGenerealsetup.ICurrency currency, ICreditTerms icreditTerms,
-            ICountry country, IWarehouse warehouse
+            ICountry country, IWarehouse warehouse,
+            IApplicationUser applicationUser
             )
         {
+          
             _discountType = discountType;
             _currency = currency;
             _icountry = country;
             _icreditTerms = icreditTerms;
             _warehouse = warehouse;
+            _applicationUser = applicationUser;
+            if (_applicationUser.GetUserId() == null)
+            {
+                _applicationUser.Logout();
+            }
         }
         [NonAction]
         public ApiResponse GetAjaxResponse(bool status, string message, object data)

@@ -6,21 +6,31 @@ using Inventory.Application.ViewModel.CustomersVm;
 using System.Threading.Tasks;
 using Inventory.Application.Interface.Customer;
 using Inventory.Application.ViewModel;
+using Microsoft.AspNetCore.Authorization;
+using Inventory.Application.Interface.ApplicationUser;
 
 namespace Inventory.Web.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
     //[EnableCors("localhost")]
+    [Authorize]
     public class CustomerController : ControllerBase
     {
         private readonly ICustomer _icustomer;
         private readonly IcustomerType _icustomerType;
-
-        public CustomerController (ICustomer icustomer, IcustomerType icustomerType)
+        private readonly IApplicationUser _applicationUser;
+        public CustomerController (ICustomer icustomer, IcustomerType icustomerType,
+              IApplicationUser applicationUser
+            )
         {
             _icustomer = icustomer;
             _icustomerType = icustomerType;
+            _applicationUser = applicationUser;
+            if (_applicationUser.GetUserId() == null && _applicationUser.GetTenantId() == null)
+            {
+                _applicationUser.Logout();
+            }
         }
         [NonAction]
         public ApiResponse GetAjaxResponse(bool status, string message, object data)
