@@ -12,6 +12,7 @@ namespace Inventory.Application.Services.CommonsServices
     public class WarehouseService : IWarehouse
     {
         private readonly ApplicationDbContext _DbContext;
+        public Boolean Status = false;
         public WarehouseService(ApplicationDbContext DbContext)
         {
             _DbContext = DbContext;
@@ -43,7 +44,7 @@ namespace Inventory.Application.Services.CommonsServices
             List<WarehouseVm> warehouseList = new List<WarehouseVm>();
             try
             {
-                var list = _DbContext.Warehouses.Where(x=>x.IsActive==true).ToList();
+                var list = _DbContext.Warehouses.Where(x => x.IsActive == true).ToList();
                 foreach (var a in list)
                 {
                     WarehouseVm warehouse = new WarehouseVm();
@@ -122,8 +123,8 @@ namespace Inventory.Application.Services.CommonsServices
                     warehouse.code = model.Warehousecode;
                     warehouse.CreationTime = DateTime.Now;
                     warehouse.LastModificationTime = DateTime.Now;
-                    warehouse.CreatorUserId = "";
-                    warehouse.LastModifierUserId = "";
+                    warehouse.CreatorUserId = "18584764-e39b-4633-8682-4821b967a34c";
+                    warehouse.LastModifierUserId = "18584764-e39b-4633-8682-4821b967a34c";
                     warehouse.IsActive = true;
 
                     _DbContext.Warehouses.Add(warehouse);
@@ -134,19 +135,15 @@ namespace Inventory.Application.Services.CommonsServices
                 else
                 {
                     Warehouse warehouse = new Warehouse();
-                    var a = _DbContext.Warehouses.FirstOrDefault(x => x.WarehouseId == model.WarehouseId);
-                    if (a != null)
+                    warehouse = _DbContext.Warehouses.FirstOrDefault(x => x.WarehouseId == model.WarehouseId);
+                    if (warehouse != null)
                     {
-                        warehouse.WarehouseId = a.WarehouseId;
-                        warehouse.Name = a.Name;
-                        warehouse.code = a.code;
-                        warehouse.CreationTime = a.CreationTime;
+                        warehouse.Name = model.WarehouseName;
+                        warehouse.code = model.Warehousecode;
                         warehouse.LastModificationTime = DateTime.Now;
-                        warehouse.CreatorUserId = a.CreatorUserId;
-                        warehouse.LastModifierUserId = "";
-                        warehouse.IsActive = a.IsActive;
+                        warehouse.LastModifierUserId = "18584764-e39b-4633-8682-4821b967a34c";
 
-                        _DbContext.Warehouses.Update(warehouse);
+                        _DbContext.Update(warehouse);
                         _DbContext.SaveChanges();
                         WarehouseId = "Warehouse is Updates Successfully";
                     }
@@ -163,32 +160,29 @@ namespace Inventory.Application.Services.CommonsServices
 
         public bool UpdateWarehouseStatusAsync(long id, bool status)
         {
-            Boolean a = false;
+           
             try
             {
-                var ware = _DbContext.Warehouses.FirstOrDefault(x => x.WarehouseId == id);
-                if (ware != null)
+                Warehouse warehouse = new Warehouse();
+                warehouse = _DbContext.Warehouses.FirstOrDefault(x => x.WarehouseId == id);
+                if (warehouse != null)
                 {
-                    Warehouse warehouse = new Warehouse();
-                    warehouse.WarehouseId = ware.WarehouseId;
-                    warehouse.Name = ware.Name;
-                    warehouse.code = ware.code;
                     warehouse.IsActive = status;
-                    warehouse.CreationTime = ware.CreationTime;
-                    warehouse.CreatorUserId = ware.CreatorUserId;
                     warehouse.LastModificationTime = DateTime.Now;
-                    warehouse.LastModifierUserId = "";
+                    warehouse.LastModifierUserId = "18584764-e39b-4633-8682-4821b967a34c";
 
-                    _DbContext.Warehouses.Update(warehouse);
+                    _DbContext.Update(warehouse);
                     _DbContext.SaveChanges();
+                    Status = true;
                 }
+                else { Status = false; }
             }
             catch (Exception ex)
             {
 
                 throw ex;
             }
-            return a;
+            return Status;
         }
     }
 }

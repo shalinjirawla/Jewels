@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpParams } from '@angular/comm
 import { Observable } from 'rxjs'
 const httpOption = {
   headers: new HttpHeaders({ 'Content-type': 'application/json' })
+  //.set('Authorization', "Bearer "+localStorage.getItem('access_token'))
+
 };
 @Injectable({
   providedIn: 'root'
@@ -21,7 +23,6 @@ export class CurrencyService {
 
 
   public SaveCurrency(input: any): Observable<any> {
-    debugger
     if (input.CurrencyId == 0) {
       let url = this.BaseURL + `SaveCurrency`;
       return this.HttpClient.post(url, input, httpOption).pipe((responce: any) => {
@@ -99,6 +100,21 @@ export class CreditTermsService {
       return this.Responce = responce;
     });
   }
+ 
+
+  
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CountryService {
+
+  Responce: any;
+  constructor(private HttpClient: HttpClient) { }
+  private BaseURL: string = "https://localhost:44315/api/Commons/";
+
+
   public AddCountry(input): Observable<any> {
     let url = this.BaseURL + `AddUpdateCountry`;
     return this.HttpClient.post(url, JSON.stringify(input), httpOption).pipe((responce: any) => {
@@ -126,6 +142,17 @@ export class CreditTermsService {
     });
   }
 
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class WarehouseService {
+
+  Responce: any;
+  constructor(private HttpClient: HttpClient) { }
+  private BaseURL: string = "https://localhost:44315/api/Commons/";
+
   public GetLocationList(): Observable<any> {
     let url = this.BaseURL + `GetWarehouseList`;
     return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
@@ -134,10 +161,35 @@ export class CreditTermsService {
   }
 
   public AddLocation(input: any): Observable<any> {
-    debugger
     let url = this.BaseURL + `SaveWarehouseList`;
     return this.HttpClient.post(url, input, httpOption).pipe((responce: any) => {
       return this.Responce = responce;
     })
   }
+
+  public UpdateLocationStatus(LocationId:any,Status:any): Observable<any> {
+    let result;
+    let url = this.BaseURL + `UpdateWarehouseStatus?Id=${LocationId}&status=${Status}`;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    })
+  }
+
+  public GetLocation(Id:any):Observable<any>{
+    let result;
+    let url = this.BaseURL + `GetWarehouse?Id=${Id}`;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    })
+  }
+
+  public DeleteLocation(Id:any):Observable<any>{
+    debugger
+    let result;
+    let url = this.BaseURL + `DeleteWarehouse?Id=${Id}`;
+    return this.HttpClient.delete(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    })
+  }
+
 }

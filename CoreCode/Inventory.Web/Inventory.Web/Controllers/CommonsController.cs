@@ -365,19 +365,19 @@ namespace Inventory.Web.Controllers
         [HttpDelete]
         public IActionResult DeleteWarehouse(long Id)
         {
-            var msg = "";
-            Boolean warehouse = false;
+           
             if (Id != 0)
             {
                 var a = _warehouse.DeleteWarehouseAsync(Id);
-                msg = "Warehouse deleted successfully";
-                warehouse = true;
+                Message = "Warehouse deleted successfully";
+                Status = true;
             }
             else
             {
-                msg = "Your Warehouse Id is not found";
+                Message = "Your Warehouse Id is not found";
+                Status = false;
             }
-            return Ok(GetAjaxResponse(warehouse, msg, null));
+            return Ok(GetAjaxResponse(Status, Message, null));
         }
 
         [HttpGet]
@@ -394,7 +394,16 @@ namespace Inventory.Web.Controllers
             if (Id != 0)
             {
                 var warehouse = _warehouse.UpdateWarehouseStatusAsync(Id, status);
-                return Ok(GetAjaxResponse(true, string.Empty, warehouse));
+                if (status) {
+                    Message = "Ware House Actived..";
+                    Status = true;
+                }
+                else
+                {
+                    Message = "Ware House Deactived..";
+                    Status = true;
+                }
+                return Ok(GetAjaxResponse(true, Message, warehouse));
             }
             else
             {

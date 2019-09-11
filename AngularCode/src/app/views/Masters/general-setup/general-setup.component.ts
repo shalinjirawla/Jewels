@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { CurrencyService, CreditTermsService } from '../../../Services/Masters-Services/general-setup.service';
+import { CurrencyService, CreditTermsService, CountryService, WarehouseService } from '../../../Services/Masters-Services/general-setup.service';
 import Swal from 'sweetalert2'
 import { from } from 'rxjs';
 const Toast = Swal.mixin({
@@ -62,6 +62,8 @@ export class GeneralSetupComponent implements OnInit {
   //Location End
 
   constructor(private FormBuilder: FormBuilder,
+    private CountryService: CountryService,
+    private WarehouseService: WarehouseService,
     private CurrencyService: CurrencyService,
     private CreditTermsService: CreditTermsService,
   ) { }
@@ -316,7 +318,6 @@ export class GeneralSetupComponent implements OnInit {
   }
 
   CountryReset() {
-    debugger
     this.onLoadCoutry();
     this.Countrysubmit = false;
     this.CountryModal.hide();
@@ -329,7 +330,7 @@ export class GeneralSetupComponent implements OnInit {
       return;
     }
     this.Countrysubmit = false;
-    this.CreditTermsService.AddCountry(CountryForm.value).subscribe((responce: any) => {
+    this.CountryService.AddCountry(CountryForm.value).subscribe((responce: any) => {
       let result = responce.data;
       if (responce.status) {
         Toast.fire({
@@ -345,14 +346,14 @@ export class GeneralSetupComponent implements OnInit {
   }
 
   public GetCountryList() {
-    this.CreditTermsService.GetCountryList().subscribe((responce: any) => {
+    this.CountryService.GetCountryList().subscribe((responce: any) => {
       let result = responce.data;
       this.CoutryList = result;
     })
   }
 
   public GetCountry(i: any) {
-    this.CreditTermsService.GetCountry(i).subscribe((responce: any) => {
+    this.CountryService.GetCountry(i).subscribe((responce: any) => {
       let result = responce.data;
       if (responce.status) {
         this.CountryForm.patchValue({
@@ -377,7 +378,7 @@ export class GeneralSetupComponent implements OnInit {
         confirmButtonText: 'Yes, delete it!'
       }).then((result) => {
         if (result.value) {
-          this.CreditTermsService.DeleteCountry(i).subscribe((responce: any) => {
+          this.CountryService.DeleteCountry(i).subscribe((responce: any) => {
             if (responce.status) {
               Swal.fire(
                 'Deleted!',
@@ -399,8 +400,8 @@ export class GeneralSetupComponent implements OnInit {
   onLoadLocation() {
     this.LocationForm = this.FormBuilder.group({
       WarehouseId: [0],
-      WarehouseName: ['',Validators.required],
-      Warehousecode: [,Validators.required],
+      WarehouseName: ['', Validators.required],
+      Warehousecode: [, Validators.required],
       IsActive: [true],
     })
     this.getLocationList();
@@ -413,7 +414,7 @@ export class GeneralSetupComponent implements OnInit {
   }
 
   getLocationList() {
-    this.CreditTermsService.GetLocationList().subscribe((responce: any) => {
+    this.WarehouseService.GetLocationList().subscribe((responce: any) => {
       if (responce.status) {
         this.LocationList = responce.data;
       }
@@ -421,22 +422,20 @@ export class GeneralSetupComponent implements OnInit {
   }
 
   AddLocation(LocationForm: FormControl) {
-    debugger
     this.Locationsubmit = true;
-    if(LocationForm.invalid){
+    if (LocationForm.invalid) {
       return
     }
-    this.Locationsubmit=false;
-
-    this.CreditTermsService.AddLocation(LocationForm.value).subscribe((responce: any) => {
-      debugger
+    this.Locationsubmit = false;
+    this.WarehouseService.AddLocation(LocationForm.value).subscribe((responce: any) => {
       let result = responce.data;
       if (responce.status) {
+        this.onLoadLocation();
         Toast.fire({
           type: 'success',
-          title: responce.message,
+          title: responce.data,
         });
-        this.onLoadLocation();
+        document.getElementById("locationList-link").click();
       }
 
     })
@@ -444,9 +443,78 @@ export class GeneralSetupComponent implements OnInit {
 
   LocationReset() {
     this.LocationModal.hide();
+    this.onLoadLocation();
+  }
+
+  GetLocation(LocationId: any) {
+    debugger
+    this.WarehouseService.GetLocation(LocationId).subscribe((responce: any) => {
+      debugger
+      let result = responce.data;
+      if (responce.status) {
+        this.LocationForm.patchValue({
+          WarehouseId: result.warehouseId,
+          WarehouseName: result.warehouseName,
+          Warehousecode: result.warehousecode,
+          IsActive: result.isActive
+        })
+        document.getElementById("locationFor-link").click();
+      }
+    })
+  }
+
+  LocationChange(event, LocationId) {
+    this.WarehouseService.UpdateLocationStatus(LocationId, event).subscribe((responce: any) => {
+      let result = responce.data;
+      debugger
+      if (responce.status) {
+        Toast.fire({
+          type: 'success',
+          title: responce.message,
+        });
+        this.onLoadLocation();
+      }else
+      {
+        Toast.fire({
+          type: 'error',
+          title: responce.message,
+        });
+      }
+
+    })
+  }
+
+  DeleteLocation(i: any) {
+    if (i != 0) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.value) {
+          this.WarehouseService.DeleteLocation(i).subscribe((responce: any) => {
+            if (responce.status) {
+              Swal.fire(
+                'Deleted!',
+                responce.message,
+                'success'
+              )
+              this.onLoadLocation();
+            }
+          });
+        }
+      })
+    }
   }
 
   locationtabclick(event) {
+    if (event == "locationList-link") {
+      this.onLoadLocation();
+    }
 
   }
   //#endregion Location Section End
