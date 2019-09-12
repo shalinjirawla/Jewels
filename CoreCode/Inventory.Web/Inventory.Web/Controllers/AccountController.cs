@@ -27,6 +27,7 @@ namespace Inventory.Web.Controllers
         public Boolean Status = false;
         public string Message = "";
         public object Data = null;
+        public string UserId = "";
         public AccountController(UserManager<ApplicationUser> UserManager,
             IApplicationUser applicationUser,
              SignInManager<ApplicationUser> signInManager
@@ -35,10 +36,11 @@ namespace Inventory.Web.Controllers
             _UserManager = UserManager;
             _applicationUser = applicationUser;
             _signInManager = signInManager;
-            if (_applicationUser.GetUserId() == null && _applicationUser.GetTenantId()==null)
+            if (_applicationUser.GetUserId() == null && _applicationUser.GetTenantId() == null)
             {
                 logout();
             }
+            
 
         }
         [NonAction]
@@ -89,33 +91,6 @@ namespace Inventory.Web.Controllers
             else { return BadRequest(); }
             return Ok(GetAjaxResponse(Status, Message, LoginVm));
         }
-
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> Register(RegisterVm model)
-        {
-            if (ModelState.IsValid)
-            {
-                Status = await _applicationUser.RegisterTenant(model);
-                if (Status)
-                {
-                    LoginVm LoginVm = new LoginVm
-                    {
-                        UserName = model.EmailId,
-                        Password = model.Password,
-                    };
-                    Data = Login(LoginVm);
-                    Message = "Regsiter Successfully Completed...";
-                }
-                else
-                {
-                    Message = model.EmailId + " Email Id Alredy Exist..";
-                }
-            }
-            else { return BadRequest(); }
-            return Ok(GetAjaxResponse(Status, Message, Data));
-        }
-
 
         [HttpGet]
         public IActionResult GetAll()

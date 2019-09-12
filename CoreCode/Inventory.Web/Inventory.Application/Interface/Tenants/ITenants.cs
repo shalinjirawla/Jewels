@@ -7,10 +7,14 @@ using System.Threading.Tasks;
 
 namespace Inventory.Application.Interface.Tenants
 {
-   public interface ITenants
+    public interface ITenants
     {
         Task<Boolean> SaveTenants(TenantsVm model);
-
-        RegisterVm GetRegisterDataAsync(long id);
+        Task<string> RegisterAspnetUser(UserVm registerVm);
+        Task<TenantsDetailsVm> GetRegisterDataAsync(long id, string UserId);
+        Task<Boolean> RegisterTenantUpdate(UserVm model);
+        Task<Boolean> RegisterTenantActived(UserVm model);
+        Task<Boolean> ChechTenants(long TenantId);
+        Task<Boolean> CheckUserId(string UserId);
     }
 }

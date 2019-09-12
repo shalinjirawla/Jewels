@@ -26,7 +26,30 @@
                         <div *ngIf="f.EmailId.errors.email">Email must be a valid email address</div>
                     </div>
                 </div>
-
+                <div class="wrap-input100  m-b-8" data-validate="Password is required">
+                    <span class="label-input100">Password</span>
+                    <input class="input100 form-control" type="password" formControlName="Password" name="pass"
+                        placeholder="Enter Password" [ngClass]="{ 'is-invalid': FormSubmitted && f.Password.errors }"
+                        [ngClass]="{ 'is-valid': FormSubmitted && f.Password.valid }">
+                    <div *ngIf="FormSubmitted && f.Password.errors" class="invalid-feedback">
+                        <div *ngIf="f.Password.errors.required">Password is required</div>
+                        <div *ngIf="f.Password.errors.pattern">Password must be at least 6 characters<br />
+                            Lowercase letters<br />
+                            Uppercase letters<br />
+                            Numbers && Special characters</div>
+                    </div>
+                </div>
+                <div class="wrap-input100  m-b-6" data-validate="Confirm Password is required">
+                    <span class="label-input100 ">Confirm Password</span>
+                    <input class="input100 form-control" type="password" formControlName="ConfirmPassword" name="Confirm"
+                        placeholder="Enter Confirm Password"
+                        [ngClass]="{ 'is-invalid': FormSubmitted && f.ConfirmPassword.errors }">
+                    <div *ngIf="FormSubmitted && f.ConfirmPassword.errors" class="invalid-feedback">
+                        <div *ngIf="f.ConfirmPassword.errors.required">Confirm Password is required</div>
+                        <div *ngIf="f.ConfirmPassword.errors.mustMatch">Passwords must match</div>
+                    </div>
+                </div>
+                
 
 
                 <div class="container-login100-form-btn m-t-20">

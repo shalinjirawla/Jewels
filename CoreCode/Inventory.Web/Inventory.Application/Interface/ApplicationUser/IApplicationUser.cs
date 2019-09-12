@@ -1,4 +1,5 @@
 ﻿using Inventory.Application.ViewModel.ApplicationUser;
+using Inventory.Application.ViewModel.Tenants;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,6 @@ namespace Inventory.Application.Interface.ApplicationUser
 {
     public interface IApplicationUser
     {
-        Task<Boolean> RegisterTenant(RegisterVm model);
         Task<LoginVm> Login(LoginVm login);
         Task<Boolean> SetCurrentLoginUserIdandTenantId(string UserId,long TenantId);
         Task<string> GetUserId();

@@ -3,7 +3,7 @@
         <div class="wrap-login100">
             <div class="login100-form-title" style="background-image: url(assets/images/bg-01.jpg);">
                 <span class="login100-form-title-1">
-                    Register
+                    Your Account Has been Activated..
                 </span>
             </div>
 
@@ -11,9 +11,9 @@
                 <input type="hidden" formControlName="TenantId">
                 <div class="wrap-input100  m-b-6">
                     <span class="label-input100">Company</span>
-                    <input class="input100 form-control" type="text" disabled formControlName="TenantName" name="Company"
-                        [ngClass]="{ 'is-invalid': FormSubmitted && f.TenantName.errors }"
-                       placeholder="Enter Company">
+                    <input class="input100 form-control" type="text" disabled formControlName="TenantName"
+                        name="Company" [ngClass]="{ 'is-invalid': FormSubmitted && f.TenantName.errors }"
+                        placeholder="Enter Company">
                     <div *ngIf="FormSubmitted && f.TenantName.errors" class="invalid-feedback">
                         <div *ngIf="f.TenantName.errors.required">Company Name is required</div>
                     </div>
@@ -23,45 +23,24 @@
                     <input class="input100 form-control" disabled type="text" formControlName="EmailId" name="EmailId"
                         placeholder="Enter Email Id" [ngClass]="{ 'is-invalid': FormSubmitted && f.EmailId.errors }">
                     <div *ngIf="FormSubmitted && f.EmailId.errors" class="invalid-feedback">
-                        <div *ngIf="f.EmailId.errors.required">Email Id  is required</div>
+                        <div *ngIf="f.EmailId.errors.required">Email Id is required</div>
                         <div *ngIf="f.EmailId.errors.email">Email must be a valid email address</div>
                     </div>
                 </div>
-                <div class="wrap-input100  m-b-6" data-validate="Email Id is required">
-                        <span class="label-input100">User Name</span>
-                        <input class="input100 form-control"  type="text" formControlName="UserName" name="UserName"
-                            placeholder="Enter User Name" [ngClass]="{ 'is-invalid': FormSubmitted && f.UserName.errors }">
-                        <div *ngIf="FormSubmitted && f.UserName.errors" class="invalid-feedback">
-                            <div *ngIf="f.UserName.errors.required">User Name  is required</div>
-                        </div>
-                    </div>
-                <div class="wrap-input100  m-b-8" data-validate="Password is required">
-                    <span class="label-input100">Password</span>
-                    <input class="input100 form-control" type="password" formControlName="Password" name="pass"
-                        placeholder="Enter Password" [ngClass]="{ 'is-invalid': FormSubmitted && f.Password.errors }"
-                        [ngClass]="{ 'is-valid': FormSubmitted && f.Password.valid }">
-                    <div *ngIf="FormSubmitted && f.Password.errors" class="invalid-feedback">
-                        <div *ngIf="f.Password.errors.required">Password is required</div>
-                        <div *ngIf="f.Password.errors.pattern">Password must be at least 6 characters<br />
-                            Lowercase letters<br />
-                            Uppercase letters<br />
-                            Numbers && Special characters</div>
-                    </div>
+                <div class="wrap-input100  m-b-8" >
+                    <span class="label-input100">Business Register Number</span>
+                    <input class="input100 form-control" type="BusinessRegisterNumber"
+                        formControlName="BusinessRegisterNumber" name="BusinessRegisterNumber"
+                        placeholder="Enter Business Register Number">
+
                 </div>
-                <div class="wrap-input100  m-b-6" data-validate="Confirm Password is required">
-                    <span class="label-input100 ">Confirm Password</span>
-                    <input class="input100 form-control" type="password" formControlName="ConfirmPassword" name="Confirm"
-                        placeholder="Enter Confirm Password"
-                        [ngClass]="{ 'is-invalid': FormSubmitted && f.ConfirmPassword.errors }">
-                    <div *ngIf="FormSubmitted && f.ConfirmPassword.errors" class="invalid-feedback">
-                        <div *ngIf="f.ConfirmPassword.errors.required">Confirm Password is required</div>
-                        <div *ngIf="f.ConfirmPassword.errors.mustMatch">Passwords must match</div>
-                    </div>
+                <div class="wrap-input100  m-b-6" data-validate="TaxRegisterNumber is required">
+                    <span class="label-input100 ">Tax Register Number</span>
+                    <input class="input100 form-control" type="password" formControlName="TaxRegisterNumber"
+                        name="TaxRegisterNumber" placeholder="Enter Tax Register Number">
+
                 </div>
                 <div>
-                  
-                    <input type="hidden" formControlName="BusinessRegisterNumber">
-                    <input type="hidden" formControlName="TaxRegisterNumber">
                     <input type="hidden" formControlName="IsActive">
                     <input type="hidden" formControlName="Logo">
                     <input type="hidden" formControlName="IsInTrialPeriod">
@@ -70,7 +49,7 @@
 
                 <div class="container-login100-form-btn m-b-8">
                     <button class="login100-form-btn" (click)="SaveRegsiter(RegisterForm)">
-                        <span  *ngIf="!loading"> Update</span>
+                        <span *ngIf="!loading">Subscribe</span>
                         <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
                     </button>
                 </div>
