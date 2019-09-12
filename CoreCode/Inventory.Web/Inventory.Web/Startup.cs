@@ -33,6 +33,7 @@ using System;
 using Inventory.Application.Interface.Tenants;
 using Inventory.Application.Services.TenantsServices;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Inventory.Web
 {
@@ -58,14 +59,8 @@ namespace Inventory.Web
             });
             services.AddIdentity<ApplicationUser, IdentityRole>()
              .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddSession(options =>
-            {
-                // Set a short timeout for easy testing.
-                options.IdleTimeout = TimeSpan.FromDays(1);
-                options.Cookie.HttpOnly = true;
-                // Make the session cookie essential
-                options.Cookie.IsEssential = true;
-            });
+            services.AddSession();
+            services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
             //Password Strength Setting
             services.Configure<IdentityOptions>(options =>
             {
@@ -102,7 +97,6 @@ namespace Inventory.Web
                                                                     // /#/404
                 options.SlidingExpiration = true;
             });
-            services.AddDistributedMemoryCache();
             //adding autorization policy's
             services.AddAuthentication(options =>
             {

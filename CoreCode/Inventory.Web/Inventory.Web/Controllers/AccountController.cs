@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net.Http;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using Inventory.Application.Interface.ApplicationUser;
 using Inventory.Application.ViewModel.ApplicationUser;
@@ -28,6 +30,7 @@ namespace Inventory.Web.Controllers
         public string Message = "";
         public object Data = null;
         public string UserId = "";
+        public IPrincipal user;
         public AccountController(UserManager<ApplicationUser> UserManager,
             IApplicationUser applicationUser,
              SignInManager<ApplicationUser> signInManager
@@ -36,12 +39,6 @@ namespace Inventory.Web.Controllers
             _UserManager = UserManager;
             _applicationUser = applicationUser;
             _signInManager = signInManager;
-            if (_applicationUser.GetUserId() == null && _applicationUser.GetTenantId() == null)
-            {
-                logout();
-            }
-            
-
         }
         [NonAction]
         public ApiResponse GetAjaxResponse(bool status, string message, object data)
@@ -54,6 +51,7 @@ namespace Inventory.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+               
                 var loginRequestUser = _UserManager.Users.FirstOrDefault(x => x.UserName == LoginVm.UserName);
                 if (loginRequestUser != null)
                 {
@@ -69,7 +67,6 @@ namespace Inventory.Web.Controllers
                             LoginVm.UserName = loginRequestUser.UserName;
                             LoginVm.TenantId = loginRequestUser.TenantId;
                             LoginVm = await _applicationUser.Login(LoginVm);
-                            //SetCurrentLoginUserId(loginRequestUser.Id);
                         }
                     }
                     else
@@ -95,6 +92,14 @@ namespace Inventory.Web.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
+            var re = Request;
+            var headers = re.Headers;
+            
+            string id = _applicationUser.GetUserId();
+            if (headers.ContainsKey("Custom"))
+            {
+                string token = headers.GetCommaSeparatedValues("Custom").First();
+            }
             return Ok(GetAjaxResponse(true, "ok", null));
         }
         [HttpGet]

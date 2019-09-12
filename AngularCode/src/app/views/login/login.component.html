@@ -14,8 +14,8 @@
                       <span class="input-group-text"><i class="icon-user"></i></span>
                     </div>
                     <input class="input100 form-control" type="text" formControlName="UserName" name="UserName"
-                        placeholder="Enter User Name" [ngClass]="{ 'is-invalid': FormSubmitted && f.UserName.errors }">
-                    <div *ngIf="FormSubmitted && f.UserName.errors" class="invalid-feedback">
+                        placeholder="Enter User Name"  [ngClass]="{ 'is-invalid': FormSubmitted && f.UserName.errors }">
+                    <div *ngIf="FormSubmitted && f.UserName.errors"  class="invalid-feedback">
                         <div *ngIf="f.UserName.errors.required">User Name  is required</div>
                     </div>
                   </div>

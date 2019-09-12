@@ -24,6 +24,9 @@ namespace Inventory.Web.Controllers
         private readonly IApplicationUser _applicationUser;
         public Boolean Result = false;
         public string Message = "";
+        public object Data = null;
+        public string GetUserId = "";
+        public long GetTenantId = 0;
         public ProductsController(IProductCategories productCategoriesServices, IProductBrand productBrand,
              IApplicationUser applicationUser
             )
@@ -31,11 +34,14 @@ namespace Inventory.Web.Controllers
             _ProductCategoriesServices = productCategoriesServices;
             _ProductBrandServices = productBrand;
             _applicationUser = applicationUser;
-            if (_applicationUser.GetUserId() == null && _applicationUser.GetTenantId() == null)
+            GetUserId = _applicationUser.GetUserId();
+            GetTenantId = _applicationUser.GetTenantId();
+            if (GetUserId == null && GetTenantId == 0)
             {
                 _applicationUser.Logout();
             }
         }
+
         [NonAction]
         public ApiResponse GetAjaxResponse(bool status, string message, object data)
         {
@@ -49,9 +55,8 @@ namespace Inventory.Web.Controllers
             Boolean Result=false;
             string Message = "";
             if (ModelState.IsValid) {
-                string UserId = await _applicationUser.GetUserId();
-                long TenantId = await _applicationUser.GetTenantId();
-                Result =await _ProductCategoriesServices.SaveProductCategories(model,UserId,TenantId);
+                
+                Result =await _ProductCategoriesServices.SaveProductCategories(model,GetUserId,GetTenantId);
                 if (Result) { Message = "Categories Successfully Saved...!"; }
                 else { Message = model.CategoriesName + " Is Already Exist...!"; }
             }
@@ -84,8 +89,7 @@ namespace Inventory.Web.Controllers
             string Message = "";
             if (ModelState.IsValid)
             {
-                string UserId = await _applicationUser.GetUserId();
-                Result = await _ProductCategoriesServices.UpdateProductCategories(CategoriesId,model, UserId);
+                Result = await _ProductCategoriesServices.UpdateProductCategories(CategoriesId,model, GetUserId);
                 if (Result) { Message = "Categories Successfully Updated...!"; }
                 else { Message = model.CategoriesName + " Is Already Exist...!"; }
             }
@@ -127,9 +131,8 @@ namespace Inventory.Web.Controllers
         public async Task<IActionResult> SaveProductBrand(ProductBrandVm model)
         {
             if (ModelState.IsValid) {
-                string UserId = await _applicationUser.GetUserId();
-                long TenantId = await _applicationUser.GetTenantId();
-                Result= await _ProductBrandServices.SaveProductCategories(model,UserId,TenantId);
+               
+                Result= await _ProductBrandServices.SaveProductCategories(model,GetUserId,GetTenantId);
                 if (Result)
                 {
                     Message = "Product Brand Successfully Saved..!";
@@ -153,8 +156,7 @@ namespace Inventory.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateProductBrand(long BrandId, ProductBrandVm model) {
             if (BrandId != 0 && ModelState.IsValid) {
-                string UserId = await _applicationUser.GetUserId();
-                Result = await _ProductBrandServices.UpdateProductCategories(BrandId, model, UserId);
+                Result = await _ProductBrandServices.UpdateProductCategories(BrandId, model, GetUserId);
                 if (Result)
                 {
                     Message = "Product Successfully Updated..!";
