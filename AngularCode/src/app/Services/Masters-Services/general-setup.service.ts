@@ -194,3 +194,49 @@ export class WarehouseService {
   }
 
 }
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TaxCodeService {
+
+  Responce: any;
+  constructor(private HttpClient: HttpClient) { }
+  private BaseURL: string = "https://localhost:44315/api/Commons/";
+
+  public GetTaxCodeList(): Observable<any> {
+    let url = this.BaseURL + `GetTaxCodeList`;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+
+  public AddTaxCode(input): Observable<any> {
+    let url = this.BaseURL + `AddTextCode`;
+    return this.HttpClient.post(url, JSON.stringify(input), httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+
+  public GetTaxCode(i): Observable<any> {
+    let url = this.BaseURL + `GetTaxCodeById?TaxId=` + i;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+
+  public UpdateTaxCode(input): Observable<any> {
+    let url = this.BaseURL + `UpdateTaxCode?TaxcodeId=${input.taxId}`;
+    return this.HttpClient.post(url, JSON.stringify(input), httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+
+  public DeleteTaxCode(i): Observable<any> {
+    let url = this.BaseURL + `DeleteTaxCode?TaxId=` + i;
+    return this.HttpClient.delete(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+  
+}

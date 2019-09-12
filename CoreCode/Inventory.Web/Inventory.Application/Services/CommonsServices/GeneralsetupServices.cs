@@ -16,14 +16,14 @@ namespace Inventory.Application.Services.CommonsServices
     public class GeneralsetupServices : ICurrency, ITaxCode, ICreditTerms
     {
         private readonly ApplicationDbContext _DbContext;
-        public GeneralsetupServices(ApplicationDbContext DbContext)
+        public GeneralsetupServices(ApplicationDbContext DbContext) 
         {
             _DbContext = DbContext;
         }
         public Boolean Result = false;
 
         #region Currency Services Start
-        public async Task<bool> SaveCurrency(CurrencyVm model)
+        public async Task<bool> SaveCurrency(CurrencyVm model, string UserId, long TenantId)
         {
             try
             {
@@ -39,9 +39,9 @@ namespace Inventory.Application.Services.CommonsServices
                                 CurrencyName = model.CurrencyName,
                                 Code = model.Code,
                                 CreationTime = DateTime.Now,
-                                CreatorUserId = "",
+                                CreatorUserId = UserId,
                                 LastModificationTime = DateTime.Now,
-                                LastModifierUserId = "",
+                                LastModifierUserId = UserId,
                                 IsActive = true,
                             };
                             _DbContext.Currencies.Add(currency);
@@ -179,7 +179,7 @@ namespace Inventory.Application.Services.CommonsServices
             return list;
         }
 
-        public async Task<bool> UpdateCurrency(long CurrencyId, CurrencyVm currencyVm)
+        public async Task<bool> UpdateCurrency(long CurrencyId, CurrencyVm currencyVm, string UserId)
         {
             try
             {
@@ -193,7 +193,7 @@ namespace Inventory.Application.Services.CommonsServices
                             data.CurrencyName = currencyVm.CurrencyName;
                             data.Code = currencyVm.Code;
                             data.LastModificationTime = DateTime.Now;
-                            data.LastModifierUserId = "001";
+                            data.LastModifierUserId = UserId;
                         }
                         _DbContext.Currencies.Update(data);
                         _DbContext.SaveChanges();
@@ -268,34 +268,187 @@ namespace Inventory.Application.Services.CommonsServices
             return Result;
         }
         #endregion Currency Services End
+
         #region Tax Code Serives start
-        public Task<bool> SaveTaxCode(TaxCodeVm model)
+        public async Task<bool> SaveTaxCode(TaxCodeVm model, string UserId, long TenantId)
         {
-            throw new NotImplementedException();
+            Boolean IsExist = false;
+            try
+            {
+
+                if (model != null)
+                {
+                    IsExist = await IsTaxCodeExist(model.Code);
+                    if (!IsExist)
+                    {
+                        TaxCode taxCode = new TaxCode
+                        {
+                            Code = model.Code,
+                            Amount = model.Amount,
+                            CreationTime = DateTime.Now,
+                            CreatorUserId = UserId,
+                            LastModificationTime = DateTime.Now,
+                            LastModifierUserId = UserId,
+                            IsActive = true,
+                            TenantsId= TenantId,
+                        };
+                        _DbContext.TaxCode.Add(taxCode);
+                        _DbContext.SaveChanges();
+                        Result = true;
+                    }
+                    else
+                    {
+                        Result = false;
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+            return Result;
         }
 
-        public Task<List<TaxCodeVm>> GetTaxCodeList()
+        public async Task<Boolean> IsTaxCodeExist(string Code)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await Task.Run(() =>
+                {
+                    if (!string.IsNullOrEmpty(Code))
+                    {
+                        var data = _DbContext.TaxCode.FirstOrDefault(x => x.Code == Code);
+                        if (data != null)
+                        {
+                            Result = true;
+                        }
+                        else { Result = false; }
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+            return Result;
         }
 
-        public Task<TaxCodeVm> GetTaxCode(long TaxId)
+        public async Task<List<TaxCodeVm>> GetTaxCodeList()
         {
-            throw new NotImplementedException();
+            List<TaxCodeVm> taxcodelist = new List<TaxCodeVm>();
+
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var taxcode = _DbContext.TaxCode.ToList();
+                    foreach (var a in taxcode)
+                    {
+                        TaxCodeVm tax = new TaxCodeVm();
+                        tax.TaxId = a.TaxId;
+                        tax.Code = a.Code;
+                        tax.Amount = a.Amount;
+
+                        taxcodelist.Add(tax);
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+            return taxcodelist;
         }
 
-        public Task<bool> UpdateTaxCode(long TaxId, TaxCodeVm currencyVm)
+        public async Task<TaxCodeVm> GetTaxCode(long TaxId)
         {
-            throw new NotImplementedException();
+            TaxCodeVm tax = new TaxCodeVm();
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var taxcode = _DbContext.TaxCode.Where(x => x.TaxId == TaxId).FirstOrDefault();
+                    if (taxcode != null)
+                    {
+                        tax.TaxId = taxcode.TaxId;
+                        tax.Code = taxcode.Code;
+                        tax.Amount = taxcode.Amount;
+                    }
+
+                });
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return tax;
         }
 
-        public Task<bool> DeleteTaxCode(long TaxId)
+        public async Task<bool> UpdateTaxCode(long TaxId, TaxCodeVm model, string UserId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await Task.Run(() =>
+                {
+                    Result = false;
+                    var taxcode = _DbContext.TaxCode.Where(x => x.TaxId == TaxId).FirstOrDefault();
+                    if (taxcode != null && model != null)
+                    {
+                        taxcode.Code = model.Code;
+                        taxcode.Amount = model.Amount;
+                        taxcode.LastModifierUserId = UserId;
+                        taxcode.LastModificationTime = DateTime.Now;
+                        taxcode.IsActive = true;
+
+                        _DbContext.TaxCode.Update(taxcode);
+                        _DbContext.SaveChanges();
+                        Result = true;
+
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return Result;
+        }
+
+        public async Task<bool> DeleteTaxCode(long TaxId)
+        {
+            try
+            {
+                await Task.Run(() =>
+                {
+                    Result = false;
+                    var taxcode = _DbContext.TaxCode.Where(x => x.TaxId == TaxId).FirstOrDefault();
+                    if (taxcode != null)
+                    {
+                        _DbContext.TaxCode.Remove(taxcode);
+                        _DbContext.SaveChanges();
+                        Result = true;
+
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return Result;
         }
         #endregion Tax Code Services End
+
         #region Credit Terms Services Start
-        public async Task<bool> SaveCreditTerms(CreditTermsVm model)
+        public async Task<bool> SaveCreditTerms(CreditTermsVm model, string UserId, long TenantId)
         {
             Boolean IsExist = false;
             try
@@ -312,9 +465,9 @@ namespace Inventory.Application.Services.CommonsServices
                             Duration = model.Duration,
                             Description = model.Description,
                             CreationTime = DateTime.Now,
-                            CreatorUserId = "001",
+                            CreatorUserId = UserId,
                             LastModificationTime = DateTime.Now,
-                            LastModifierUserId = "001",
+                            LastModifierUserId = UserId,
                             IsActive = true,
                         };
                         _DbContext.CreditTerms.Add(creditTerms);
@@ -416,7 +569,7 @@ namespace Inventory.Application.Services.CommonsServices
             return creditTerms;
         }
 
-        public async Task<bool> UpdateCreditTerms(long CreditTermId, CreditTermsVm model)
+        public async Task<bool> UpdateCreditTerms(long CreditTermId, CreditTermsVm model, string UserId)
         {
             try
             {
@@ -429,10 +582,8 @@ namespace Inventory.Application.Services.CommonsServices
                         creditTerms.Code = model.Code;
                         creditTerms.Duration = model.Duration;
                         creditTerms.Description = model.Description;
-                        creditTerms.CreationTime = DateTime.Now;
-                        creditTerms.CreatorUserId = "001";
                         creditTerms.LastModificationTime = DateTime.Now;
-                        creditTerms.LastModifierUserId = "001";
+                        creditTerms.LastModifierUserId = UserId;
                         creditTerms.IsActive = true;
 
                         _DbContext.CreditTerms.Update(creditTerms);

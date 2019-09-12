@@ -139,6 +139,7 @@ namespace Inventory.Web
             services.AddScoped<ICountry, CountryServices>();
             services.AddScoped<IProductBrand, ProductBrandServices>();
             services.AddScoped<IGenerealsetup.ICurrency, GeneralsetupServices>();
+            services.AddScoped<IGenerealsetup.ITaxCode, GeneralsetupServices>();
             services.AddScoped<IGenerealsetup.ICreditTerms, GeneralsetupServices>();
             services.AddScoped<IcustomerType, CustomerTypeServices>();
             services.AddScoped<IApplicationUser, ApplicationUserServices>();
