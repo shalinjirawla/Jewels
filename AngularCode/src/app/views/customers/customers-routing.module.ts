@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { CustomerComponent } from './customer/customer.component';
 import {CustomerTypeComponent} from './CustomerType/customer-type/customer-type.component';
+import { AuthGuardService} from './../../shared/guards/auth-guard.service';
 
 
 const routes: Routes = [
@@ -14,11 +15,13 @@ const routes: Routes = [
     children: [
       {
         path: '',
+        canActivate: [AuthGuardService],
         redirectTo: 'customer'
       },
       {
         path: 'customer',
         component: CustomerComponent,
+        canActivate: [AuthGuardService],
         data: {
           title: 'Customer'
         }
@@ -26,6 +29,7 @@ const routes: Routes = [
       {
         path: 'customergroup',
         component: CustomerTypeComponent,
+        canActivate: [AuthGuardService],
         data: {
           title: 'Customer Group'
         }

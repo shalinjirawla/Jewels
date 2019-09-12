@@ -9,6 +9,7 @@ import { P500Component } from './views/error/500.component';
 import { LoginComponent } from './views/login/login.component';
 import { RegisterComponent } from './views/register/register.component';
 import { TenantsComponent } from './views/Tenants/tenants/tenants.component';
+import { AuthGuardService} from './shared/guards/auth-guard.service';
   import { from } from 'rxjs';
 export const routes: Routes = [
   {
@@ -54,34 +55,41 @@ export const routes: Routes = [
   {
     path: '',
     component: DefaultLayoutComponent,
+    canActivate: [AuthGuardService],
     data: {
       title: 'Home'
     },
     children: [
       {
         path: 'customers',
-        loadChildren: () => import('./views/customers/customers.module').then(m => m.CustomerModule)
+        loadChildren: () => import('./views/customers/customers.module').then(m => m.CustomerModule),
+        canActivate: [AuthGuardService],
       },
      
       {
         path: 'dashboard',
-        loadChildren: () => import('./views/dashboard/dashboard.module').then(m => m.DashboardModule)
+        loadChildren: () => import('./views/dashboard/dashboard.module').then(m => m.DashboardModule),
+        canActivate: [AuthGuardService],
       },
       {
         path: 'sales',
-        loadChildren: () => import('./views/Sales/sales.module').then(m => m.SalesModule)
+        loadChildren: () => import('./views/Sales/sales.module').then(m => m.SalesModule),
+        canActivate: [AuthGuardService],
       },
       {
         path:'products',
-        loadChildren:()=>import('./views/products/products.module').then(m=>m.ProductsModule)
+        loadChildren:()=>import('./views/products/products.module').then(m=>m.ProductsModule),
+        canActivate: [AuthGuardService],
       },
       {
         path:'suppliers',
-        loadChildren:()=>import('./views/suppliers/suppliers.module').then(m=>m.SuppliersModule)
+        loadChildren:()=>import('./views/suppliers/suppliers.module').then(m=>m.SuppliersModule),
+        canActivate: [AuthGuardService],
       },
       {
         path:'masters',
-        loadChildren:()=>import('./views/Masters/masters.module').then(m=>m.MastersModule)
+        loadChildren:()=>import('./views/Masters/masters.module').then(m=>m.MastersModule),
+        canActivate: [AuthGuardService],
       }
 
       

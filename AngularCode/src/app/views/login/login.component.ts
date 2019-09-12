@@ -46,11 +46,12 @@ export class LoginComponent implements OnInit {
     }
     this.ApplicationUserService.LogInProcess(LoginForm.value).subscribe((responce: any) => {
       if (responce != null && responce.status) {
+        debugger
         this.Responce = responce.data;
         if (this.Responce != null && this.Responce != undefined) {
           localStorage.setItem('AccessToken', this.Responce.accessToken);
-          sessionStorage.setItem('UserId', this.Responce.userId);
-          sessionStorage.setItem('TenantId', this.Responce.tenantId);
+          localStorage.setItem('UserId', this.Responce.userId);
+          localStorage.setItem('TenantId', this.Responce.tenantId);
           this.router.navigateByUrl('/dashboard');
         } else {
           Swal.fire({
