@@ -20,6 +20,11 @@ namespace Inventory.Web.Controllers
         private readonly ICustomer _icustomer;
         private readonly IcustomerType _icustomerType;
         private readonly IApplicationUser _applicationUser;
+        public bool Status = false;
+        public string Message = "";
+        public object Data = null;
+        public string GetUserId = "";
+        public long GetTenantId = 0;
         public CustomerController (ICustomer icustomer, IcustomerType icustomerType,
               IApplicationUser applicationUser
             )
@@ -27,7 +32,9 @@ namespace Inventory.Web.Controllers
             _icustomer = icustomer;
             _icustomerType = icustomerType;
             _applicationUser = applicationUser;
-            if (_applicationUser.GetUserId() == null && _applicationUser.GetTenantId() == null)
+            GetUserId = _applicationUser.GetUserId();
+            GetTenantId = _applicationUser.GetTenantId();
+            if (GetUserId == null && GetTenantId == 0)
             {
                 _applicationUser.Logout();
             }
@@ -41,8 +48,8 @@ namespace Inventory.Web.Controllers
         public async Task<IActionResult> AddCustomer(AddCustomerVm Model)
         {
             string a = "hello";
-            string UserId = await _applicationUser.GetUserId();
-            long TenantId = await _applicationUser.GetTenantId();
+            string UserId =  _applicationUser.GetUserId();
+            long TenantId =  _applicationUser.GetTenantId();
             var CustomerID =await _icustomer.AddCustomer(Model,UserId,TenantId);
             return Ok(GetAjaxResponse(true, string.Empty, a));
         }
@@ -84,10 +91,12 @@ namespace Inventory.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCustomerType(CustomerTypeVm model)
         {
-            string UserId = await _applicationUser.GetUserId();
-            long TenantId = await _applicationUser.GetTenantId();
-            var CustomerType = _icustomerType.AddCustomerTypeAsyc(model, UserId, TenantId);
-            return Ok(GetAjaxResponse(true, string.Empty, CustomerType));
+            await Task.Run(() =>
+            {
+                Data = _icustomerType.AddCustomerTypeAsyc(model, GetUserId, GetTenantId);
+            });
+         
+            return Ok(GetAjaxResponse(true, string.Empty, Data));
         }
 
         [HttpDelete]

@@ -31,7 +31,9 @@ namespace Inventory.Web.Controllers
         private readonly IApplicationUser _applicationUser;
         public Boolean Status = false;
         public string Message = "";
+        public object Data = null;
         public string GetUserId = "";
+        public long GetTenantId = 0;
         public CommonsController(IDiscountType discountType,
             IGenerealsetup.ICurrency currency, ICreditTerms icreditTerms,
             ICountry country, IWarehouse warehouse,
@@ -39,13 +41,16 @@ namespace Inventory.Web.Controllers
             ITaxCode itaxCode
             )
         {
-          
+
             _discountType = discountType;
             _currency = currency;
             _icountry = country;
             _icreditTerms = icreditTerms;
             _warehouse = warehouse;
             _applicationUser = applicationUser;
+            GetUserId = _applicationUser.GetUserId();
+            GetTenantId = _applicationUser.GetTenantId();
+            if (GetUserId == null && GetTenantId == 0)
             _itaxCode = itaxCode;
             if (_applicationUser.GetUserId() == null)
             {
@@ -69,9 +74,7 @@ namespace Inventory.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                string UserId = await _applicationUser.GetUserId();
-                long TenantId = await _applicationUser.GetTenantId();
-                await _discountType.SaveDiscountType(discountTypeVm,UserId,TenantId);
+                await _discountType.SaveDiscountType(discountTypeVm, GetUserId, GetTenantId);
             }
             else
             {
@@ -98,8 +101,7 @@ namespace Inventory.Web.Controllers
         {
             if (DiscounttypeId != 0 && ModelState.IsValid)
             {
-                string UserId = await _applicationUser.GetUserId();
-                DiscounttypeId = await _discountType.UpdateDiscountType(DiscounttypeId, discountTypeVm,UserId);
+                DiscounttypeId = await _discountType.UpdateDiscountType(DiscounttypeId, discountTypeVm, GetUserId);
             }
             else
             {
@@ -139,8 +141,8 @@ namespace Inventory.Web.Controllers
             list = await _currency.GetActiveCurrencyList();
             return Ok(GetAjaxResponse(true, "List Of Currency", list));
         }
-        
-       [HttpPost]
+
+        [HttpPost]
         public async Task<IActionResult> SaveCurrency(CurrencyVm model)
         {
             if (ModelState.IsValid)
@@ -243,9 +245,10 @@ namespace Inventory.Web.Controllers
         [HttpGet]
         public IActionResult GetCountry(int Id)
         {
-            if (Id != 0) { 
-            var CountryList = _icountry.GetCountryAsyc(Id);
-            return Ok(GetAjaxResponse(true, string.Empty, CountryList));
+            if (Id != 0)
+            {
+                var CountryList = _icountry.GetCountryAsyc(Id);
+                return Ok(GetAjaxResponse(true, string.Empty, CountryList));
             }
             else
             {
@@ -265,9 +268,9 @@ namespace Inventory.Web.Controllers
             {
                 msg = "Country Updated Successfully";
             }
-            string UserId = await _applicationUser.GetUserId();
-            long TenantId = await _applicationUser.GetTenantId();
-            var CountryId = _icountry.AddCountryAsyc(model,UserId,TenantId);
+            string UserId = GetUserId;
+            long TenantId = GetTenantId;
+            var CountryId = _icountry.AddCountryAsyc(model, UserId, TenantId);
             return Ok(GetAjaxResponse(true, msg, CountryId));
         }
 
@@ -283,7 +286,7 @@ namespace Inventory.Web.Controllers
             {
                 return Ok(GetAjaxResponse(false, string.Empty, null));
             }
-           
+
         }
 
         #endregion Country APIs End
@@ -306,14 +309,14 @@ namespace Inventory.Web.Controllers
                 vm = await _icreditTerms.GetCreditTerms(CreditTermId);
             }
             else { return BadRequest(); }
-           
+
             return Ok(GetAjaxResponse(true, string.Empty, vm));
         }
 
         [HttpPost]
         public async Task<IActionResult> AddCreditTerm(CreditTermsVm model)
         {
-            if(ModelState.IsValid && model != null)
+            if (ModelState.IsValid && model != null)
             {
                 string UserId = await _applicationUser.GetUserId();
                 long TenantId = await _applicationUser.GetTenantId();
@@ -325,13 +328,15 @@ namespace Inventory.Web.Controllers
                 else { Message = "Error Occurss..!"; }
             }
             else { return BadRequest(); }
-            
+
             return Ok(GetAjaxResponse(Status, Message, null));
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateCreditTerm(long CreditTermId,CreditTermsVm model)
+        public async Task<IActionResult> UpdateCreditTerm(long CreditTermId, CreditTermsVm model)
         {
+
+            Status = await _icreditTerms.UpdateCreditTerms(CreditTermId, model);
             string UserId = await _applicationUser.GetUserId();
             Status = await _icreditTerms.UpdateCreditTerms(CreditTermId,model,UserId);
             if (Status)
@@ -377,22 +382,23 @@ namespace Inventory.Web.Controllers
             {
                 return Ok(GetAjaxResponse(false, "your WareHouse Id not found", null));
             }
-           
+
 
         }
         [HttpPost]
         public async Task<IActionResult> SaveWarehouseList(WarehouseVm model)
         {
-            string UserId = await _applicationUser.GetUserId();
-            long TenantId = await _applicationUser.GetTenantId();
-            var warehouse = _warehouse.SaveWarehouseListAsync(model,UserId,TenantId);
-            return Ok(GetAjaxResponse(true, string.Empty, warehouse));
+            await Task.Run(() =>
+            {
+                Data = _warehouse.SaveWarehouseListAsync(model, GetUserId, GetTenantId);
+            });
+            return Ok(GetAjaxResponse(true, string.Empty, Data));
 
         }
         [HttpDelete]
         public IActionResult DeleteWarehouse(long Id)
         {
-           
+
             if (Id != 0)
             {
                 var a = _warehouse.DeleteWarehouseAsync(Id);
@@ -416,13 +422,16 @@ namespace Inventory.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> UpdateWarehouseStatus(long Id,Boolean status)
+        public async Task<IActionResult> UpdateWarehouseStatus(long Id, Boolean status)
         {
             if (Id != 0)
             {
-                string UserId = await _applicationUser.GetUserId();
-                var warehouse = _warehouse.UpdateWarehouseStatusAsync(Id, status, UserId);
-                if (status) {
+                await Task.Run(() =>
+                {
+                    Data = _warehouse.UpdateWarehouseStatusAsync(Id, status, GetUserId);
+                });
+                if (status)
+                {
                     Message = "Ware House Actived..";
                     Status = true;
                 }
@@ -431,11 +440,11 @@ namespace Inventory.Web.Controllers
                     Message = "Ware House Deactived..";
                     Status = true;
                 }
-                return Ok(GetAjaxResponse(true, Message, warehouse));
+                return Ok(GetAjaxResponse(true, Message, Data));
             }
             else
             {
-                return Ok(GetAjaxResponse(false,"Your warehouse is not Found", null));
+                return Ok(GetAjaxResponse(false, "Your warehouse is not Found", null));
             }
         }
 

@@ -15,6 +15,7 @@ using System.Linq;
 using Inventory.Core.Models.Tenants;
 using System.Web.Providers.Entities;
 using Microsoft.AspNetCore.Http;
+using System.Security.Principal;
 
 namespace Inventory.Application.Services.ApplicationUserServices
 {
@@ -52,7 +53,7 @@ namespace Inventory.Application.Services.ApplicationUserServices
                     {
                         Status = await SetCurrentLoginUserIdandTenantId(login.UserId, login.TenantId);
                         DateTime CurrentDateTime = DateTime.Now;
-                        tokenString = GenerateJSONWebToken(login.UserName, login.EmailId, CurrentDateTime);
+                        tokenString = GenerateJSONWebToken(login.UserName, login.EmailId, CurrentDateTime, login.UserId);
                     }
                     login.AccessToken = tokenString;
                     login.Password = null;
@@ -64,7 +65,7 @@ namespace Inventory.Application.Services.ApplicationUserServices
             }
             return login;
         }
-        private string GenerateJSONWebToken(string Username, string EmailId, DateTime CurrentDateTime)
+        private string GenerateJSONWebToken(string Username, string EmailId, DateTime CurrentDateTime,string UserId)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -72,6 +73,7 @@ namespace Inventory.Application.Services.ApplicationUserServices
                   new Claim(JwtRegisteredClaimNames.Sub, Username),
                   new Claim(JwtRegisteredClaimNames.Email, EmailId),
                   new Claim("DateOfJoing",CurrentDateTime.ToString("yyyy-MM-dd")),
+                    new Claim("UserId", UserId),
                   new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                  };
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
@@ -93,6 +95,7 @@ namespace Inventory.Application.Services.ApplicationUserServices
                 {
                     await Task.Run(() =>
                     {
+                       
                         _httpContextAccessor.HttpContext.Session.SetString("UserId", UserId);
                         _httpContextAccessor.HttpContext.Session.SetString("TenantId", Convert.ToString(TenantId));
                     });
@@ -105,26 +108,37 @@ namespace Inventory.Application.Services.ApplicationUserServices
             }
             return Status;
         }
-        public async Task<string> GetUserId()
+        public string GetUserId()
         {
-            return await Task.Run(() =>
-            {
-                return _httpContextAccessor.HttpContext.Session.GetString("UserId");
-            });
-        }
-        public async Task<long> GetTenantId()
-        {
-            return await Task.Run(() =>
-            {
-                return Convert.ToInt64(_httpContextAccessor.HttpContext.Session.GetString("TenantId"));
 
-            });
+            string UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+
+            var a = _httpContextAccessor.HttpContext.User;
+            return UserId;
+        }
+        public string GetUserId1(IPrincipal user)
+        {
+            if (user == null)
+                return string.Empty;
+           // Claim claimUserId = User.Claims.SingleOrDefault(c => c.Type == "UserId");
+            var identity = (ClaimsIdentity)user.Identity;
+            IEnumerable<Claim> claims = identity.Claims;
+            return claims.FirstOrDefault(s => s.Type == "UserId")?.Value;
+            // string UserId= _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            //return UserId;
+        }
+        public long GetTenantId()
+        {
+            long TenantId= Convert.ToInt64(_httpContextAccessor.HttpContext.Session.GetString("TenantId"));
+            return TenantId;
+
+
         }
         public async Task<Boolean> Logout()
         {
             return await Task.Run(() =>
             {
-                _httpContextAccessor.HttpContext.Session.Clear();
+                //_httpContextAccessor.HttpContext.Session.Clear();
                 Status = true;
                 return Status;
             });

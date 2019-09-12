@@ -2,6 +2,7 @@
 using Inventory.Application.ViewModel.Tenants;
 using System;
 using System.Collections.Generic;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,8 +12,9 @@ namespace Inventory.Application.Interface.ApplicationUser
     {
         Task<LoginVm> Login(LoginVm login);
         Task<Boolean> SetCurrentLoginUserIdandTenantId(string UserId,long TenantId);
-        Task<string> GetUserId();
-        Task<long> GetTenantId();
+        string GetUserId();
+        string GetUserId1( IPrincipal user);
+        long GetTenantId();
         Task<Boolean> Logout();
     }
 }
