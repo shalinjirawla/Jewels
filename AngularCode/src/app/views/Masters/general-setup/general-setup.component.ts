@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { CurrencyService, CreditTermsService, CountryService, WarehouseService } from '../../../Services/Masters-Services/general-setup.service';
+import { CurrencyService, CreditTermsService, CountryService, WarehouseService, TaxCodeService } from '../../../Services/Masters-Services/general-setup.service';
 import Swal from 'sweetalert2'
 import { from } from 'rxjs';
 const Toast = Swal.mixin({
@@ -61,11 +61,20 @@ export class GeneralSetupComponent implements OnInit {
   LocationList: any;
   //Location End
 
+  //TaxCode Start
+  @ViewChild('TaxcodeModal', { static: false }) public TaxcodeModal: ModalDirective;
+  TaxcodeTitle: string = "Tax Code"
+  Taxcodesubmit: boolean = false;
+  TaxcodeForm: FormGroup;
+  TaxcodeList: any;
+  //TaxCode End
+
   constructor(private FormBuilder: FormBuilder,
     private CountryService: CountryService,
     private WarehouseService: WarehouseService,
     private CurrencyService: CurrencyService,
     private CreditTermsService: CreditTermsService,
+    private TaxCodeService: TaxCodeService,
   ) { }
 
   ngOnInit() {
@@ -74,6 +83,7 @@ export class GeneralSetupComponent implements OnInit {
     this.OnloadPaymentTerms();
     this.onLoadCoutry();
     this.onLoadLocation();
+    this.onLoadTaxCode();
   }
   //#region Currency Section Start 
 
@@ -447,7 +457,6 @@ export class GeneralSetupComponent implements OnInit {
   }
 
   GetLocation(LocationId: any) {
-    debugger
     this.WarehouseService.GetLocation(LocationId).subscribe((responce: any) => {
       debugger
       let result = responce.data;
@@ -473,8 +482,7 @@ export class GeneralSetupComponent implements OnInit {
           title: responce.message,
         });
         this.onLoadLocation();
-      }else
-      {
+      } else {
         Toast.fire({
           type: 'error',
           title: responce.message,
@@ -519,8 +527,132 @@ export class GeneralSetupComponent implements OnInit {
   }
   //#endregion Location Section End
 
+  //#region Taxcode Section Start
+  onLoadTaxCode() {
+    this.TaxcodeForm = this.FormBuilder.group({
+      taxId: [0],
+      code: ['', Validators.required],
+      amount: [, Validators.required],
+    })
+    this.GetTaxCodeList();
+  }
+
+  OpentaxcodeModal() {
+    this.TaxcodeModal.show();
+  }
+
+  GetTaxCodeList() {
+    this.TaxCodeService.GetTaxCodeList().subscribe((responce: any) => {
+      debugger
+      if (responce.status) {
+        if (responce.data != null) {
+          this.TaxcodeList = responce.data;
+        }
+      }
+    });
+  }
+
+  get taxform() { return this.TaxcodeForm.controls }
+
+  AddTaxcode(TaxcodeForm: FormControl) {
+    this.Taxcodesubmit = true;
+    if (TaxcodeForm.invalid) {
+      return
+    }
+    this.Taxcodesubmit = false;
+    if (TaxcodeForm.value.taxId == 0) {
+      this.TaxCodeService.AddTaxCode(TaxcodeForm.value).subscribe((responce: any) => {
+        debugger
+        let result = responce.data;
+        if (responce.status) {
+          this.onLoadTaxCode();
+          Toast.fire({
+            type: 'success',
+            title: responce.message,
+          });
+          document.getElementById("taxcodeList-link").click();
+        }
+
+      })
+    }
+    else {
+      this.TaxCodeService.UpdateTaxCode(TaxcodeForm.value).subscribe((responce: any) => {
+        debugger
+        let result = responce.data;
+        if (responce.status) {
+          debugger
+          this.onLoadTaxCode();
+          Toast.fire({
+            type: 'success',
+            title: responce.message,
+          });
+          document.getElementById("taxcodeList-link").click();
+        }
+
+      })
+    }
+  }
+
+  GetTaxcode(i: any) {
+    this.TaxCodeService.GetTaxCode(i).subscribe((responce: any) => {
+      debugger
+      let result = responce.data;
+      if (responce.status) {
+        if (result != null) {
+          this.TaxcodeForm.patchValue({
+            taxId: result.taxId,
+            code: result.code,
+            amount: result.amount,
+          })
+          document.getElementById("taxcodeFor-link").click();
+        }
+      }
+    })
+  }
+
+  DeleteTaxcode(Id: any) {
+    if (Id != 0) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.value) {
+          this.TaxCodeService.DeleteTaxCode(Id).subscribe((responce: any) => {
+            if (responce.status) {
+              Swal.fire(
+                'Deleted!',
+                responce.message,
+                'success'
+              )
+              this.onLoadTaxCode();
+            }
+          });
+        }
+      })
+    }
+  }
+
+  taxcodetabclick(event) {
+    if (event == "taxcodeList-link") {
+      this.onLoadTaxCode();
+    }
+
+  }
+
+  TaxcodeReset() {
+    this.TaxcodeModal.hide();
+    this.onLoadTaxCode();
+  }
+
+  //#endregion Taxcode Section End
+
   allowalpha(event: any) {
-    const pattern = /[a-z\+\A-Z\+ +\a-z\+\A-Z+]/;
+    const pattern = /[a-z\\A-Z\ \a-z\\A-Z]/;
     let inputChar = String.fromCharCode(event.charCode);
     if (!pattern.test(inputChar)) {
       event.preventDefault();
@@ -532,6 +664,42 @@ export class GeneralSetupComponent implements OnInit {
     let inputChar = String.fromCharCode(event.charCode);
     if (!pattern.test(inputChar)) {
       event.preventDefault();
+    }
+  }
+
+  allownumberwithdot(event: any) {
+    const pattern = /[0-9\\.]/;
+    let inputChar = String.fromCharCode(event.charCode);
+    if (!pattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+
+  avoidkeyPress(e) {
+    debugger
+    if ((e.keyCode == 110 || e.keyCode == 190) && e.target.value.indexOf(".") != -1) {
+      e.preventDefault();
+      return;
+    }
+    if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+      // Allow: Ctrl+A, Command+A
+      (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+      // Allow: home, end, left, right, down, up
+      (e.keyCode >= 35 && e.keyCode <= 40)) {
+      // let it happen, don't do anything
+      return;
+    }
+    else if (e.keyCode == 190) {
+      if (e.shiftKey) {
+        e.preventDefault();
+      }
+      else {
+        return;
+      }
+    }
+    // Ensure that it is a number and stop the keypress
+    if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+      e.preventDefault();
     }
   }
 

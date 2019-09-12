@@ -24,6 +24,7 @@ namespace Inventory.Web.Controllers
     {
         private readonly IDiscountType _discountType;
         private readonly IGenerealsetup.ICurrency _currency;
+        private readonly ITaxCode _itaxCode;
         private readonly ICountry _icountry;
         private readonly ICreditTerms _icreditTerms;
         private readonly IWarehouse _warehouse;
@@ -34,7 +35,8 @@ namespace Inventory.Web.Controllers
         public CommonsController(IDiscountType discountType,
             IGenerealsetup.ICurrency currency, ICreditTerms icreditTerms,
             ICountry country, IWarehouse warehouse,
-            IApplicationUser applicationUser
+            IApplicationUser applicationUser,
+            ITaxCode itaxCode
             )
         {
           
@@ -44,6 +46,7 @@ namespace Inventory.Web.Controllers
             _icreditTerms = icreditTerms;
             _warehouse = warehouse;
             _applicationUser = applicationUser;
+            _itaxCode = itaxCode;
             if (_applicationUser.GetUserId() == null)
             {
                 _applicationUser.Logout();
@@ -142,7 +145,9 @@ namespace Inventory.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                Status = await _currency.SaveCurrency(model);
+                string UserId = await _applicationUser.GetUserId();
+                long TenantId = await _applicationUser.GetTenantId();
+                Status = await _currency.SaveCurrency(model,UserId,TenantId);
                 if (Status)
                 {
                     Message = "Currency Succesfully Saved..!";
@@ -176,7 +181,8 @@ namespace Inventory.Web.Controllers
         {
             if (CurrencyId != 0 && ModelState.IsValid)
             {
-                Status = await _currency.UpdateCurrency(CurrencyId, model);
+                string UserId = await _applicationUser.GetUserId();
+                Status = await _currency.UpdateCurrency(CurrencyId, model, UserId);
                 if (Status)
                 {
                     Message = "Currency Successfulyy Upated....!";
@@ -309,7 +315,9 @@ namespace Inventory.Web.Controllers
         {
             if(ModelState.IsValid && model != null)
             {
-                Status = await _icreditTerms.SaveCreditTerms(model);
+                string UserId = await _applicationUser.GetUserId();
+                long TenantId = await _applicationUser.GetTenantId();
+                Status = await _icreditTerms.SaveCreditTerms(model,UserId,TenantId);
                 if (Status)
                 {
                     Message = "Credit Terms Added....!";
@@ -324,8 +332,8 @@ namespace Inventory.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateCreditTerm(long CreditTermId,CreditTermsVm model)
         {
-
-            Status = await _icreditTerms.UpdateCreditTerms(CreditTermId,model);
+            string UserId = await _applicationUser.GetUserId();
+            Status = await _icreditTerms.UpdateCreditTerms(CreditTermId,model,UserId);
             if (Status)
             {
                 Message = "Credit Terms is Updated....!";
@@ -432,5 +440,73 @@ namespace Inventory.Web.Controllers
         }
 
         #endregion Warehouse APIs End
+
+        #region Tax Code APIs Start
+
+        [HttpPost]
+        public async Task<IActionResult> AddTextCode(TaxCodeVm model)
+        {
+            if (ModelState.IsValid && model != null)
+            {
+                string UserId = await _applicationUser.GetUserId();
+                long TenantId = await _applicationUser.GetTenantId();
+                Status = await _itaxCode.SaveTaxCode(model, UserId, TenantId);
+                if (Status)
+                {
+                    Message = "Tax Code Added....!";
+                }
+                else { Message = "Error Occurss..!"; }
+            }
+            else { return BadRequest(); }
+
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateTaxCode(long TaxcodeId, TaxCodeVm model)
+        {
+            string UserId = await _applicationUser.GetUserId();
+            Status = await _itaxCode.UpdateTaxCode(TaxcodeId, model, UserId);
+            if (Status)
+            {
+                Message = "Tax Code is Updated....!";
+            }
+            else { Message = "Error Occurss..!"; }
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTaxCodeList()
+        {
+            var Taxcode = await _itaxCode.GetTaxCodeList();
+            return Ok(GetAjaxResponse(true, string.Empty, Taxcode));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTaxCodeById(long TaxId)
+        {
+            TaxCodeVm tax = new TaxCodeVm();
+            if (TaxId != 0)
+            {
+                tax = await _itaxCode.GetTaxCode(TaxId);
+            }
+            else { return BadRequest(); }
+
+            return Ok(GetAjaxResponse(true, string.Empty, tax));
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteTaxCode(long TaxId)
+        {
+            Status = await _itaxCode.DeleteTaxCode(TaxId);
+            if (Status)
+            {
+                Message = "Tax Code is Deleted...!";
+            }
+            else { Message = "Error Occurss..!"; }
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        #endregion Tax Code APIs End
     }
 }
