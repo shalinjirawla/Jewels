@@ -4,7 +4,7 @@ import { ApplicationUserService } from '../../Services/ApplicationUser/applicati
 import Swal from 'sweetalert2'
 import { from } from 'rxjs';
 import { element } from 'protractor';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 const Toast = Swal.mixin({
   toast: true,
   position: 'top-end',
@@ -28,8 +28,7 @@ export class LoginComponent implements OnInit {
     this.Onload();
     this.LogOut();
   }
-  public LogOut()
-  {
+  public LogOut() {
     localStorage.clear();
     sessionStorage.clear();
   }
@@ -40,27 +39,33 @@ export class LoginComponent implements OnInit {
       AccessToken: [''],
     });
   }
-  public LoginProcess(LoginForm:FormControl){
-    this.FormSubmitted=true;
-    if(this.LoginForm.invalid){
+  public LoginProcess(LoginForm: FormControl) {
+    this.FormSubmitted = true;
+    if (this.LoginForm.invalid) {
       return;
     }
-    this.ApplicationUserService.LogInProcess(LoginForm.value).subscribe((responce:any)=>{
-      if(responce!=null && responce.status)
-      {
-        this.Responce=responce.data;
-        localStorage.setItem('AccessToken',this.Responce.accessToken);
-        sessionStorage.setItem('UserId',this.Responce.userId);
-        sessionStorage.setItem('TenantId',this.Responce.tenantId);
-        this.router.navigateByUrl('/dashboard');
-      }else{
-      Swal.fire({
-        type:'error',
-        title:responce.message,
-        timer:2000,
-      })  
+    this.ApplicationUserService.LogInProcess(LoginForm.value).subscribe((responce: any) => {
+      if (responce != null && responce.status) {
+        this.Responce = responce.data;
+        if (this.Responce != null && this.Responce != undefined) {
+          localStorage.setItem('AccessToken', this.Responce.accessToken);
+          sessionStorage.setItem('UserId', this.Responce.userId);
+          sessionStorage.setItem('TenantId', this.Responce.tenantId);
+          this.router.navigateByUrl('/dashboard');
+        } else {
+          Swal.fire({
+            type:'error',
+            title:responce.message,
+          });
+        }
+      } else {
+        Swal.fire({
+          type: 'error',
+          title: responce.message,
+          timer: 2000,
+        })
       }
     });
   }
-  get f(){return this.LoginForm.controls;}
+  get f() { return this.LoginForm.controls; }
 }  

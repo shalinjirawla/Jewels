@@ -2,7 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import {Router} from '@angular/router'
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import { MustMatch } from '../../_helpers/must-match';
 import { from } from 'rxjs';
 import { element } from 'protractor';
 import { TenantsServicesService } from '../../../Services/TenantsServices/tenants-services.service';
@@ -36,7 +37,12 @@ export class TenantsComponent implements OnInit {
       TenantId: [0],
       TenantName: ['', Validators.required],
       EmailId: ['', Validators.compose([Validators.required, Validators.email])],
-    });
+      Password: ['', Validators.compose([Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{6,}')])],
+      ConfirmPassword: ['', Validators.required],
+    },
+      {
+        validator: MustMatch('Password', 'ConfirmPassword')
+      });
   }
   public SaveTenants(TenantsForm: FormControl) {
     this.FormSubmitted = true;

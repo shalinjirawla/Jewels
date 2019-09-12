@@ -33,6 +33,7 @@ export class RegisterComponent implements OnInit {
   FormSubmitted: boolean = false;
   Responce: any;
   UrlTenantId: number;
+  UrlUserId:string;
   ngOnInit() {
     this.getQueryParameter();
   }
@@ -41,13 +42,19 @@ export class RegisterComponent implements OnInit {
     const url = window.location.href;
     this.Onload();
     if (url.includes('?')) {
-
+debugger
       let httpParams = url.split('?')[1];
-      this.UrlTenantId = parseInt(httpParams.split("=")[1]);
-      if (this.UrlTenantId != null && this.UrlTenantId != 0) {
-        this.GetRegisterData(this.UrlTenantId);
+      let data=httpParams.split("&")
+      if(data!=null && data!=undefined && data.length>1){
+      let TenantId= parseInt(data[0].split("=")[1]);
+      let UserId=data[1].split("=")[1];
+      if (TenantId != null && TenantId != 0 &&  UserId!=null &&  UserId!='') {
+        this.GetRegisterData(TenantId,UserId);
       }
-      return this.UrlTenantId;
+      return TenantId;
+    }else{
+      this.router.navigateByUrl('404');
+    }
 
     } else {
       this.router.navigateByUrl('404');
@@ -60,18 +67,12 @@ export class RegisterComponent implements OnInit {
       TenantId: [0],
       TenantName: ['', Validators.required],
       EmailId: ['', Validators.compose([Validators.required, Validators.email])],
-      UserName: ['', Validators.required],
-      Password: ['', Validators.compose([Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{6,}')])],
-      ConfirmPassword: ['', Validators.required],
-      BusinessRegisterNumber: [0],
-      TaxRegisterNumber: [0],
+      BusinessRegisterNumber: [''],
+      TaxRegisterNumber: [''],
       IsActive: [true],
       Logo: [''],
       IsInTrialPeriod: [''],
       SubscriptionEndDateUtc: ['']
-    },
-      {
-        validator: MustMatch('Password', 'ConfirmPassword')
       });
 
   }
@@ -103,10 +104,14 @@ export class RegisterComponent implements OnInit {
     return this.RegisterForm.controls;
   }
 
-  public GetRegisterData(UrlTenantId: number) {
-    this.TenantsServicesService.GetRegisterData(UrlTenantId).subscribe((responce: any) => {
+  public GetRegisterData(UrlTenantId: number,UrlUserId:string) {
+    this.TenantsServicesService.GetRegisterData(UrlTenantId,UrlUserId).subscribe((responce: any) => {
       if (responce.status) {
         let result = responce.data;
+        Swal.fire({
+          type: 'success',
+          title: responce.message,
+        })
         this.RegisterForm.patchValue({
           TenantId: result.tenantId,
           TenantName: result.tenantName,

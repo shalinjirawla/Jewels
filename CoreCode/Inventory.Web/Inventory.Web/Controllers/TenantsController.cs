@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Inventory.Application.Interface.Tenants;
+using Inventory.Application.ViewModel.ApplicationUser;
 using Inventory.Application.ViewModel.Tenants;
 using Inventory.Web.share;
 using Microsoft.AspNetCore.Authorization;
@@ -49,21 +50,44 @@ namespace Inventory.Web.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult GetRegisterData(long TenantId)
+        public async Task<IActionResult> GetRegisterData(long TenantId,string UserId)
         {
-            Data = null;
             if (TenantId != 0)
             {
-                Data = _tenants.GetRegisterDataAsync(TenantId);
-                if (Data != null)
+                TenantsDetailsVm vm = new TenantsDetailsVm();
+               Status =await _tenants.ChechTenants(TenantId);
+                if (Status)
                 {
-                    Message = "";
-                    Status = true;
+                    Status =await _tenants.CheckUserId(UserId);
+                    if (Status)
+                    {
+                        var data = _tenants.GetRegisterDataAsync(TenantId, UserId);
+                        if (data.Result != null)
+                        {
+                            Data = data.Result;
+                            UserVm model = new UserVm()
+                            {
+                                EmailId = data.Result.EmailId,
+                                TenantId = data.Result.TenantId,
+                            };
+                            Status = await _tenants.RegisterTenantActived(model);
+                            Message = "Your Account Succesfully Activated...!";
+                            Status = true;
+                        }
+                        else
+                        {
+                            Message = "Could Not Find Any Company..";
+                            Status = false;
+                        }
+                    }
+                    else {
+                        Message = "UserId could  Not Found..";
+                    }
                 }
                 else {
-                    Message = "Could Not Find Any Company..";
-                    Status = false;
+                    Message = "Company Already Activated... Please Login..";
                 }
+                
             }
             else { return BadRequest(); }
             return Ok(GetAjaxResponse(Status, Message, Data));

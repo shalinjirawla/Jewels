@@ -24,9 +24,9 @@ export class TenantsServicesService {
 
     }
   }
-  public GetRegisterData(TenantId: any): Observable<any> {
+  public GetRegisterData(TenantId: any,UserId:any): Observable<any> {
     if (TenantId != 0) {
-      let url = this.BaseURL+`GetRegisterData?TenantId=${TenantId}`;
+      let url = this.BaseURL+`GetRegisterData?TenantId=${TenantId}&UserId=${UserId}`;
       return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
         return this.Responce = responce;
       });
