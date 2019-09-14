@@ -212,6 +212,7 @@ export class TaxCodeService {
   }
 
   public AddTaxCode(input): Observable<any> {
+    debugger
     let url = this.BaseURL + `AddTextCode`;
     return this.HttpClient.post(url, JSON.stringify(input), httpOption).pipe((responce: any) => {
       return this.Responce = responce;

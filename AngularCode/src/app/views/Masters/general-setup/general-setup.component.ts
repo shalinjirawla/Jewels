@@ -676,7 +676,6 @@ export class GeneralSetupComponent implements OnInit {
   }
 
   avoidkeyPress(e) {
-    debugger
     if ((e.keyCode == 110 || e.keyCode == 190) && e.target.value.indexOf(".") != -1) {
       e.preventDefault();
       return;
