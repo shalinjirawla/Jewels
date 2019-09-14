@@ -10,7 +10,6 @@ export class AuthGuardService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     let isLoggedIn = false;
-    debugger
     // ... your login logic here 
     var AccessToken = localStorage.getItem("AccessToken");
     var UserId = localStorage.getItem("UserId");

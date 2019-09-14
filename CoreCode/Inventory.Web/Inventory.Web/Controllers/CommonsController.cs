@@ -50,6 +50,7 @@ namespace Inventory.Web.Controllers
             _icreditTerms = icreditTerms;
             _warehouse = warehouse;
             _applicationUser = applicationUser;
+            _itaxCode = itaxCode;
             _SessionHanlderController = SessionHanlderController;
            
         }

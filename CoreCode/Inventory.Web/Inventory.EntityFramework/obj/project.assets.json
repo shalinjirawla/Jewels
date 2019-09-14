@@ -2,6 +2,39 @@
   "version": 3,
   "targets": {
     ".NETStandard,Version=v2.0": {
+      "EntityFramework/6.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net45/EntityFramework.SqlServer.dll": {},
+          "lib/net45/EntityFramework.dll": {}
+        },
+        "runtime": {
+          "lib/net45/EntityFramework.SqlServer.dll": {},
+          "lib/net45/EntityFramework.dll": {}
+        }
+      },
+      "Microsoft.AspNet.Identity.Core/2.2.2": {
+        "type": "package",
+        "compile": {
+          "lib/net45/Microsoft.AspNet.Identity.Core.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Microsoft.AspNet.Identity.Core.dll": {}
+        }
+      },
+      "Microsoft.AspNet.Identity.EntityFramework/2.2.2": {
+        "type": "package",
+        "dependencies": {
+          "EntityFramework": "6.1.0",
+          "Microsoft.AspNet.Identity.Core": "2.2.2"
+        },
+        "compile": {
+          "lib/net45/Microsoft.AspNet.Identity.EntityFramework.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Microsoft.AspNet.Identity.EntityFramework.dll": {}
+        }
+      },
       "Microsoft.AspNetCore.Authentication/2.2.0": {
         "type": "package",
         "dependencies": {
@@ -1085,6 +1118,61 @@
     }
   },
   "libraries": {
+    "EntityFramework/6.1.0": {
+      "sha512": "u/M0OEfqxTUsL5BwzD66eBGm278/ozqdLK3JvMO6QwUxxc+z7ZUkTYm4suDhWRqzkc6mOhvXDQY5dZUwbldxyQ==",
+      "type": "package",
+      "path": "entityframework/6.1.0",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        "content/App.config.transform",
+        "content/Web.config.transform",
+        "entityframework.6.1.0.nupkg.sha512",
+        "entityframework.nuspec",
+        "lib/net40/EntityFramework.SqlServer.dll",
+        "lib/net40/EntityFramework.SqlServer.xml",
+        "lib/net40/EntityFramework.dll",
+        "lib/net40/EntityFramework.xml",
+        "lib/net45/EntityFramework.SqlServer.dll",
+        "lib/net45/EntityFramework.SqlServer.xml",
+        "lib/net45/EntityFramework.dll",
+        "lib/net45/EntityFramework.xml",
+        "tools/EntityFramework.PowerShell.Utility.dll",
+        "tools/EntityFramework.PowerShell.dll",
+        "tools/EntityFramework.psd1",
+        "tools/EntityFramework.psm1",
+        "tools/about_EntityFramework.help.txt",
+        "tools/init.ps1",
+        "tools/install.ps1",
+        "tools/migrate.exe"
+      ]
+    },
+    "Microsoft.AspNet.Identity.Core/2.2.2": {
+      "sha512": "aZoXAqqisAQlEdeMwcn204m7ErUeYXJuoZ4YqvV85OPeB0w8o8kW8Ww5o5ZTZFx3mrLmmtfWKjt4nLqfjzjXEw==",
+      "type": "package",
+      "path": "microsoft.aspnet.identity.core/2.2.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/Microsoft.AspNet.Identity.Core.dll",
+        "lib/net45/Microsoft.AspNet.Identity.Core.xml",
+        "microsoft.aspnet.identity.core.2.2.2.nupkg.sha512",
+        "microsoft.aspnet.identity.core.nuspec"
+      ]
+    },
+    "Microsoft.AspNet.Identity.EntityFramework/2.2.2": {
+      "sha512": "jyMuM6SRjNSONo64eSZgHOOg+VBmcHU29BWee3Nev6zC+3AYiTqmA0xXAV7+yEIJgqYF61POFvb1NRV52PsH+w==",
+      "type": "package",
+      "path": "microsoft.aspnet.identity.entityframework/2.2.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/Microsoft.AspNet.Identity.EntityFramework.dll",
+        "lib/net45/Microsoft.AspNet.Identity.EntityFramework.xml",
+        "microsoft.aspnet.identity.entityframework.2.2.2.nupkg.sha512",
+        "microsoft.aspnet.identity.entityframework.nuspec"
+      ]
+    },
     "Microsoft.AspNetCore.Authentication/2.2.0": {
       "sha512": "b0R9X7L6zMqNsssKDvhYHuNi5x0s4DyHTeXybIAyGaitKiW1Q5aAGKdV2codHPiePv9yHfC9hAMyScXQ/xXhPw==",
       "type": "package",
@@ -3673,6 +3761,7 @@
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
       "Inventory.Core >= 1.0.0",
+      "Microsoft.AspNet.Identity.EntityFramework >= 2.2.2",
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 2.2.0",
       "Microsoft.AspNetCore.Session >= 2.2.0",
       "Microsoft.EntityFrameworkCore >= 2.2.6",
@@ -3681,23 +3770,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\admin\\.nuget\\packages\\": {},
+    "C:\\Users\\Admin\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.EntityFramework\\Inventory.EntityFrameworkCore.csproj",
+      "projectUniqueName": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.EntityFramework\\Inventory.EntityFrameworkCore.csproj",
       "projectName": "Inventory.EntityFrameworkCore",
-      "projectPath": "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.EntityFramework\\Inventory.EntityFrameworkCore.csproj",
-      "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-      "outputPath": "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.EntityFramework\\obj\\",
+      "projectPath": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.EntityFramework\\Inventory.EntityFrameworkCore.csproj",
+      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+      "outputPath": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.EntityFramework\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -3710,8 +3799,8 @@
       "frameworks": {
         "netstandard2.0": {
           "projectReferences": {
-            "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj": {
-              "projectPath": "D:\\Ravi\\Github_Jewelv1\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj"
+            "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj": {
+              "projectPath": "D:\\Shalin\\InventoryProject\\Jewels\\CoreCode\\Inventory.Web\\Inventory.Core\\Inventory.Core.csproj"
             }
           }
         }
@@ -3725,6 +3814,10 @@
     "frameworks": {
       "netstandard2.0": {
         "dependencies": {
+          "Microsoft.AspNet.Identity.EntityFramework": {
+            "target": "Package",
+            "version": "[2.2.2, )"
+          },
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
             "target": "Package",
             "version": "[2.2.0, )"
@@ -3755,5 +3848,37 @@
         "warn": true
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'EntityFramework 6.1.0' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETStandard,Version=v2.0'. This package may not be fully compatible with your project.",
+      "libraryId": "EntityFramework",
+      "targetGraphs": [
+        ".NETStandard,Version=v2.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.AspNet.Identity.Core 2.2.2' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETStandard,Version=v2.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Microsoft.AspNet.Identity.Core",
+      "targetGraphs": [
+        ".NETStandard,Version=v2.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.AspNet.Identity.EntityFramework 2.2.2' was restored using '.NETFramework,Version=v4.6.1' instead of the project target framework '.NETStandard,Version=v2.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Microsoft.AspNet.Identity.EntityFramework",
+      "targetGraphs": [
+        ".NETStandard,Version=v2.0"
+      ]
+    }
+  ]
 }
