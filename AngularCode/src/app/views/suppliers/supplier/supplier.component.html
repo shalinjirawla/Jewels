@@ -1,97 +1,503 @@
 <div class="col-md-12">
-        <div class="card">
-            <div class="card-header card-header-danger">
-                <button type="button" class="btn btn-primary float-right btn-sm" id="AddSupplierbtn" data-toggle="modal"
-                    (click)="largeModal.show()">
-                    Add New Supplier
-                </button>
-                <h4 class="card-title mt-0">Suppliers List</h4>
-            </div>
-            <div class="card-body bg-white">
-                <div class="table-responsive animated flash">
-                    <table  class="table " id="DisplayCategoriesView">
-                        <thead class="">
-                            <th>
-                                Brand Name
-                            </th>
-                            <th>
-                                Description
-                            </th>
-    
-                            <th colspan="2" class="text-center">
-                                Action
-                            </th>
-                        </thead>
-                        <tbody [hidden]="BrandListEmplty">
-                            <tr *ngFor="let item of BrandList">
-                                <td class="mr-2">
-                                    {{item.brandName}}
-                                </td>
-                                <td class="mr-2">
-                                    {{item.description}}
-                                </td>
-                               
-    
-                                <td class="text-right" (click)="BrandEdit(item.brandId)">
-    
-                                    <button class="btn  btn-lg"> <i class="fa fa-pencil text-success"> </i></button>
-                                </td>
-                                <td class="mb-2" (click)="BrandDelete(item.brandId)">
-                                    <button class="btn  btn-lg"><i class="fa fa-trash text-danger"></i> </button>
-    
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="mt-2 text-center" [hidden]="!BrandListEmplty">
-                        <div class="spinner-border text-danger" role="status">
-                            <span class="sr-only">Loading...</span>
-                        </div>
+    <div class="card">
+        <div class="card-header card-header-danger">
+            <button type="button" class="btn btn-primary float-right btn-sm" id="AddSupplierbtn" data-toggle="modal"
+                (click)="largeModal.show()">
+                Add New Supplier
+            </button>
+            <h4 class="card-title mt-0">Suppliers List</h4>
+        </div>
+        <div class="card-body bg-white">
+            <div class="table-responsive animated flash">
+                <table class="table " id="DisplayCategoriesView">
+                    <thead class="">
+                        <th>
+                            COMPANY NAME
+                        </th>
+                        <th>
+                            #
+                        </th>
+                        <th>
+                            PURCHASES
+                        </th>
+                        <th colspan="2" class="text-center">
+                            Action
+                        </th>
+                    </thead>
+                    <tbody [hidden]="Supplieremplty">
+                        <tr *ngFor="let item of SuppliersList">
+                            <td class="mr-2">
+                                {{item.brandName}}
+                            </td>
+                            <td class="mr-2">
+                                {{item.description}}
+                            </td>
+
+
+                            <td class="text-right" (click)="BrandEdit(item.brandId)">
+
+                                <button class="btn  btn-lg"> <i class="fa fa-pencil text-success"> </i></button>
+                            </td>
+                            <td class="mb-2" (click)="BrandDelete(item.brandId)">
+                                <button class="btn  btn-lg"><i class="fa fa-trash text-danger"></i> </button>
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="mt-2 text-center" [hidden]="!Supplieremplty">
+                    <div class="spinner-border text-danger" role="status">
+                        <span class="sr-only">Loading...</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">{{ModelTitleString}}</h4>
-                    <button type="button" class="close" (click)="ResetForm()" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- <form [formGroup]="BrandForm">
-                        <input type="hidden" formControlName="BrandId">
-                        <div class="row">
-                            <div class="form-group col-sm-12">
-                                <label>BRAND NAME</label>
-                                <input class="form-control" id="BrandName" formControlName="BrandName"
-                                    placeholder="BRAND NAME" type="text"
-                                    [ngClass]="{ 'is-invalid': FormSubmitted && f.BrandName.errors }">
-                                <div *ngIf="FormSubmitted && f.BrandName.errors" class="invalid-feedback">
-                                    <div *ngIf="f.BrandName.errors.required">Brand Name is required</div>
+</div>
+<div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{ModelTitleString}}</h4>
+                <button type="button" class="close" (click)="ResetForm()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <tabset (click)="TabClick($event.target.id)">
+                    <tab id="SuppliersDetail">
+                        <form [formGroup]="AddSuppliersForm">
+                            <ng-template tabHeading><i class="icon-user text-info"></i> Supplier Details</ng-template>
+                            <div class="row">
+                                <div class="form-group col-sm-5">
+                                    <input type="hidden" formControlName="SupplierId">
+                                    <label for="city">COMPANY NAME</label>
+                                    <input class="form-control" id="COMPANY-NAME" formControlName="CompanyName"
+                                        [ngClass]="{ 'is-invalid': FormSubmittedSupplliers && f.CompanyName.errors }"
+                                        placeholder="COMPANY NAME" type="text">
+                                    <div *ngIf="FormSubmittedSupplliers && f.CompanyName.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="f.CompanyName.errors.required">Company Name is required</div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-5">
+                                    <label for="postal-code">SUPPLIER CODE</label>
+                                    <input class="form-control" id="CSUPPLIER-CODE" formControlName="SupplierCode"
+                                        placeholder="SUPPLIER CODE" type="text">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-5">
+                                    <label for="postal-code">WEBSITE</label>
+                                    <input class="form-control" id="WEBSITE" formControlName="Website"
+                                        placeholder="SWEBSITE" type="text">
+                                </div>
+                                <div class="form-group col-sm-5">
+                                    <label for="postal-code">REMARKS</label>
+                                    <input class="form-control" id="REMARKS" formControlName="Remarks"
+                                        placeholder="REMARKS" type="text">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-5">
+                                    <label for="postal-code">DEFAULT CURRENCY </label>
+                                    <select class="form-control" formControlName="DefaultCurrency">
+                                        <option value="">--Select--</option>
+                                        <option *ngFor="let type of DefaultCurrenyList" [value]="type.currencyId">
+                                            {{type.code}}
+                                        </option>
+
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-5">
+                                    <label for="postal-code">DEFAULT PAYMENT TERM</label>
+                                    <select class="form-control" formControlName="DefaultPaymentTerms">
+                                        <option value="">--Select--</option>
+                                        <option *ngFor="let type of CustomerTypeList" [value]="type.customerTypeId">
+                                            {{type.customerTypeName}}
+                                        </option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-5">
+                                    <label for="postal-code">DEFAULT TAX </label>
+                                    <select class="form-control" formControlName="DefaultTax">
+                                        <option value="">--Select--</option>
+                                        <option *ngFor="let type of DefaultTaxCodeList" [value]="type.taxId">
+                                            {{type.code}}({{type.amount}}%)
+                                        </option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-5">
+                                    <label for="postal-code">SHIPMENT TERMS </label>
+                                    <select class="form-control" formControlName="ShipmentTerms">
+                                        <option value="">--Select--</option>
+                                        <option *ngFor="let type of CustomerTypeList" [value]="type.customerTypeId">
+                                            {{type.customerTypeName}}
+                                        </option>
+
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-5">
+                                    <label for="postal-code">SHIPMENT METHOD</label>
+                                    <select class="form-control" formControlName="Shipmentmethod">
+                                        <option value="">--Select--</option>
+                                        <option *ngFor="let type of CustomerTypeList" [value]="type.customerTypeId">
+                                            {{type.customerTypeName}}
+                                        </option>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </tab>
+                    <tab id="SuppliersAddress">
+                        <ng-template tabHeading><i class="fa fa-file text-info"></i> Addresses </ng-template>
+                        <div [hidden]="!AddressLenghtcount">
+                            <div class="table-responsive animated flash">
+                                <table class="table " id="AddressList">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 10%;">Address Type</th>
+                                            <th style="width: 30%;">Address</th>
+                                            <th style="width: 10%;">City</th>
+                                            <th style="width: 10%;">Postal Code</th>
+                                            <th style="width: 15%;" class="ml-2">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let type of AddressList.Address; let i = index">
+                                            <td *ngIf="type.addressType==1"> Billing</td>
+                                            <td *ngIf="type.addressType==2"> Shipping</td>
+                                            <td *ngIf="type.addressType==0">--Select--</td>
+                                            <td>{{type.address}}</td>
+                                            <td>{{type.city}}</td>
+                                            <td>{{type.postalCode}}</td>
+                                            <td>
+                                                <span style="cursor: pointer;" class="btn-lg">
+                                                    <span class="text-primary " (click)="EditAddress(i)">
+                                                        <i class="fa fa-pencil"></i>
+                                                    </span>
+                                                    
+                                                    <span [ngClass]="{'text-primary': type.defaultAddress}" class="ml-2"
+                                                        (click)="SetDeafult(type.defaultAddress,i)">
+                                                        <i class="fa fa-check"></i>
+                                                    </span>
+                                                    <span [hidden]="type.defaultAddress" class="text-danger ml-2"
+                                                        (click)="DeleteAddress(i)">
+                                                        <i class="fa fa-trash"></i></span> </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button type="button" class="btn btn-primary btn-md pull-right"
+                                    (click)="AddNewAddress()">Add New </button>
+                            </div>
+                        </div>
+                        <div [hidden]="AddressLenghtcount">
+                            <form [formGroup]="AddSuppliersAddressForm">
+                                <div class="row">
+                                    <div class="form-group col-sm-4">
+                                        <input type="hidden" formControlName="addressId">
+                                        <label for="type"> TYPE
+                                        </label>
+                                        <select class="form-control"
+                                            [ngClass]="{ 'is-invalid': Addresssubmitted && add.addressType.errors }"
+                                            formControlName="addressType"
+                                            (change)="changeaddresstype($event.target.value)" id="ccyear">
+                                            <option value="">--Select--</option>
+                                            <option value="1">Billing (%)</option>
+                                            <option value="2">Shipping ($)</option>
+                                        </select>
+                                        <div *ngIf="Addresssubmitted && add.addressType.errors"
+                                            class="invalid-feedback">
+                                            <div *ngIf="add.addressType.errors.required">Address Type is required</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-2"></div>
+                                    <div class="form-group col-sm-4">
+                                        <label for="address">ADDRESS
+                                        </label>
+                                        <textarea placeholder="Address"
+                                            [ngClass]="{ 'is-invalid': Addresssubmitted && add.address.errors }"
+                                            class="form-control" formControlName="address"
+                                            id="Customer_Address"></textarea>
+                                        <div *ngIf="Addresssubmitted && add.address.errors" class="invalid-feedback">
+                                            <div *ngIf="add.address.errors.required">Address is required</div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-4">
+                                        <label for="country"> COUNTRY
+                                        </label>
+                                        <select class="form-control"
+                                            [ngClass]="{ 'is-invalid': Addresssubmitted && add.countryId.errors }"
+                                            formControlName="countryId"
+                                            id="customer_Coutry">
+                                            <option value="">--Select--</option>
+                                            <option *ngFor="let item of CountryList" [value]="item.countryId">
+                                                {{item.countryName}}</option>
+
+                                        </select>
+                                        <div *ngIf="Addresssubmitted && add.countryId.errors" class="invalid-feedback">
+                                            <div *ngIf="add.countryId.errors.required">Country is required</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-2"></div>
+                                    <div class="form-group col-sm-4">
+                                        <label for="state">STATE
+                                        </label>
+                                        <input class="form-control" (keypress)="allowalpha($event)"
+                                            [ngClass]="{ 'is-invalid': Addresssubmitted && add.state.errors }"
+                                            formControlName="state" autocomplete="off" id="customer_State"
+                                            placeholder="State" type="text">
+                                        <div *ngIf="Addresssubmitted && add.state.errors" class="invalid-feedback">
+                                            <div *ngIf="add.state.errors.required">State is required</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-4">
+                                        <label for="city"> CITY / TOWN
+                                        </label>
+                                        <input class="form-control"
+                                            [ngClass]="{ 'is-invalid': Addresssubmitted && add.city.errors }"
+                                            (keypress)="allowalpha($event)" formControlName="city" autocomplete="off"
+                                            id="Customer_City" placeholder="City" type="text">
+                                        <div *ngIf="Addresssubmitted && add.city.errors" class="invalid-feedback">
+                                            <div *ngIf="add.city.errors.required">City is required</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-2"></div>
+                                    <div class="form-group col-sm-4">
+                                        <label for="postal-code">POSTAL CODE
+                                        </label>
+                                        <input class="form-control"
+                                            [ngClass]="{ 'is-invalid': Addresssubmitted && add.postalCode.errors }"
+                                            (keypress)="allownumber($event)" autocomplete="off"
+                                            formControlName="postalCode" id="Customer_Code" placeholder="Postal Code"
+                                            type="text">
+                                        <div *ngIf="Addresssubmitted && add.postalCode.errors" class="invalid-feedback">
+                                            <div *ngIf="add.postalCode.errors.required">Postal Code is required</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" [hidden]="!CheckboxFlag">
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input"
+                                            (change)="CheckAddress($event.target.checked)" id="copyaddress"
+                                            type="checkbox" [value]="CopyAddress">
+                                       
+                                        <label class="custom-control-label offset-1 " for="copyaddress">
+                                            {{copyAddress}}
+                                        </label>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <button type="button" class="btn btn-primary btn-md pull-right"
+                                        (click)="AddSupplliersAddress(AddSuppliersAddressForm)">{{addaddresstitle}}</button>
+                                    <button type="button" class="btn btn-secondary btn-md mr-2 pull-right"
+                                        (click)="CancelAddSuppilresAddress()">Cancel </button>
+
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="form-group col-sm-12">
-                                <label>DESCRIPTION</label>
-                                <textarea class="form-control" id="Description" formControlName="Description"
-                                    placeholder="DESCRIPTION" ></textarea>
+                    </tab>
+                    <tab id="SuppliersContact">
+                        <ng-template tabHeading><i class="fa fa-phone text-info"></i> Contacts
+                        </ng-template>
+                        <div [hidden]="!ContactLenghtcount">
+                            <div class="table-responsive animated flash">
+                                <table class="table " id="AddressList">
+                                    <thead>
+                                        <tr>
+                                            <th>FirstName </th>
+                                            <th>Designation</th>
+                                            <th>Mobile</th>
+                                            <th>Email</th>
+                                            <th style="width: 15%;" class="ml-2">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let Contact of ContactList.Contact; let i = index">
+                                            <td>{{Contact.firstName}}</td>
+                                            <td>{{Contact.designation}}</td>
+                                            <td>{{Contact.mobile}}</td>
+                                            <td>{{Contact.email}}</td>
+                                            <td>
+                                                <span style="cursor: pointer;" class="h5">
+                                                    <span class="text-primary " (click)="EditContact(i)">
+                                                        <i class="fa fa-pencil"></i>
+                                                    </span>
+                                                    <span *ngIf="Contact.defaultContact" class="text-primary ml-2">
+                                                        <i class="fa fa-check"></i>
+                                                    </span>
+                                                    <span *ngIf="!Contact.defaultContact" class="ml-2"
+                                                        (click)="SetDeafultContact(Contact.defaultContact,i)">
+                                                        <i class="fa fa-check"></i>
+                                                    </span>
+                                                    <span class="text-danger ml-2" (click)="DeleteContact(i)">
+                                                        <i class="fa fa-trash"></i></span> </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button type="button" class="btn btn-primary btn-md pull-right"
+                                    (click)="AddNewContact()">Add New </button>
                             </div>
-                            
                         </div>
-                       
-                    </form> -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="ResetForm()">Close</button>
-                    <button type="button" class="btn btn-primary" (click)="AddBrand(BrandForm)">Save
-                        changes</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+                        <div [hidden]="ContactLenghtcount">
+                            <form [formGroup]="AddSuppliersContactForm">
+                                <div class="row">
+                                    <div class="form-group col-sm-4">
+                                        <label for="designation"> DESIGNATION
+                                        </label>
+                                        <input type="hidden" formControlName="contactId">
+                                        <input class="form-control" formControlName="designation"
+                                            id="Customer_Designation" placeholder="Designation" type="text">
+                                    </div>
+                                    <div class="form-group col-sm-2"></div>
+                                    <div class="form-group col-sm-4">
+                                        <label for="email"> Email
+                                        </label>
+                                        <input class="form-control" id="Customer_contact_Email" formControlName="email"
+                                            placeholder="Email"
+                                            [ngClass]="{ 'is-invalid': contactsubmitted && con.email.errors }"
+                                            type="text">
+                                        <div *ngIf="contactsubmitted && con.email.errors" class="invalid-feedback">
+                                            <div *ngIf="con.email.errors.email">Input Valid Email Address
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-12">
+                                        <label for="name">NAME
+                                        </label>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <input class="form-control"
+                                                    [ngClass]="{ 'is-invalid': contactsubmitted && con.firstName.errors }"
+                                                    formControlName="firstName" autocomplete="off"
+                                                    (keypress)="allowalpha($event)" id="Customer_contact_fn"
+                                                    placeholder="First Name" type="text">
+                                                <div *ngIf="contactsubmitted && con.firstName.errors"
+                                                    class="invalid-feedback">
+                                                    <div *ngIf="con.firstName.errors.required">First Name is required
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-2"></div>
+                                            <div class="col-sm-4">
+                                                <input class="form-control" formControlName="lastName"
+                                                    id="Customer_contact_ln" autocomplete="off" placeholder="Last Name"
+                                                    type="text" (keypress)="allowalpha($event)">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group col-sm-4">
+                                        <label for="mobile"> MOBILE
+                                        </label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">{{countryCode}}</span>
+                                            </div>
+                                            <input class="form-control"
+                                                [ngClass]="{ 'is-invalid': contactsubmitted && con.mobile.errors }"
+                                                (keypress)="allownumber($event)" id="Customer_contact_Mobile"
+                                                autocomplete="off" formControlName="mobile" placeholder="Mobile"
+                                                type="text">
+                                            <div *ngIf="contactsubmitted && con.mobile.errors" class="invalid-feedback">
+                                                <div *ngIf="con.mobile.errors.maxlength">Mobile Number is Maximum(10)
+                                                </div>
+                                                <div *ngIf="con.mobile.errors.minlength">Mobile Number is Minimum(10)
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-2"></div>
+                                    <div class="form-group  col-sm-4">
+                                        <label for="fax"> FAX
+                                        </label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">{{countryCode}}</span>
+                                            </div>
+                                            <input class="form-control" autocomplete="off" formControlName="fax"
+                                                id="Customer_contact_Fax"
+                                                [ngClass]="{ 'is-invalid': contactsubmitted && con.fax.errors }"
+                                                (keypress)="allownumber($event)" placeholder="Area Code & Fax Number "
+                                                type="text">
+                                            <div *ngIf="contactsubmitted && con.fax.errors" class="invalid-feedback">
+                                                <div *ngIf="con.fax.errors.maxlength">Fax Number is Maximum(13)
+                                                </div>
+                                                <div *ngIf="con.fax.errors.minlength">Fax Number is Minimum(9)
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-4">
+                                        <label for="office"> PHONE
+                                        </label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="basic-addon1">{{countryCode}}</span>
+                                            </div>
+                                            <input class="form-control" autocomplete="off"
+                                                (keypress)="allownumber($event)"
+                                                [ngClass]="{ 'is-invalid': contactsubmitted && con.office.errors }"
+                                                id="Customer_contact_Office" formControlName="office"
+                                                placeholder="Area Code & Phone Number" type="text">
+                                            <div *ngIf="contactsubmitted && con.office.errors" class="invalid-feedback">
+                                                <div *ngIf="con.office.errors.maxlength">Phone Number is Maximum(13)
+                                                </div>
+                                                <div *ngIf="con.office.errors.minlength">Phone Number is Minimum(8)
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <button type="button" class="btn btn-primary btn-md pull-right"
+                                        (click)="AddSuppliersContact(AddSuppliersContactForm)">{{addcontacttitle}}</button>
+                                    <button type="button" class="btn btn-secondary btn-md mr-2 pull-right"
+                                        (click)="CancelAddSuppliersContact()">Cancel </button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </tab>
+                </tabset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="ResetForm()">Close</button>
+                <button type="button" class="btn btn-primary"
+                    (click)="saveSuppliers(AddSuppliersForm)">Save Change</button>
+            </div>
+        </div>
+    </div>
+</div>
