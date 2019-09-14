@@ -664,6 +664,7 @@ export class GeneralSetupComponent implements OnInit {
 
     })
     this.GetShipmentTermList();
+    this.ShipmentTermsubmit = false;
   }
 
   get shiptermform() { return this.ShipmentTermForm.controls }
@@ -688,6 +689,20 @@ export class GeneralSetupComponent implements OnInit {
 
       })
     }
+    else {
+      this.ShipmentTermService.UpdateShipmentTerm(ShipmentTermForm.value).subscribe((responce: any) => {
+        let result = responce.data;
+        if (responce.status) {
+          this.onLoadShipmentTerm();
+          Toast.fire({
+            type: 'success',
+            title: responce.message,
+          });
+          document.getElementById("ShipmentTermList-link").click();
+        }
+
+      })
+    }
   }
 
   GetShipmentTermList() {
@@ -699,6 +714,50 @@ export class GeneralSetupComponent implements OnInit {
       }
     });
   }
+
+  GetShipmentTerm(i: any) {
+    this.ShipmentTermService.GetShipmentTerm(i).subscribe((responce: any) => {
+      let result = responce.data;
+      if (responce.status) {
+        if (result != null) {
+          debugger
+          this.ShipmentTermForm.patchValue({
+            shipmentTermId: result.shipmentTermId,
+            code: result.code,
+            description: result.description,
+          })
+          document.getElementById("ShipmentTermFor-link").click();
+        }
+      }
+    })
+  }
+
+  DeleteShipmentTerm(Id:any){
+  if (Id != 0) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.value) {
+        this.ShipmentTermService.DeleteShipmentTerm(Id).subscribe((responce: any) => {
+          if (responce.status) {
+            Swal.fire(
+              'Deleted!',
+              responce.message,
+              'success'
+            )
+            this.onLoadShipmentTerm();
+          }
+        });
+      }
+    })
+  }
+}
 
   OpenShipmentTermModal() {
     this.ShipmentTermModal.show();

@@ -71,7 +71,6 @@ namespace Inventory.Application.Services.ApplicationUserServices
             var claims = new[] {
                   new Claim(JwtRegisteredClaimNames.Sub, Username),
                   new Claim(JwtRegisteredClaimNames.Email, EmailId),
-                  new Claim(JwtRegisteredClaimNames.UniqueName, Username),
                   new Claim("DateOfJoing",CurrentDateTime.ToString("yyyy-MM-dd")),
                     new Claim("UserId", UserId),
                     new Claim("TenantId",Convert.ToString(TenantId)),

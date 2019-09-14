@@ -143,11 +143,11 @@ namespace Inventory.Web
             services.AddScoped<IGenerealsetup.ICurrency, GeneralsetupServices>();
             services.AddScoped<IGenerealsetup.ITaxCode, GeneralsetupServices>();
             services.AddScoped<IGenerealsetup.ICreditTerms, GeneralsetupServices>();
+            services.AddScoped<IGenerealsetup.IShipmentTerm, GeneralsetupServices>();
             services.AddScoped<IcustomerType, CustomerTypeServices>();
             services.AddScoped<IApplicationUser, ApplicationUserServices>();
             services.AddScoped<IWarehouse, WarehouseService>();
             services.AddScoped<ITenants, TenantsServices>();
-            services.AddScoped<IGenerealsetup.ICreditTerms, GeneralsetupServices>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //Configure CORS for angular2 UI
             services.AddCors(options =>

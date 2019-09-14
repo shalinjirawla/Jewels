@@ -252,7 +252,7 @@ export class ShipmentTermService {
   private BaseURL: string = "https://localhost:44315/api/Commons/";
 
   public GetShipmentTermList(): Observable<any> {
-    let url = this.BaseURL + `GetAddShipmentTermList`;
+    let url = this.BaseURL + `GetShipmentTermList`;
     return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
       return this.Responce = responce;
     });
@@ -267,14 +267,14 @@ export class ShipmentTermService {
   }
 
   public GetShipmentTerm(i): Observable<any> {
-    let url = this.BaseURL + `GetAddShipmentTermById?ShipmentTermId=` + i;
+    let url = this.BaseURL + `GetShipmentTermById?ShipmentTermId=` + i;
     return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
       return this.Responce = responce;
     });
   }
 
   public UpdateShipmentTerm(input): Observable<any> {
-    let url = this.BaseURL + `UpdateAddShipmentTerm?ShipmentTermId=${input.taxId}`;
+    let url = this.BaseURL + `UpdateAddShipmentTerm?ShipmentTermId=${input.shipmentTermId}`;
     return this.HttpClient.post(url, JSON.stringify(input), httpOption).pipe((responce: any) => {
       return this.Responce = responce;
     });
