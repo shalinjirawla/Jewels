@@ -10,6 +10,12 @@ export class AuthGuardService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     let isLoggedIn = false;
+    setTimeout(function () {
+      localStorage.removeItem("AccessToken");
+      localStorage.removeItem("UserId");
+      localStorage.removeItem("TenantId");
+    }, 1000 * 60 * 60);
+
     // ... your login logic here 
     var AccessToken = localStorage.getItem("AccessToken");
     var UserId = localStorage.getItem("UserId");
@@ -24,4 +30,6 @@ export class AuthGuardService implements CanActivate {
       return false;
     }
   }
+
+
 }

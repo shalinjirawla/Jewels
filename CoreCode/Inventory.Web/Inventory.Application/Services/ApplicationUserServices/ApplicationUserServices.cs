@@ -87,8 +87,62 @@ namespace Inventory.Application.Services.ApplicationUserServices
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-       
+        public async Task<Boolean> SetCurrentLoginUserIdandTenantId(string UserId, long TenantId)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(UserId) && TenantId != 0)
+                {
+                    await Task.Run(() =>
+                    {
+                       
+                        _httpContextAccessor.HttpContext.Session.SetString("UserId", UserId);
+                        _httpContextAccessor.HttpContext.Session.SetString("TenantId", Convert.ToString(TenantId));
+                    });
+                }
+            }
+            catch (Exception e)
+            {
 
+                throw;
+            }
+            return Status;
+        }
+        public string GetUserId()
+        {
+
+            string UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
+
+            return UserId;
+        }
+        public string GetUserId1(IPrincipal user)
+        {
+            if (user == null)
+                return string.Empty;
+           // Claim claimUserId = User.Claims.SingleOrDefault(c => c.Type == "UserId");
+            var identity = (ClaimsIdentity)user.Identity;
+            IEnumerable<Claim> claims = identity.Claims;
+            return claims.FirstOrDefault(s => s.Type == "UserId")?.Value;
+            // string UserId= _httpContextAccessor.HttpContext.Session.GetString("UserId");
+            //return UserId;
+        }
+        public long GetTenantId()
+        {
+            long TenantId= Convert.ToInt64(_httpContextAccessor.HttpContext.Session.GetString("TenantId"));
+            return TenantId;
+
+
+        }
+        public async Task<Boolean> Logout()
+        {
+            return await Task.Run(() =>
+            {
+                //_httpContextAccessor.HttpContext.Session.Clear();
+                Status = true;
+                return Status;
+            });
+        }
+       
 
     }
 }

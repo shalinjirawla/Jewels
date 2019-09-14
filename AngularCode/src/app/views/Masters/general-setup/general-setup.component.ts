@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { CurrencyService, CreditTermsService, CountryService, WarehouseService, TaxCodeService } from '../../../Services/Masters-Services/general-setup.service';
+import { CurrencyService, CreditTermsService, CountryService, WarehouseService, TaxCodeService, ShipmentTermService } from '../../../Services/Masters-Services/general-setup.service';
 import Swal from 'sweetalert2'
 import { from } from 'rxjs';
 const Toast = Swal.mixin({
@@ -68,6 +68,13 @@ export class GeneralSetupComponent implements OnInit {
   TaxcodeForm: FormGroup;
   TaxcodeList: any;
   //TaxCode End
+  //ShipmentTerm Start
+  @ViewChild('ShipmentTermModal', { static: false }) public ShipmentTermModal: ModalDirective;
+  ShipmentTermTitle: string = "Shipment Term"
+  ShipmentTermsubmit: boolean = false;
+  ShipmentTermForm: FormGroup;
+  ShipmentTermList: any;
+  //ShipmentTerm End
 
   constructor(private FormBuilder: FormBuilder,
     private CountryService: CountryService,
@@ -75,6 +82,7 @@ export class GeneralSetupComponent implements OnInit {
     private CurrencyService: CurrencyService,
     private CreditTermsService: CreditTermsService,
     private TaxCodeService: TaxCodeService,
+    private ShipmentTermService: ShipmentTermService,
   ) { }
 
   ngOnInit() {
@@ -84,6 +92,7 @@ export class GeneralSetupComponent implements OnInit {
     this.onLoadCoutry();
     this.onLoadLocation();
     this.onLoadTaxCode();
+    this.onLoadShipmentTerm();
   }
   //#region Currency Section Start 
 
@@ -458,7 +467,6 @@ export class GeneralSetupComponent implements OnInit {
 
   GetLocation(LocationId: any) {
     this.WarehouseService.GetLocation(LocationId).subscribe((responce: any) => {
-      debugger
       let result = responce.data;
       if (responce.status) {
         this.LocationForm.patchValue({
@@ -475,7 +483,6 @@ export class GeneralSetupComponent implements OnInit {
   LocationChange(event, LocationId) {
     this.WarehouseService.UpdateLocationStatus(LocationId, event).subscribe((responce: any) => {
       let result = responce.data;
-      debugger
       if (responce.status) {
         Toast.fire({
           type: 'success',
@@ -543,7 +550,6 @@ export class GeneralSetupComponent implements OnInit {
 
   GetTaxCodeList() {
     this.TaxCodeService.GetTaxCodeList().subscribe((responce: any) => {
-      debugger
       if (responce.status) {
         if (responce.data != null) {
           this.TaxcodeList = responce.data;
@@ -562,7 +568,6 @@ export class GeneralSetupComponent implements OnInit {
     this.Taxcodesubmit = false;
     if (TaxcodeForm.value.taxId == 0) {
       this.TaxCodeService.AddTaxCode(TaxcodeForm.value).subscribe((responce: any) => {
-        debugger
         let result = responce.data;
         if (responce.status) {
           this.onLoadTaxCode();
@@ -577,10 +582,8 @@ export class GeneralSetupComponent implements OnInit {
     }
     else {
       this.TaxCodeService.UpdateTaxCode(TaxcodeForm.value).subscribe((responce: any) => {
-        debugger
         let result = responce.data;
         if (responce.status) {
-          debugger
           this.onLoadTaxCode();
           Toast.fire({
             type: 'success',
@@ -595,7 +598,6 @@ export class GeneralSetupComponent implements OnInit {
 
   GetTaxcode(i: any) {
     this.TaxCodeService.GetTaxCode(i).subscribe((responce: any) => {
-      debugger
       let result = responce.data;
       if (responce.status) {
         if (result != null) {
@@ -650,6 +652,129 @@ export class GeneralSetupComponent implements OnInit {
   }
 
   //#endregion Taxcode Section End
+
+
+  //#region ShipmentTerm Section Start
+
+  onLoadShipmentTerm() {
+    this.ShipmentTermForm = this.FormBuilder.group({
+      shipmentTermId: [0],
+      code: ['', Validators.required],
+      description: ['']
+
+    })
+    this.GetShipmentTermList();
+    this.ShipmentTermsubmit = false;
+  }
+
+  get shiptermform() { return this.ShipmentTermForm.controls }
+
+  AddShipmentTerm(ShipmentTermForm: FormControl) {
+    this.ShipmentTermsubmit = true;
+    if (ShipmentTermForm.invalid) {
+      return
+    }
+    this.ShipmentTermsubmit = false;
+    if (ShipmentTermForm.value.shipmentTermId == 0) {
+      this.ShipmentTermService.AddShipmentTerm(ShipmentTermForm.value).subscribe((responce: any) => {
+        let result = responce.data;
+        if (responce.status) {
+          this.onLoadShipmentTerm();
+          Toast.fire({
+            type: 'success',
+            title: responce.message,
+          });
+          document.getElementById("ShipmentTermList-link").click();
+        }
+
+      })
+    }
+    else {
+      this.ShipmentTermService.UpdateShipmentTerm(ShipmentTermForm.value).subscribe((responce: any) => {
+        let result = responce.data;
+        if (responce.status) {
+          this.onLoadShipmentTerm();
+          Toast.fire({
+            type: 'success',
+            title: responce.message,
+          });
+          document.getElementById("ShipmentTermList-link").click();
+        }
+
+      })
+    }
+  }
+
+  GetShipmentTermList() {
+    this.ShipmentTermService.GetShipmentTermList().subscribe((responce: any) => {
+      if (responce.status) {
+        if (responce.data != null) {
+          this.ShipmentTermList = responce.data;
+        }
+      }
+    });
+  }
+
+  GetShipmentTerm(i: any) {
+    this.ShipmentTermService.GetShipmentTerm(i).subscribe((responce: any) => {
+      let result = responce.data;
+      if (responce.status) {
+        if (result != null) {
+          debugger
+          this.ShipmentTermForm.patchValue({
+            shipmentTermId: result.shipmentTermId,
+            code: result.code,
+            description: result.description,
+          })
+          document.getElementById("ShipmentTermFor-link").click();
+        }
+      }
+    })
+  }
+
+  DeleteShipmentTerm(Id:any){
+  if (Id != 0) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.value) {
+        this.ShipmentTermService.DeleteShipmentTerm(Id).subscribe((responce: any) => {
+          if (responce.status) {
+            Swal.fire(
+              'Deleted!',
+              responce.message,
+              'success'
+            )
+            this.onLoadShipmentTerm();
+          }
+        });
+      }
+    })
+  }
+}
+
+  OpenShipmentTermModal() {
+    this.ShipmentTermModal.show();
+  }
+
+  ShipmentTermReset() {
+    this.ShipmentTermModal.hide();
+    this.onLoadShipmentTerm();
+  }
+
+  ShipmentTermtabclick(event) {
+    if (event == "ShipmentTermList-link") {
+      this.onLoadShipmentTerm();
+    }
+  }
+
+  //#endregion ShipmentTerm Section End
 
   allowalpha(event: any) {
     const pattern = /[a-z\\A-Z\ \a-z\\A-Z]/;

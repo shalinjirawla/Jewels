@@ -13,10 +13,10 @@ using static Inventory.Application.Interface.Common.IGenerealsetup;
 
 namespace Inventory.Application.Services.CommonsServices
 {
-    public class GeneralsetupServices : ICurrency, ITaxCode, ICreditTerms
+    public class GeneralsetupServices : ICurrency, ITaxCode, ICreditTerms, IShipmentTerm
     {
         private readonly ApplicationDbContext _DbContext;
-        public GeneralsetupServices(ApplicationDbContext DbContext) 
+        public GeneralsetupServices(ApplicationDbContext DbContext)
         {
             _DbContext = DbContext;
         }
@@ -154,7 +154,7 @@ namespace Inventory.Application.Services.CommonsServices
             {
                 await Task.Run(() =>
                 {
-                    var data = _DbContext.Currencies.Where(x=>x.IsActive==true).ToList();
+                    var data = _DbContext.Currencies.Where(x => x.IsActive == true).ToList();
                     if (data != null && data.Count > 0)
                     {
                         foreach (var item in data)
@@ -290,7 +290,7 @@ namespace Inventory.Application.Services.CommonsServices
                             LastModificationTime = DateTime.Now,
                             LastModifierUserId = UserId,
                             IsActive = true,
-                            TenantsId= TenantId,
+                            TenantsId = TenantId,
                         };
                         _DbContext.TaxCode.Add(taxCode);
                         _DbContext.SaveChanges();
@@ -453,7 +453,7 @@ namespace Inventory.Application.Services.CommonsServices
             Boolean IsExist = false;
             try
             {
-               
+
                 if (model != null)
                 {
                     IsExist = await IsCreditTermsExist(model.Code);
@@ -477,7 +477,7 @@ namespace Inventory.Application.Services.CommonsServices
                     else
                     {
                         Result = false;
-                       
+
                     }
                 }
             }
@@ -625,6 +625,188 @@ namespace Inventory.Application.Services.CommonsServices
             }
             return Result;
         }
+
         #endregion Credit Terms Services end
+
+        #region Shipment Terms Services Start
+
+        public async Task<bool> SaveShipmentTerm(ShipmentTermVm model, string UserId, long TenantId)
+        {
+            Boolean IsExist = false;
+            Boolean Result = false;
+            try
+            {
+
+                if (model != null)
+                {
+                    IsExist = await IsShipmentTermExist(model.Code);
+                    if (!IsExist)
+                    {
+                        ShipmentTerm ShipmentTerm = new ShipmentTerm
+                        {
+                            Code = model.Code,
+                            Description = model.Description,
+                            CreationTime = DateTime.Now,
+                            CreatorUserId = UserId,
+                            LastModificationTime = DateTime.Now,
+                            LastModifierUserId = UserId,
+                            IsActive = true,
+                        };
+                        _DbContext.ShipmentTerms.Add(ShipmentTerm);
+                        _DbContext.SaveChanges();
+                        Result = true;
+                    }
+                    else
+                    {
+                        Result = false;
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+            return Result;
+        }
+        public async Task<Boolean> IsShipmentTermExist(string Code)
+        {
+
+            try
+            {
+                await Task.Run(() =>
+                {
+                    if (!string.IsNullOrEmpty(Code))
+                    {
+                        var data = _DbContext.ShipmentTerms.FirstOrDefault(x => x.Code == Code);
+                        if (data != null)
+                        {
+                            Result = true;
+                        }
+                        else { Result = false; }
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+            return Result;
+        }
+
+        public async Task<List<ShipmentTermVm>> GetShipmentTermList()
+        {
+            List<ShipmentTermVm> ShipmentTermList = new List<ShipmentTermVm>();
+
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var creditTerms = _DbContext.ShipmentTerms.ToList();
+                    foreach (var a in creditTerms)
+                    {
+                        ShipmentTermVm ShipmentTerm = new ShipmentTermVm();
+                        ShipmentTerm.ShipmentTermId = a.ShipmentTermId;
+                        ShipmentTerm.Code = a.Code;
+                        ShipmentTerm.Description = a.Description;
+
+                        ShipmentTermList.Add(ShipmentTerm);
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+            return ShipmentTermList; ;
+        }
+
+        public async Task<ShipmentTermVm> GetShipmentTerm(long ShipmentTermId)
+        {
+            ShipmentTermVm ShipmentTerm = new ShipmentTermVm();
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var term = _DbContext.ShipmentTerms.Where(x => x.ShipmentTermId == ShipmentTermId).FirstOrDefault();
+                    if (term != null)
+                    {
+                        ShipmentTerm.ShipmentTermId = term.ShipmentTermId;
+                        ShipmentTerm.Code = term.Code;
+                        ShipmentTerm.Description = term.Description;
+                    }
+
+                });
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return ShipmentTerm;
+        }
+
+        public async Task<bool> UpdateShipmentTerm(long ShipmentTermId, ShipmentTermVm model, string UserId)
+        {
+            try
+            {
+                await Task.Run(() =>
+                {
+                    Result = false;
+                    var ShipmentTerms = _DbContext.ShipmentTerms.Where(x => x.ShipmentTermId == ShipmentTermId).FirstOrDefault();
+                    if (ShipmentTerms != null && model != null)
+                    {
+                        ShipmentTerms.Code = model.Code;
+                        ShipmentTerms.Description = model.Description;
+                        ShipmentTerms.LastModificationTime = DateTime.Now;
+                        ShipmentTerms.LastModifierUserId = UserId;
+                        ShipmentTerms.IsActive = true;
+
+                        _DbContext.ShipmentTerms.Update(ShipmentTerms);
+                        _DbContext.SaveChanges();
+                        Result = true;
+
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return Result;
+        }
+
+        public async Task<bool> DeleteShipmentTerm(long ShipmentTermId)
+        {
+            try
+            {
+                await Task.Run(() =>
+                {
+                    Result = false;
+                    var ShipmentTerm = _DbContext.ShipmentTerms.Where(x => x.ShipmentTermId == ShipmentTermId).FirstOrDefault();
+                    if (ShipmentTerm != null)
+                    {
+                        _DbContext.ShipmentTerms.Remove(ShipmentTerm);
+                        _DbContext.SaveChanges();
+                        Result = true;
+
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return Result;
+
+        }
+
+        #endregion Shipment Terms Services Start
     }
 }

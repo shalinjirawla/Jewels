@@ -24,11 +24,11 @@ namespace Inventory.Web.Controllers
     {
         private readonly IDiscountType _discountType;
         private readonly IGenerealsetup.ICurrency _currency;
-        private readonly ITaxCode _itaxCode;
+        private readonly ITaxCode _taxCode;
         private readonly ICountry _icountry;
         private readonly ICreditTerms _icreditTerms;
         private readonly IWarehouse _warehouse;
-        private readonly IApplicationUser _applicationUser;
+        private readonly IShipmentTerm _shipmentTerm;
         public Boolean Status = false;
         public string Message = "";
         public object Data = null;
@@ -38,8 +38,7 @@ namespace Inventory.Web.Controllers
         public CommonsController(IDiscountType discountType,
             IGenerealsetup.ICurrency currency, ICreditTerms icreditTerms,
             ICountry country, IWarehouse warehouse,
-            IApplicationUser applicationUser,
-            ITaxCode itaxCode,
+            ITaxCode itaxCode, IShipmentTerm shipmentTerm,
             SessionHanlderController SessionHanlderController
             )
         {
@@ -47,10 +46,13 @@ namespace Inventory.Web.Controllers
             _discountType = discountType;
             _currency = currency;
             _icountry = country;
+            _taxCode = itaxCode;
             _icreditTerms = icreditTerms;
             _warehouse = warehouse;
             _applicationUser = applicationUser;
             _itaxCode = itaxCode;
+            _shipmentTerm = shipmentTerm;
+
             _SessionHanlderController = SessionHanlderController;
            
         }
@@ -147,6 +149,9 @@ namespace Inventory.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+
+              
+
                 GetUserId = _SessionHanlderController.GetUserId(HttpContext);
                 GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
 
@@ -184,6 +189,8 @@ namespace Inventory.Web.Controllers
         {
             if (CurrencyId != 0 && ModelState.IsValid)
             {
+
+
                 GetUserId = _SessionHanlderController.GetUserId(HttpContext);
                 Status = await _currency.UpdateCurrency(CurrencyId, model, GetUserId);
                 if (Status)
@@ -320,6 +327,8 @@ namespace Inventory.Web.Controllers
         {
             if (ModelState.IsValid && model != null)
             {
+
+
                 GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
                 GetUserId = _SessionHanlderController.GetUserId(HttpContext);
                 Status = await _icreditTerms.SaveCreditTerms(model,GetUserId,GetTenantId);
@@ -337,6 +346,9 @@ namespace Inventory.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateCreditTerm(long CreditTermId, CreditTermsVm model)
         {
+
+
+
             GetUserId = _SessionHanlderController.GetUserId(HttpContext);
             Status = await _icreditTerms.UpdateCreditTerms(CreditTermId,model,GetUserId);
             if (Status)
@@ -461,9 +473,11 @@ namespace Inventory.Web.Controllers
         {
             if (ModelState.IsValid && model != null)
             {
+
+
                 GetUserId = _SessionHanlderController.GetUserId(HttpContext);
                 GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
-                Status = await _itaxCode.SaveTaxCode(model, GetUserId, GetTenantId);
+                Status = await _taxCode.SaveTaxCode(model, GetUserId, GetTenantId);
                 if (Status)
                 {
                     Message = "Tax Code Added....!";
@@ -478,8 +492,9 @@ namespace Inventory.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateTaxCode(long TaxcodeId, TaxCodeVm model)
         {
+
             GetUserId = _SessionHanlderController.GetUserId(HttpContext);
-            Status = await _itaxCode.UpdateTaxCode(TaxcodeId, model, GetUserId);
+            Status = await _taxCode.UpdateTaxCode(TaxcodeId, model, GetUserId);
             if (Status)
             {
                 Message = "Tax Code is Updated....!";
@@ -491,7 +506,7 @@ namespace Inventory.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTaxCodeList()
         {
-            var Taxcode = await _itaxCode.GetTaxCodeList();
+            var Taxcode = await _taxCode.GetTaxCodeList();
             return Ok(GetAjaxResponse(true, string.Empty, Taxcode));
         }
 
@@ -501,7 +516,7 @@ namespace Inventory.Web.Controllers
             TaxCodeVm tax = new TaxCodeVm();
             if (TaxId != 0)
             {
-                tax = await _itaxCode.GetTaxCode(TaxId);
+                tax = await _taxCode.GetTaxCode(TaxId);
             }
             else { return BadRequest(); }
 
@@ -511,7 +526,7 @@ namespace Inventory.Web.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteTaxCode(long TaxId)
         {
-            Status = await _itaxCode.DeleteTaxCode(TaxId);
+            Status = await _taxCode.DeleteTaxCode(TaxId);
             if (Status)
             {
                 Message = "Tax Code is Deleted...!";
@@ -521,5 +536,75 @@ namespace Inventory.Web.Controllers
         }
 
         #endregion Tax Code APIs End
+
+
+        #region Shipment Term APIs Start
+
+        [HttpPost]
+        public async Task<IActionResult> AddShipmentTerm(ShipmentTermVm model)
+        {
+            if (ModelState.IsValid && model != null)
+            {
+                GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
+                GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+                Status = await _shipmentTerm.SaveShipmentTerm(model, GetUserId, GetTenantId);
+                if (Status)
+                {
+                    Message = "Tax Code Added....!";
+                }
+                else { Message = "Error Occurss..!"; }
+            }
+            else { return BadRequest(); }
+
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateAddShipmentTerm(long ShipmentTermId, ShipmentTermVm model)
+        {
+            GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+            Status = await _shipmentTerm.UpdateShipmentTerm(ShipmentTermId, model, GetUserId);
+            if (Status)
+            {
+                Message = "Tax Code is Updated....!";
+            }
+            else { Message = "Error Occurss..!"; }
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetShipmentTermList()
+        {
+
+            var ShipmentTerm = await _shipmentTerm.GetShipmentTermList();
+            return Ok(GetAjaxResponse(true, string.Empty, ShipmentTerm));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetShipmentTermById(long ShipmentTermId)
+        {
+            ShipmentTermVm ShipmentTerm = new ShipmentTermVm();
+            if (ShipmentTermId != 0)
+            {
+                ShipmentTerm = await  _shipmentTerm.GetShipmentTerm(ShipmentTermId);
+            }
+            else { return BadRequest(); }
+
+            return Ok(GetAjaxResponse(true, string.Empty, ShipmentTerm));
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAddShipmentTerm(long ShipmentTermId)
+        {
+            Status = await _shipmentTerm.DeleteShipmentTerm(ShipmentTermId);
+            if (Status)
+            {
+                Message = "Shipment Term is Deleted...!";
+            }
+            else { Message = "Error Occurss..!"; }
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        #endregion Shipment Term APIs End
     }
 }

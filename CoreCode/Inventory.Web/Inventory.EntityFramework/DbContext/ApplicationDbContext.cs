@@ -42,5 +42,6 @@ namespace Inventory.EntityFrameworkCore.DbContext
         public DbSet<CreditTerms> CreditTerms { get; set; }
         public DbSet<TaxCode> TaxCode { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
+        public DbSet<ShipmentTerm> ShipmentTerms { get; set; }
     }
 }

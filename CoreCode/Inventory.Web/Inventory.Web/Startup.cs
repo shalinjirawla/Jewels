@@ -63,6 +63,41 @@ namespace Inventory.Web
             services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
             services.AddMvc().AddControllersAsServices();
             //Password Strength Setting
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Password settings
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequiredUniqueChars = 6;
+
+                // Lockout settings
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+                options.Lockout.MaxFailedAccessAttempts = 10;
+                options.Lockout.AllowedForNewUsers = true;
+
+                // User settings
+                options.User.RequireUniqueEmail = true;
+            });
+
+            //Setting the Account Login page
+            services.ConfigureApplicationCookie(options =>
+            {
+                // Cookie settings
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+                options.LoginPath = "/#/Login"; // If the LoginPath is not set here,
+                                                      // ASP.NET Core will default to /#/Login
+                options.LogoutPath = "/#/Logout"; // If the LogoutPath is not set here,
+                                                        // ASP.NET Core will default to /#/Logout
+                options.AccessDeniedPath = "/#/404"; // If the AccessDeniedPath is
+                                                                    // not set here, ASP.NET Core 
+                                                                    // will default to 
+                                                                    // /#/404
+                options.SlidingExpiration = true;
+            });
            
             //adding autorization policy's
             services.AddAuthentication(options =>
@@ -70,7 +105,7 @@ namespace Inventory.Web
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-
+                
             }).AddJwtBearer(option => {
                 option.SaveToken = true;
                 option.RequireHttpsMetadata = false;
@@ -108,6 +143,7 @@ namespace Inventory.Web
             services.AddScoped<IGenerealsetup.ICurrency, GeneralsetupServices>();
             services.AddScoped<IGenerealsetup.ITaxCode, GeneralsetupServices>();
             services.AddScoped<IGenerealsetup.ICreditTerms, GeneralsetupServices>();
+            services.AddScoped<IGenerealsetup.IShipmentTerm, GeneralsetupServices>();
             services.AddScoped<IcustomerType, CustomerTypeServices>();
             services.AddScoped<IApplicationUser, ApplicationUserServices>();
             services.AddScoped<IWarehouse, WarehouseService>();
