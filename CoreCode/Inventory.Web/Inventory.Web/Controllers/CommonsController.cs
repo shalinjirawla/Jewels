@@ -35,11 +35,14 @@ namespace Inventory.Web.Controllers
         public object Data = null;
         public string GetUserId = "";
         public long GetTenantId = 0;
+        private readonly SessionHanlderController _SessionHanlderController;
         public CommonsController(IDiscountType discountType,
             IGenerealsetup.ICurrency currency, ICreditTerms icreditTerms,
             ICountry country, IWarehouse warehouse,
             IApplicationUser applicationUser,
             ITaxCode itaxCode, IShipmentTerm shipmentTerm
+            ITaxCode itaxCode,
+            SessionHanlderController SessionHanlderController
             )
         {
 
@@ -58,6 +61,9 @@ namespace Inventory.Web.Controllers
             {
                 _applicationUser.Logout();
             }
+
+            _SessionHanlderController = SessionHanlderController;
+           
         }
         [NonAction]
         public ApiResponse GetAjaxResponse(bool status, string message, object data)
@@ -76,6 +82,8 @@ namespace Inventory.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+                GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
                 await _discountType.SaveDiscountType(discountTypeVm, GetUserId, GetTenantId);
             }
             else
@@ -103,6 +111,7 @@ namespace Inventory.Web.Controllers
         {
             if (DiscounttypeId != 0 && ModelState.IsValid)
             {
+                GetUserId = _SessionHanlderController.GetUserId(HttpContext);
                 DiscounttypeId = await _discountType.UpdateDiscountType(DiscounttypeId, discountTypeVm, GetUserId);
             }
             else
@@ -149,7 +158,12 @@ namespace Inventory.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+
               
+
+                GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+                GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
+
                 Status = await _currency.SaveCurrency(model,GetUserId,GetTenantId);
                 if (Status)
                 {
@@ -184,6 +198,9 @@ namespace Inventory.Web.Controllers
         {
             if (CurrencyId != 0 && ModelState.IsValid)
             {
+
+
+                GetUserId = _SessionHanlderController.GetUserId(HttpContext);
                 Status = await _currency.UpdateCurrency(CurrencyId, model, GetUserId);
                 if (Status)
                 {
@@ -268,9 +285,10 @@ namespace Inventory.Web.Controllers
             {
                 msg = "Country Updated Successfully";
             }
-            string UserId = GetUserId;
-            long TenantId = GetTenantId;
-            var CountryId = _icountry.AddCountryAsyc(model, UserId, TenantId);
+          
+            GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
+            GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+            var CountryId = _icountry.AddCountryAsyc(model, GetUserId, GetTenantId);
             return Ok(GetAjaxResponse(true, msg, CountryId));
         }
 
@@ -318,6 +336,10 @@ namespace Inventory.Web.Controllers
         {
             if (ModelState.IsValid && model != null)
             {
+
+
+                GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
+                GetUserId = _SessionHanlderController.GetUserId(HttpContext);
                 Status = await _icreditTerms.SaveCreditTerms(model,GetUserId,GetTenantId);
                 if (Status)
                 {
@@ -334,6 +356,9 @@ namespace Inventory.Web.Controllers
         public async Task<IActionResult> UpdateCreditTerm(long CreditTermId, CreditTermsVm model)
         {
 
+
+
+            GetUserId = _SessionHanlderController.GetUserId(HttpContext);
             Status = await _icreditTerms.UpdateCreditTerms(CreditTermId,model,GetUserId);
             if (Status)
             {
@@ -386,6 +411,9 @@ namespace Inventory.Web.Controllers
         {
             await Task.Run(() =>
             {
+                GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+                GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
+
                 Data = _warehouse.SaveWarehouseListAsync(model, GetUserId, GetTenantId);
             });
             return Ok(GetAjaxResponse(true, string.Empty, Data));
@@ -424,6 +452,7 @@ namespace Inventory.Web.Controllers
             {
                 await Task.Run(() =>
                 {
+                    GetUserId = _SessionHanlderController.GetUserId(HttpContext);
                     Data = _warehouse.UpdateWarehouseStatusAsync(Id, status, GetUserId);
                 });
                 if (status)
@@ -453,6 +482,10 @@ namespace Inventory.Web.Controllers
         {
             if (ModelState.IsValid && model != null)
             {
+
+
+                GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+                GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
                 Status = await _itaxCode.SaveTaxCode(model, GetUserId, GetTenantId);
                 if (Status)
                 {
@@ -468,6 +501,8 @@ namespace Inventory.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateTaxCode(long TaxcodeId, TaxCodeVm model)
         {
+
+            GetUserId = _SessionHanlderController.GetUserId(HttpContext);
             Status = await _itaxCode.UpdateTaxCode(TaxcodeId, model, GetUserId);
             if (Status)
             {

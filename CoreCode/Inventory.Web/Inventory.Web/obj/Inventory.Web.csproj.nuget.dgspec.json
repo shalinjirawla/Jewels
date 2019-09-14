@@ -248,6 +248,10 @@
               "target": "Package",
               "version": "[2.7.0, )"
             },
+            "Microsoft.AspNet.Identity.EntityFramework": {
+              "target": "Package",
+              "version": "[2.2.2, )"
+            },
             "Microsoft.AspNetCore.App": {
               "suppressParent": "All",
               "target": "Package",
@@ -268,6 +272,10 @@
               "version": "[2.2.0, )"
             },
             "Microsoft.AspNetCore.Session": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.Extensions.Identity.Stores": {
               "target": "Package",
               "version": "[2.2.0, )"
             },

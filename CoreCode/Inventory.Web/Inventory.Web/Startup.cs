@@ -61,6 +61,7 @@ namespace Inventory.Web
              .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddSession();
             services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
+            services.AddMvc().AddControllersAsServices();
             //Password Strength Setting
             services.Configure<IdentityOptions>(options =>
             {
@@ -147,7 +148,7 @@ namespace Inventory.Web
             services.AddScoped<IWarehouse, WarehouseService>();
             services.AddScoped<ITenants, TenantsServices>();
             services.AddScoped<IGenerealsetup.ICreditTerms, GeneralsetupServices>();
-            services.AddScoped<IGenerealsetup.IShipmentTerm, GeneralsetupServices>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //Configure CORS for angular2 UI
             services.AddCors(options =>
             {
@@ -162,8 +163,6 @@ namespace Inventory.Web
                 });
 
             });
-
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             //Swagger - Enable this line and the related lines in Configure method to enable swagger UI
             services.AddSwaggerGen(c =>
