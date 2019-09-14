@@ -144,6 +144,7 @@ namespace Inventory.Web
             services.AddScoped<IGenerealsetup.ITaxCode, GeneralsetupServices>();
             services.AddScoped<IGenerealsetup.ICreditTerms, GeneralsetupServices>();
             services.AddScoped<IGenerealsetup.IShipmentTerm, GeneralsetupServices>();
+            services.AddScoped<IGenerealsetup.IShipmentMethod, GeneralsetupServices>();
             services.AddScoped<IcustomerType, CustomerTypeServices>();
             services.AddScoped<IApplicationUser, ApplicationUserServices>();
             services.AddScoped<IWarehouse, WarehouseService>();

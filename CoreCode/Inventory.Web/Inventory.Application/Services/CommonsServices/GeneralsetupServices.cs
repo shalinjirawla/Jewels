@@ -13,7 +13,7 @@ using static Inventory.Application.Interface.Common.IGenerealsetup;
 
 namespace Inventory.Application.Services.CommonsServices
 {
-    public class GeneralsetupServices : ICurrency, ITaxCode, ICreditTerms, IShipmentTerm
+    public class GeneralsetupServices : ICurrency, ITaxCode, ICreditTerms, IShipmentTerm, IShipmentMethod
     {
         private readonly ApplicationDbContext _DbContext;
         public GeneralsetupServices(ApplicationDbContext DbContext)
@@ -651,6 +651,7 @@ namespace Inventory.Application.Services.CommonsServices
                             LastModificationTime = DateTime.Now,
                             LastModifierUserId = UserId,
                             IsActive = true,
+                            TenantsId= TenantId
                         };
                         _DbContext.ShipmentTerms.Add(ShipmentTerm);
                         _DbContext.SaveChanges();
@@ -721,7 +722,7 @@ namespace Inventory.Application.Services.CommonsServices
 
                 throw e;
             }
-            return ShipmentTermList; ;
+            return ShipmentTermList; 
         }
 
         public async Task<ShipmentTermVm> GetShipmentTerm(long ShipmentTermId)
@@ -808,5 +809,189 @@ namespace Inventory.Application.Services.CommonsServices
         }
 
         #endregion Shipment Terms Services Start
+
+        #region Shipment Method Services Start
+
+        public async Task<bool> SaveShipmentMethod(ShipmentMethodVm model, string UserId, long TenantId)
+        {
+            Boolean IsExist = false;
+            Boolean Result = false;
+            try
+            {
+
+                if (model != null)
+                {
+                    IsExist = await IsShipmentMethodExist(model.Code);
+                    if (!IsExist)
+                    {
+                        ShipmentMethod ShipmentMethod = new ShipmentMethod
+                        {
+                            Code = model.Code,
+                            Description = model.Description,
+                            CreationTime = DateTime.Now,
+                            CreatorUserId = UserId,
+                            LastModificationTime = DateTime.Now,
+                            LastModifierUserId = UserId,
+                            IsActive = true,
+                            TenantsId=TenantId
+                        };
+                        _DbContext.ShipmentMethods.Add(ShipmentMethod);
+                        _DbContext.SaveChanges();
+                        Result = true;
+                    }
+                    else
+                    {
+                        Result = false;
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+            return Result;
+        }
+
+        public async Task<Boolean> IsShipmentMethodExist(string Code)
+        {
+
+            try
+            {
+                await Task.Run(() =>
+                {
+                    if (!string.IsNullOrEmpty(Code))
+                    {
+                        var data = _DbContext.ShipmentMethods.FirstOrDefault(x => x.Code == Code);
+                        if (data != null)
+                        {
+                            Result = true;
+                        }
+                        else { Result = false; }
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+            return Result;
+        }
+
+        public async Task<List<ShipmentMethodVm>> GetShipmentMethodList()
+        {
+            List<ShipmentMethodVm> ShipmentMethodList = new List<ShipmentMethodVm>();
+
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var ShipmentMethods = _DbContext.ShipmentMethods.ToList();
+                    foreach (var a in ShipmentMethods)
+                    {
+                        ShipmentMethodVm ShipmentMethod = new ShipmentMethodVm();
+                        ShipmentMethod.ShipmentMethodId = a.ShipmentMethodId;
+                        ShipmentMethod.Code = a.Code;
+                        ShipmentMethod.Description = a.Description;
+
+                        ShipmentMethodList.Add(ShipmentMethod);
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+            return ShipmentMethodList; ;
+        }
+
+        public async Task<ShipmentMethodVm> GetShipmentMethod(long ShipmentMethodId)
+        {
+            ShipmentMethodVm ShipmentMethod = new ShipmentMethodVm();
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var term = _DbContext.ShipmentMethods.Where(x => x.ShipmentMethodId == ShipmentMethodId).FirstOrDefault();
+                    if (term != null)
+                    {
+                        ShipmentMethod.ShipmentMethodId = term.ShipmentMethodId;
+                        ShipmentMethod.Code = term.Code;
+                        ShipmentMethod.Description = term.Description;
+                    }
+
+                });
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return ShipmentMethod;
+        }
+
+        public async Task<bool> UpdateShipmentMethod(long ShipmentMethodId, ShipmentMethodVm model, string UserId)
+        {
+            try
+            {
+                await Task.Run(() =>
+                {
+                    Result = false;
+                    var ShipmentMethod = _DbContext.ShipmentMethods.Where(x => x.ShipmentMethodId == ShipmentMethodId).FirstOrDefault();
+                    if (ShipmentMethod != null && model != null)
+                    {
+                        ShipmentMethod.Code = model.Code;
+                        ShipmentMethod.Description = model.Description;
+                        ShipmentMethod.LastModificationTime = DateTime.Now;
+                        ShipmentMethod.LastModifierUserId = UserId;
+                        ShipmentMethod.IsActive = true;
+
+                        _DbContext.ShipmentMethods.Update(ShipmentMethod);
+                        _DbContext.SaveChanges();
+                        Result = true;
+
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return Result;
+        }
+
+        public async Task<bool> DeleteShipmentMethod(long ShipmentMethodId)
+        {
+            try
+            {
+                await Task.Run(() =>
+                {
+                    Result = false;
+                    var ShipmentMethod = _DbContext.ShipmentMethods.Where(x => x.ShipmentMethodId == ShipmentMethodId).FirstOrDefault();
+                    if (ShipmentMethod != null)
+                    {
+                        _DbContext.ShipmentMethods.Remove(ShipmentMethod);
+                        _DbContext.SaveChanges();
+                        Result = true;
+
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return Result;
+        }
+
+        #endregion Shipment Method Services Start
+
+
     }
 }

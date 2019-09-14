@@ -1,9 +1,10 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { CurrencyService, CreditTermsService, CountryService, WarehouseService, TaxCodeService, ShipmentTermService } from '../../../Services/Masters-Services/general-setup.service';
+import { CurrencyService, CreditTermsService, CountryService, WarehouseService, TaxCodeService, ShipmentMethodService, ShipmentTermService } from '../../../Services/Masters-Services/general-setup.service';
 import Swal from 'sweetalert2'
 import { from } from 'rxjs';
+import { threadId } from 'worker_threads';
 const Toast = Swal.mixin({
   toast: true,
   position: 'top-end',
@@ -68,6 +69,7 @@ export class GeneralSetupComponent implements OnInit {
   TaxcodeForm: FormGroup;
   TaxcodeList: any;
   //TaxCode End
+
   //ShipmentTerm Start
   @ViewChild('ShipmentTermModal', { static: false }) public ShipmentTermModal: ModalDirective;
   ShipmentTermTitle: string = "Shipment Term"
@@ -76,6 +78,14 @@ export class GeneralSetupComponent implements OnInit {
   ShipmentTermList: any;
   //ShipmentTerm End
 
+  //ShipmentMethod Start
+  @ViewChild('ShipmentMethodModal', { static: false }) public ShipmentMethodModal: ModalDirective;
+  ShipmentMethodTitle: string = "Shipment Method"
+  ShipmentMethodsubmit: boolean = false;
+  ShipmentMethodForm: FormGroup;
+  ShipmentMethodList: any;
+  //ShipmentMethod End
+
   constructor(private FormBuilder: FormBuilder,
     private CountryService: CountryService,
     private WarehouseService: WarehouseService,
@@ -83,6 +93,7 @@ export class GeneralSetupComponent implements OnInit {
     private CreditTermsService: CreditTermsService,
     private TaxCodeService: TaxCodeService,
     private ShipmentTermService: ShipmentTermService,
+    private ShipmentMethodService: ShipmentMethodService,
   ) { }
 
   ngOnInit() {
@@ -93,6 +104,7 @@ export class GeneralSetupComponent implements OnInit {
     this.onLoadLocation();
     this.onLoadTaxCode();
     this.onLoadShipmentTerm();
+    this.onLoadShipmentMethod();
   }
   //#region Currency Section Start 
 
@@ -104,6 +116,7 @@ export class GeneralSetupComponent implements OnInit {
       Status: [true],
     });
     this.GetCurrencyList();
+    this.CurrencySubmiited = false;
   }
   public GetCurrencyList() {
     this.CurrencyService.GetCurrencyList().subscribe((responce: any) => {
@@ -125,6 +138,7 @@ export class GeneralSetupComponent implements OnInit {
     this.CurrencyService.SaveCurrency(this.CurrencyForm.value).subscribe((responce: any) => {
       if (responce.status) {
         this.OnloadCurrency();
+        document.getElementById("CurrencyList-link").click();
         Toast.fire({
           type: 'success',
           title: responce.message,
@@ -154,6 +168,7 @@ export class GeneralSetupComponent implements OnInit {
             Code: this.CurrencyResponce.code,
             Status: this.CurrencyResponce.status,
           })
+          document.getElementById("CurrencyFor-link").click();
         } else {
           Toast.fire({
             type: 'error',
@@ -208,6 +223,14 @@ export class GeneralSetupComponent implements OnInit {
     }
   }
   get fCurrency() { return this.CurrencyForm.controls; }
+
+  Currencytabclick(event){
+      if (event == "CurrencyList-link") {
+        this.OnloadCurrency();
+      }
+  }
+
+
   //#endregion Currency Section End 
   public OnloadCrediTTerms() {
     this.CreditTermForm = this.FormBuilder.group({
@@ -732,49 +755,179 @@ export class GeneralSetupComponent implements OnInit {
     })
   }
 
-  DeleteShipmentTerm(Id:any){
-  if (Id != 0) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-      if (result.value) {
-        this.ShipmentTermService.DeleteShipmentTerm(Id).subscribe((responce: any) => {
-          if (responce.status) {
-            Swal.fire(
-              'Deleted!',
-              responce.message,
-              'success'
-            )
-            this.onLoadShipmentTerm();
-          }
-        });
-      }
-    })
+  DeleteShipmentTerm(Id: any) {
+    if (Id != 0) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.value) {
+          this.ShipmentTermService.DeleteShipmentTerm(Id).subscribe((responce: any) => {
+            if (responce.status) {
+              Swal.fire(
+                'Deleted!',
+                responce.message,
+                'success'
+              )
+              this.onLoadShipmentTerm();
+            }
+          });
+        }
+      })
+    }
   }
-}
 
   OpenShipmentTermModal() {
+    this.onLoadShipmentTerm();
+    this.ShipmentTermsubmit = false;
     this.ShipmentTermModal.show();
   }
 
   ShipmentTermReset() {
     this.ShipmentTermModal.hide();
+    this.ShipmentTermsubmit = false;
     this.onLoadShipmentTerm();
   }
 
   ShipmentTermtabclick(event) {
     if (event == "ShipmentTermList-link") {
+      this.ShipmentTermsubmit = false;
       this.onLoadShipmentTerm();
     }
   }
 
   //#endregion ShipmentTerm Section End
+
+  //#region ShipmentMethod Section Start
+
+  onLoadShipmentMethod() {
+    this.ShipmentMethodForm = this.FormBuilder.group({
+      shipmentMethodId: [0],
+      code: ['', Validators.required],
+      description: ['']
+
+    })
+    this.GetShipmentMethodList();
+    this.ShipmentMethodsubmit = false;
+  }
+
+  OpenShipmentMethodModal() {
+    this.onLoadShipmentMethod();
+    this.ShipmentMethodsubmit = false;
+    this.ShipmentMethodModal.show();
+  }
+
+  GetShipmentMethodList() {
+    this.ShipmentMethodService.GetShipmentMethodList().subscribe((responce: any) => {
+      debugger
+      if (responce.status) {
+        if (responce.data != null) {
+          this.ShipmentMethodList = responce.data;
+        }
+      }
+    });
+  }
+
+  AddShipmentMethod(ShipmentMethodForm: FormControl) {
+    debugger
+    this.ShipmentMethodsubmit = true;
+    if (ShipmentMethodForm.invalid) {
+      return
+    }
+    this.ShipmentMethodsubmit = false;
+    if (ShipmentMethodForm.value.shipmentMethodId == 0) {
+      this.ShipmentMethodService.AddShipmentMethod(ShipmentMethodForm.value).subscribe((responce: any) => {
+        let result = responce.data;
+        if (responce.status) {
+          this.onLoadShipmentMethod();
+          Toast.fire({
+            type: 'success',
+            title: responce.message,
+          });
+          document.getElementById("ShipmentMethodList-link").click();
+        }
+
+      })
+    }
+    else {
+      this.ShipmentMethodService.UpdateShipmentMethod(ShipmentMethodForm.value).subscribe((responce: any) => {
+        let result = responce.data;
+        if (responce.status) {
+          this.onLoadShipmentMethod();
+          Toast.fire({
+            type: 'success',
+            title: responce.message,
+          });
+          document.getElementById("ShipmentMethodList-link").click();
+        }
+
+      })
+    }
+  }
+
+  GetShipmentMethod(i: any) {
+    this.ShipmentMethodService.GetShipmentMethodById(i).subscribe((responce: any) => {
+      let result = responce.data;
+      if (responce.status) {
+        if (result != null) {
+          debugger
+          this.ShipmentMethodForm.patchValue({
+            shipmentMethodId: result.shipmentMethodId,
+            code: result.code,
+            description: result.description,
+          })
+          document.getElementById("ShipmentMethodFor-link").click();
+        }
+      }
+    })
+  }
+
+  DeleteShipmentMethod(Id: any) {
+    if (Id != 0) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.value) {
+          this.ShipmentMethodService.DeleteShipmentMethod(Id).subscribe((responce: any) => {
+            if (responce.status) {
+              Swal.fire(
+                'Deleted!',
+                responce.message,
+                'success'
+              )
+              this.onLoadShipmentMethod();
+            }
+          });
+        }
+      })
+    }
+  }
+
+  ShipmentMethodtabclick(event) {
+    if (event == "ShipmentMethodList-link") {
+      this.onLoadShipmentMethod();
+    }
+  }
+
+  get smf() { return this.ShipmentMethodForm.controls }
+
+  ShipmentMethodReset() {
+    this.ShipmentMethodModal.hide();
+    this.onLoadShipmentMethod();
+  }
+
+  //#endregion ShipmentMethod Section End
 
   allowalpha(event: any) {
     const pattern = /[a-z\\A-Z\ \a-z\\A-Z]/;

@@ -4939,6 +4939,7 @@
         "framework": ".NETStandard,Version=v2.0",
         "dependencies": {
           "Inventory.Core": "1.0.0",
+          "Microsoft.AspNet.Identity.EntityFramework": "2.2.2",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "2.2.0",
           "Microsoft.AspNetCore.Session": "2.2.0",
           "Microsoft.EntityFrameworkCore": "2.2.6",

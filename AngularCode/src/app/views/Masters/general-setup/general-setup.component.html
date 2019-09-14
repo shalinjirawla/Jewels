@@ -43,7 +43,7 @@
                         </button>
                         <button
                             class="btn m-2 p-4  bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
-                            tabindex="0">
+                            tabindex="0" (click)="OpenShipmentMethodModal()">
                             <i class="fa fa-hand-o-right fa-4x text-muted text-center clearfix"></i>
                             <label>Shipment Method</label>
                             <label>5</label>
@@ -121,12 +121,11 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="divider-saveAndEdit" aria-hidden="false"></div>
-                <div class="row m-t-md">
-                    <div class="col-sm-6" aria-hidden="false">
-                        <div class="block m-b-sm text-xl ">List of Currencies</div>
-                        <div class="wrap-scroll-currencies">
+            <div class="modal-body" id="">
+                <tabset (click)="Currencytabclick($event.target.id)">
+                    <tab id="CurrencyList">
+                        <ng-template tabHeading><i class="fa fa-list text-info"></i> Currency  List </ng-template>
+                        <div class="table-responsive animated flash">
                             <table class="custom-table-s table table-striped">
                                 <thead>
                                     <tr>
@@ -161,42 +160,49 @@
                                     </tr>
                                 </tbody>
                             </table>
+
                         </div>
-                    </div>
-                    <form [formGroup]="CurrencyForm" class="formData-modal col-sm-6 ">
-                        <label for="">{{CurrencyModelTitleString}}</label>
-                        <input type="hidden" formControlName="CurrencyId">
-                        <input type="hidden" formControlName="Status">
-                        <div class="row">
-                            <div class="form-group col-sm-12">
-                                <label>CURRENCY NAME</label>
-                                <input class="form-control" id="CurrencyName" formControlName="CurrencyName"
-                                    placeholder="CREDIT TERM CODE" type="text"
-                                    [ngClass]="{ 'is-invalid': CurrencySubmiited && fCurrency.CurrencyName.errors }">
-                                <div *ngIf="CurrencySubmiited && fCurrency.CurrencyName.errors"
-                                    class="invalid-feedback">
-                                    <div *ngIf="fCurrency.CurrencyName.errors.required">Currency Name is required</div>
+                    </tab>
+                    <tab id="CurrencyFor">
+                        <ng-template tabHeading><i class="fa fa-plus text-info"> Currency Form</i>
+                        </ng-template>
+                        <form [formGroup]="CurrencyForm" class="formData-modal col-sm-12 ">
+                            <input type="hidden" formControlName="CurrencyId">
+                            <input type="hidden" formControlName="Status">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label>CURRENCY NAME</label>
+                                    <input class="form-control" id="CurrencyName" formControlName="CurrencyName"
+                                        placeholder="CREDIT TERM CODE" type="text"
+                                        [ngClass]="{ 'is-invalid': CurrencySubmiited && fCurrency.CurrencyName.errors }">
+                                    <div *ngIf="CurrencySubmiited && fCurrency.CurrencyName.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="fCurrency.CurrencyName.errors.required">Currency Name is required
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-sm-12">
-                                <label>CURRENCY CODE</label>
-                                <input type="text" class="form-control" id="Code" formControlName="Code"
-                                    placeholder="Currency Code"
-                                    [ngClass]="{ 'is-invalid': CurrencySubmiited && fCurrency.Code.errors }">
-                                <div *ngIf="CurrencySubmiited && fCurrency.Code.errors" class="invalid-feedback">
-                                    <div *ngIf="fCurrency.Code.errors.required">Code is required</div>
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label>CURRENCY CODE</label>
+                                    <input type="text" class="form-control" id="Code" formControlName="Code"
+                                        placeholder="Currency Code"
+                                        [ngClass]="{ 'is-invalid': CurrencySubmiited && fCurrency.Code.errors }">
+                                    <div *ngIf="CurrencySubmiited && fCurrency.Code.errors" class="invalid-feedback">
+                                        <div *ngIf="fCurrency.Code.errors.required">Code is required</div>
+                                    </div>
                                 </div>
                             </div>
+                        </form>
+                        <div class="form-group col-sm-12">
+                            <button type="button" class="btn btn-primary pull-right"
+                                (click)="AddCurrency(CurrencyForm)">{{CurrencybtnText}}</button><br />
                         </div>
-                    </form>
-                </div>
+                    </tab>
+                </tabset>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" (click)="CurrencyModal.hide()">Close</button>
-                <button type="button" class="btn btn-primary" (click)="AddCurrency(CurrencyForm)">{{CurrencybtnText}}
-                </button>
             </div>
         </div>
     </div>
@@ -706,7 +712,7 @@
                         </div>
                     </tab>
                     <tab id="ShipmentTermFor">
-                        <ng-template tabHeading><i class="fa fa-plus text-info"> Shipment Term  Form</i>
+                        <ng-template tabHeading><i class="fa fa-plus text-info"> Shipment Term Form</i>
                         </ng-template>
                         <form [formGroup]="ShipmentTermForm" class="formData-modal col-sm-12">
                             <div class="row">
@@ -718,12 +724,13 @@
                                         placeholder="Shipment Term Code Name" type="text">
                                     <div *ngIf="ShipmentTermsubmit && shiptermform.code.errors"
                                         class="invalid-feedback">
-                                        <div *ngIf="shiptermform.code.errors.required">Tax Code Name is required
+                                        <div *ngIf="shiptermform.code.errors.required">Shipment Term Code Name is
+                                            required
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-12">
-                                <label for="postal-code">DESCRIPTION</label>
+                                    <label for="postal-code">DESCRIPTION</label>
                                     <input class="form-control" id="" formControlName="description"
                                         placeholder="Shipment Term Description" type="text">
                                 </div>
@@ -740,6 +747,92 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" (click)="ShipmentTermReset()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal #ShipmentMethodModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Shipment Method</h4>
+                <button type="button" class="close" (click)="ShipmentMethodReset()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="">
+                <tabset (click)="ShipmentMethodtabclick($event.target.id)">
+                    <tab id="ShipmentMethodList">
+                        <ng-template tabHeading><i class="fa fa-list text-info"></i> Shipment Method List </ng-template>
+                        <div class="table-responsive animated flash">
+                            <table class="table " id="">
+                                <thead>
+                                    <tr>
+                                        <th>Code Name</th>
+                                        <th>Description</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of ShipmentMethodList">
+                                        <td>{{item.code}}</td>
+                                        <td>{{item.description}}</td>
+                                        <td>
+                                            <span style="margin-left: 25%;">
+                                                <span class="text-primary mr-3" style="cursor: pointer;"
+                                                    (click)="GetShipmentMethod(item.shipmentMethodId)">
+                                                    <i class="fa fa-pencil"></i>
+                                                </span>
+
+                                                <span class="text-danger " style="cursor: pointer;"
+                                                    (click)="DeleteShipmentMethod(item.shipmentMethodId)">
+                                                    <i class="fa fa-trash"></i>
+                                                </span>
+                                            </span>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </tab>
+                    <tab id="ShipmentMethodFor">
+                        <ng-template tabHeading><i class="fa fa-plus text-info"> Shipment Method Form</i>
+                        </ng-template>
+                        <form [formGroup]="ShipmentMethodForm" class="formData-modal col-sm-12">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <input type="hidden" formControlName="shipmentMethodId">
+                                    <label for="city">SHIPMENT TERM CODE </label>
+                                    <input class="form-control" formControlName="code" (keypress)="allowalpha($event)"
+                                        [ngClass]="{ 'is-invalid': ShipmentMethodsubmit && smf.code.errors }"
+                                        placeholder="Shipment Method Code Name" type="text">
+                                    <div *ngIf="ShipmentMethodsubmit && smf.code.errors" class="invalid-feedback">
+                                        <div *ngIf="smf.code.errors.required">Shipment Method Code Name is required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label for="postal-code">DESCRIPTION</label>
+                                    <input class="form-control" id="" formControlName="description"
+                                        placeholder="Shipment Method Description" type="text">
+                                </div>
+
+                            </div>
+                        </form>
+                        <div class="form-group col-sm-12">
+                            <button type="button" class="btn btn-primary pull-right"
+                                (click)="AddShipmentMethod(ShipmentMethodForm)">Save
+                                changes</button><br />
+                        </div>
+                    </tab>
+                </tabset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="ShipmentMethodReset()">Close</button>
             </div>
         </div>
     </div>

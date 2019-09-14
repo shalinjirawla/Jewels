@@ -29,6 +29,7 @@ namespace Inventory.Web.Controllers
         private readonly ICreditTerms _icreditTerms;
         private readonly IWarehouse _warehouse;
         private readonly IShipmentTerm _shipmentTerm;
+        private readonly IShipmentMethod _shipmentMethod;
         public Boolean Status = false;
         public string Message = "";
         public object Data = null;
@@ -39,6 +40,7 @@ namespace Inventory.Web.Controllers
             IGenerealsetup.ICurrency currency, ICreditTerms icreditTerms,
             ICountry country, IWarehouse warehouse,
             ITaxCode itaxCode, IShipmentTerm shipmentTerm,
+            IShipmentMethod shipmentMethod,
             SessionHanlderController SessionHanlderController
             )
         {
@@ -50,6 +52,7 @@ namespace Inventory.Web.Controllers
             _icreditTerms = icreditTerms;
             _warehouse = warehouse;
             _shipmentTerm = shipmentTerm;
+            _shipmentMethod = shipmentMethod;
 
             _SessionHanlderController = SessionHanlderController;
            
@@ -535,7 +538,6 @@ namespace Inventory.Web.Controllers
 
         #endregion Tax Code APIs End
 
-
         #region Shipment Term APIs Start
 
         [HttpPost]
@@ -548,7 +550,7 @@ namespace Inventory.Web.Controllers
                 Status = await _shipmentTerm.SaveShipmentTerm(model, GetUserId, GetTenantId);
                 if (Status)
                 {
-                    Message = "Tax Code Added....!";
+                    Message = "Shipment Term is Added....!";
                 }
                 else { Message = "Error Occurss..!"; }
             }
@@ -564,7 +566,7 @@ namespace Inventory.Web.Controllers
             Status = await _shipmentTerm.UpdateShipmentTerm(ShipmentTermId, model, GetUserId);
             if (Status)
             {
-                Message = "Tax Code is Updated....!";
+                Message = "Shipment Term is Updated....!";
             }
             else { Message = "Error Occurss..!"; }
             return Ok(GetAjaxResponse(Status, Message, null));
@@ -604,5 +606,74 @@ namespace Inventory.Web.Controllers
         }
 
         #endregion Shipment Term APIs End
+
+        #region Shipment Method APIs Start
+
+        [HttpPost]
+        public async Task<IActionResult> AddShipmentMethod(ShipmentMethodVm model)
+        {
+            if (ModelState.IsValid && model != null)
+            {
+                GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
+                GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+                Status = await _shipmentMethod.SaveShipmentMethod(model, GetUserId, GetTenantId);
+                if (Status)
+                {
+                    Message = "Shipment Method is  Added....!";
+                }
+                else { Message = "Error Occurss..!"; }
+            }
+            else { return BadRequest(); }
+
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateShipmentMethod(long ShipmentMethodId, ShipmentMethodVm model)
+        {
+            GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+            Status = await _shipmentMethod.UpdateShipmentMethod(ShipmentMethodId, model, GetUserId);
+            if (Status)
+            {
+                Message = "Shipment Method is Updated....!";
+            }
+            else { Message = "Error Occurss..!"; }
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetShipmentMethodList()
+        {
+
+            var ShipmentTerm = await _shipmentMethod.GetShipmentMethodList();
+            return Ok(GetAjaxResponse(true, string.Empty, ShipmentTerm));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetShipmentMethodById(long ShipmentMethodId)
+        {
+            ShipmentMethodVm ShipmentMethod = new ShipmentMethodVm();
+            if (ShipmentMethodId != 0)
+            {
+                ShipmentMethod = await _shipmentMethod.GetShipmentMethod(ShipmentMethodId);
+            }
+            else { return BadRequest(); }
+
+            return Ok(GetAjaxResponse(true, string.Empty, ShipmentMethod));
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteShipmentMethod(long ShipmentMethodId)
+        {
+            Status = await _shipmentMethod.DeleteShipmentMethod(ShipmentMethodId);
+            if (Status)
+            {
+                Message = "Shipment Method is Deleted...!";
+            }
+            else { Message = "Error Occurss..!"; }
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        #endregion Shipment Method APIs End
     }
 }
