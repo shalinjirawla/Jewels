@@ -97,13 +97,14 @@ namespace Inventory.Web
                                                                     // /#/404
                 options.SlidingExpiration = true;
             });
+           
             //adding autorization policy's
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-
+                
             }).AddJwtBearer(option => {
                 option.SaveToken = true;
                 option.RequireHttpsMetadata = false;
@@ -145,6 +146,8 @@ namespace Inventory.Web
             services.AddScoped<IApplicationUser, ApplicationUserServices>();
             services.AddScoped<IWarehouse, WarehouseService>();
             services.AddScoped<ITenants, TenantsServices>();
+            services.AddScoped<IGenerealsetup.ICreditTerms, GeneralsetupServices>();
+            services.AddScoped<IGenerealsetup.IShipmentTerm, GeneralsetupServices>();
             //Configure CORS for angular2 UI
             services.AddCors(options =>
             {

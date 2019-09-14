@@ -65,6 +65,7 @@ namespace Inventory.Application.Services
 
                             }
                             customer.CreatorUserId = UserId;
+                            customer.CreationTime = new DateTime();
                             customer.LastModifierUserId = UserId;
                             DateTime date = new DateTime();
                             customer.LastModificationTime = date;
@@ -162,6 +163,7 @@ namespace Inventory.Application.Services
 
                                 }
                                 customer.CreatorUserId = alreadycustomer.CreatorUserId;
+                                customer.CreationTime = alreadycustomer.CreationTime;
                                 customer.LastModifierUserId = "1";
                                 DateTime date = new DateTime();
                                 customer.LastModificationTime = date;

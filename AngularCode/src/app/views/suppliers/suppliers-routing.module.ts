@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import {SupplierComponent} from './supplier/supplier.component';
+import { AuthGuardService} from './../../shared/guards/auth-guard.service';
 
 const routes: Routes = [
   {
@@ -16,6 +17,7 @@ const routes: Routes = [
       {
         path: 'supplier',
         component: SupplierComponent,
+        canActivate: [AuthGuardService],
         data: {
           title: 'Supplier'
         }

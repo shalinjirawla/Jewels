@@ -5,6 +5,7 @@ import { ProductComponent } from './product/product.component';
 
 import {BrandComponent} from './brand/brand.component';
 import {RawMaterialsComponent} from './raw-materials/raw-materials.component';
+import { AuthGuardService} from './../../shared/guards/auth-guard.service';
 const routes: Routes = [
   {
     path: '',
@@ -19,6 +20,7 @@ const routes: Routes = [
       {
         path: 'product',
         component: ProductComponent,
+        canActivate: [AuthGuardService],
         data: {
           title: 'Product'
         }
@@ -26,6 +28,7 @@ const routes: Routes = [
       {
         path:'categories',
         component:CategoriesComponent,
+        canActivate: [AuthGuardService],
         data:{
           title:'Product Categories'
         }
@@ -33,6 +36,7 @@ const routes: Routes = [
       {
         path:'brand',
         component:BrandComponent,
+        canActivate: [AuthGuardService],
         data:{
           title:'Product Brand'
         }
@@ -40,6 +44,7 @@ const routes: Routes = [
       {
         path:'raw-materials',
         component:RawMaterialsComponent,
+        canActivate: [AuthGuardService],
         data:{
           title:'Raw Materails'
         }

@@ -138,6 +138,39 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.ToTable("discountTypes");
                 });
 
+            modelBuilder.Entity("Inventory.Core.Models.Commons.ShipmentTerm", b =>
+                {
+                    b.Property<long>("ShipmentTermId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Code");
+
+                    b.Property<DateTime?>("CreationTime");
+
+                    b.Property<string>("CreatorUserId");
+
+                    b.Property<string>("Description");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<string>("LastModifierUserId");
+
+                    b.Property<long?>("TenantsId");
+
+                    b.HasKey("ShipmentTermId");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("LastModifierUserId");
+
+                    b.HasIndex("TenantsId");
+
+                    b.ToTable("ShipmentTerms");
+                });
+
             modelBuilder.Entity("Inventory.Core.Models.Commons.TaxCode", b =>
                 {
                     b.Property<long>("TaxId")
@@ -276,6 +309,8 @@ namespace Inventory.EntityFrameworkCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime?>("CreationTime");
+
                     b.Property<string>("CreatorUserId");
 
                     b.Property<long?>("CreditTermId");
@@ -296,7 +331,7 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<bool>("IsActive");
 
-                    b.Property<DateTime>("LastModificationTime");
+                    b.Property<DateTime?>("LastModificationTime");
 
                     b.Property<string>("LastModifierUserId");
 
@@ -751,6 +786,21 @@ namespace Inventory.EntityFrameworkCore.Migrations
                 });
 
             modelBuilder.Entity("Inventory.Core.Models.Commons.DiscountType", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId");
+
+                    b.HasOne("Inventory.Core.Models.Tenants.Tenants", "Tenants")
+                        .WithMany()
+                        .HasForeignKey("TenantsId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.Commons.ShipmentTerm", b =>
                 {
                     b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
                         .WithMany()

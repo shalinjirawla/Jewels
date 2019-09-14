@@ -36,7 +36,7 @@
 
                         <button
                             class="btn m-2 p-4 bg-white btn-outline-success box-shadow b-4x b-light btn-lg m-r m-t w-160"
-                            tabindex="0">
+                            tabindex="0" (click)="OpenShipmentTermModal()">
                             <i class="fa fa-truck fa-4x text-muted text-center"></i>
                             <label>Shipment Term</label>
                             <p>5</p>
@@ -471,7 +471,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Location</h4>
-                <button type="button" class="close"  (click)="LocationReset()" aria-label="Close">
+                <button type="button" class="close" (click)="LocationReset()" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -572,14 +572,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Tax Code</h4>
-                <button type="button" class="close"  (click)="TaxcodeReset()" aria-label="Close">
+                <button type="button" class="close" (click)="TaxcodeReset()" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body" id="">
                 <tabset (click)="taxcodetabclick($event.target.id)">
                     <tab id="taxcodeList">
-                        <ng-template tabHeading><i class="fa fa-list text-info"></i> Tax Codes List  </ng-template>
+                        <ng-template tabHeading><i class="fa fa-list text-info"></i> Tax Codes List </ng-template>
                         <div class="table-responsive animated flash">
                             <table class="table " id="">
                                 <thead>
@@ -606,7 +606,7 @@
                                                 </span>
                                             </span>
                                         </td>
-                                        
+
                                     </tr>
                                 </tbody>
                             </table>
@@ -621,12 +621,10 @@
                                 <div class="form-group col-sm-12">
                                     <input type="hidden" formControlName="taxId">
                                     <label for="city">TAX CODE </label>
-                                    <input class="form-control" formControlName="code"
-                                        (keypress)="allowalpha($event)"
+                                    <input class="form-control" formControlName="code" (keypress)="allowalpha($event)"
                                         [ngClass]="{ 'is-invalid': Taxcodesubmit && taxform.code.errors }"
                                         placeholder="Tax Code Name" type="text">
-                                    <div *ngIf="Taxcodesubmit && taxform.code.errors"
-                                        class="invalid-feedback">
+                                    <div *ngIf="Taxcodesubmit && taxform.code.errors" class="invalid-feedback">
                                         <div *ngIf="taxform.code.errors.required">Tax Code Name is required
                                         </div>
                                     </div>
@@ -635,10 +633,9 @@
                                     <label for="postal-code">AMOUNT</label>
                                     <input class="form-control" id="" formControlName="amount"
                                         [ngClass]="{ 'is-invalid': Taxcodesubmit && taxform.amount.errors }"
-                                        (keydown)="avoidkeyPress($event)"
-                                        (keypress)="allownumberwithdot($event)" placeholder="Tax Code Amount" type="text">
-                                    <div *ngIf="Taxcodesubmit && taxform.amount.errors"
-                                        class="invalid-feedback">
+                                        (keydown)="avoidkeyPress($event)" (keypress)="allownumberwithdot($event)"
+                                        placeholder="Tax Code Amount" type="text">
+                                    <div *ngIf="Taxcodesubmit && taxform.amount.errors" class="invalid-feedback">
                                         <div *ngIf="taxform.amount.errors.required">Tax Code Amount is required
                                         </div>
                                     </div>
@@ -656,6 +653,93 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" (click)="TaxcodeReset()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal #ShipmentTermModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Tax Code</h4>
+                <button type="button" class="close" (click)="ShipmentTermReset()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="">
+                <tabset (click)="ShipmentTermtabclick($event.target.id)">
+                    <tab id="ShipmentTermList">
+                        <ng-template tabHeading><i class="fa fa-list text-info"></i> Shipment Term List </ng-template>
+                        <div class="table-responsive animated flash">
+                            <table class="table " id="">
+                                <thead>
+                                    <tr>
+                                        <th>Code Name</th>
+                                        <th>Description</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of ShipmentTermList">
+                                        <td>{{item.code}}</td>
+                                        <td>{{item.description}}</td>
+                                        <td>
+                                            <span style="margin-left: 25%;">
+                                                <span class="text-primary mr-3" style="cursor: pointer;"
+                                                    (click)="GetShipmentTerm(item.shipmentTermId)">
+                                                    <i class="fa fa-pencil"></i>
+                                                </span>
+
+                                                <span class="text-danger " style="cursor: pointer;"
+                                                    (click)="DeleteShipmentTerm(item.shipmentTermId)">
+                                                    <i class="fa fa-trash"></i>
+                                                </span>
+                                            </span>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </tab>
+                    <tab id="ShipmentTermFor">
+                        <ng-template tabHeading><i class="fa fa-plus text-info"> Shipment Term  Form</i>
+                        </ng-template>
+                        <form [formGroup]="ShipmentTermForm" class="formData-modal col-sm-12">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <input type="hidden" formControlName="shipmentTermId">
+                                    <label for="city">SHIPMENT TERM CODE </label>
+                                    <input class="form-control" formControlName="code" (keypress)="allowalpha($event)"
+                                        [ngClass]="{ 'is-invalid': ShipmentTermsubmit && shiptermform.code.errors }"
+                                        placeholder="Shipment Term Code Name" type="text">
+                                    <div *ngIf="ShipmentTermsubmit && shiptermform.code.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="shiptermform.code.errors.required">Tax Code Name is required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                <label for="postal-code">DESCRIPTION</label>
+                                    <input class="form-control" id="" formControlName="description"
+                                        placeholder="Shipment Term Description" type="text">
+                                </div>
+
+                            </div>
+                        </form>
+                        <div class="form-group col-sm-12">
+                            <button type="button" class="btn btn-primary pull-right"
+                                (click)="AddShipmentTerm(ShipmentTermForm)">Save
+                                changes</button><br />
+                        </div>
+                    </tab>
+                </tabset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="ShipmentTermReset()">Close</button>
             </div>
         </div>
     </div>

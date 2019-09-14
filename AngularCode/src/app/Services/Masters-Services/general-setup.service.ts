@@ -241,3 +241,50 @@ export class TaxCodeService {
   }
   
 }
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ShipmentTermService {
+
+  Responce: any;
+  constructor(private HttpClient: HttpClient) { }
+  private BaseURL: string = "https://localhost:44315/api/Commons/";
+
+  public GetShipmentTermList(): Observable<any> {
+    let url = this.BaseURL + `GetAddShipmentTermList`;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+
+  public AddShipmentTerm(input): Observable<any> {
+    debugger
+    let url = this.BaseURL + `AddShipmentTerm`;
+    return this.HttpClient.post(url, JSON.stringify(input), httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+
+  public GetShipmentTerm(i): Observable<any> {
+    let url = this.BaseURL + `GetAddShipmentTermById?ShipmentTermId=` + i;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+
+  public UpdateShipmentTerm(input): Observable<any> {
+    let url = this.BaseURL + `UpdateAddShipmentTerm?ShipmentTermId=${input.taxId}`;
+    return this.HttpClient.post(url, JSON.stringify(input), httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+
+  public DeleteShipmentTerm(i): Observable<any> {
+    let url = this.BaseURL + `DeleteAddShipmentTerm?ShipmentTermId=` + i;
+    return this.HttpClient.delete(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+  
+}

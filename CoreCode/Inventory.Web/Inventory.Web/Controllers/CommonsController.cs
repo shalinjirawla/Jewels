@@ -29,6 +29,7 @@ namespace Inventory.Web.Controllers
         private readonly ICreditTerms _icreditTerms;
         private readonly IWarehouse _warehouse;
         private readonly IApplicationUser _applicationUser;
+        private readonly IShipmentTerm _shipmentTerm;
         public Boolean Status = false;
         public string Message = "";
         public object Data = null;
@@ -38,7 +39,7 @@ namespace Inventory.Web.Controllers
             IGenerealsetup.ICurrency currency, ICreditTerms icreditTerms,
             ICountry country, IWarehouse warehouse,
             IApplicationUser applicationUser,
-            ITaxCode itaxCode
+            ITaxCode itaxCode, IShipmentTerm shipmentTerm
             )
         {
 
@@ -48,6 +49,7 @@ namespace Inventory.Web.Controllers
             _icreditTerms = icreditTerms;
             _warehouse = warehouse;
             _applicationUser = applicationUser;
+            _shipmentTerm = shipmentTerm;
             GetUserId = _applicationUser.GetUserId();
             GetTenantId = _applicationUser.GetTenantId();
             if (GetUserId == null && GetTenantId == 0)
@@ -147,9 +149,8 @@ namespace Inventory.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                string UserId = await _applicationUser.GetUserId();
-                long TenantId = await _applicationUser.GetTenantId();
-                Status = await _currency.SaveCurrency(model,UserId,TenantId);
+              
+                Status = await _currency.SaveCurrency(model,GetUserId,GetTenantId);
                 if (Status)
                 {
                     Message = "Currency Succesfully Saved..!";
@@ -183,8 +184,7 @@ namespace Inventory.Web.Controllers
         {
             if (CurrencyId != 0 && ModelState.IsValid)
             {
-                string UserId = await _applicationUser.GetUserId();
-                Status = await _currency.UpdateCurrency(CurrencyId, model, UserId);
+                Status = await _currency.UpdateCurrency(CurrencyId, model, GetUserId);
                 if (Status)
                 {
                     Message = "Currency Successfulyy Upated....!";
@@ -318,9 +318,7 @@ namespace Inventory.Web.Controllers
         {
             if (ModelState.IsValid && model != null)
             {
-                string UserId = await _applicationUser.GetUserId();
-                long TenantId = await _applicationUser.GetTenantId();
-                Status = await _icreditTerms.SaveCreditTerms(model,UserId,TenantId);
+                Status = await _icreditTerms.SaveCreditTerms(model,GetUserId,GetTenantId);
                 if (Status)
                 {
                     Message = "Credit Terms Added....!";
@@ -336,9 +334,7 @@ namespace Inventory.Web.Controllers
         public async Task<IActionResult> UpdateCreditTerm(long CreditTermId, CreditTermsVm model)
         {
 
-            Status = await _icreditTerms.UpdateCreditTerms(CreditTermId, model);
-            string UserId = await _applicationUser.GetUserId();
-            Status = await _icreditTerms.UpdateCreditTerms(CreditTermId,model,UserId);
+            Status = await _icreditTerms.UpdateCreditTerms(CreditTermId,model,GetUserId);
             if (Status)
             {
                 Message = "Credit Terms is Updated....!";
@@ -457,9 +453,7 @@ namespace Inventory.Web.Controllers
         {
             if (ModelState.IsValid && model != null)
             {
-                string UserId = await _applicationUser.GetUserId();
-                long TenantId = await _applicationUser.GetTenantId();
-                Status = await _itaxCode.SaveTaxCode(model, UserId, TenantId);
+                Status = await _itaxCode.SaveTaxCode(model, GetUserId, GetTenantId);
                 if (Status)
                 {
                     Message = "Tax Code Added....!";
@@ -474,8 +468,7 @@ namespace Inventory.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateTaxCode(long TaxcodeId, TaxCodeVm model)
         {
-            string UserId = await _applicationUser.GetUserId();
-            Status = await _itaxCode.UpdateTaxCode(TaxcodeId, model, UserId);
+            Status = await _itaxCode.UpdateTaxCode(TaxcodeId, model, GetUserId);
             if (Status)
             {
                 Message = "Tax Code is Updated....!";
@@ -517,5 +510,71 @@ namespace Inventory.Web.Controllers
         }
 
         #endregion Tax Code APIs End
+
+
+        #region Shipment Term APIs Start
+
+        [HttpPost]
+        public async Task<IActionResult> AddShipmentTerm(ShipmentTermVm model)
+        {
+            if (ModelState.IsValid && model != null)
+            {
+                Status = await _shipmentTerm.SaveShipmentTerm(model, GetUserId, GetTenantId);
+                if (Status)
+                {
+                    Message = "Tax Code Added....!";
+                }
+                else { Message = "Error Occurss..!"; }
+            }
+            else { return BadRequest(); }
+
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateAddShipmentTerm(long ShipmentTermId, ShipmentTermVm model)
+        {
+            Status = await _shipmentTerm.UpdateShipmentTerm(ShipmentTermId, model, GetUserId);
+            if (Status)
+            {
+                Message = "Tax Code is Updated....!";
+            }
+            else { Message = "Error Occurss..!"; }
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAddShipmentTermList()
+        {
+            var ShipmentTerm = await _shipmentTerm.GetShipmentTermList();
+            return Ok(GetAjaxResponse(true, string.Empty, ShipmentTerm));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAddShipmentTermById(long ShipmentTermId)
+        {
+            ShipmentTermVm ShipmentTerm = new ShipmentTermVm();
+            if (ShipmentTermId != 0)
+            {
+                ShipmentTerm = await  _shipmentTerm.GetShipmentTerm(ShipmentTermId);
+            }
+            else { return BadRequest(); }
+
+            return Ok(GetAjaxResponse(true, string.Empty, ShipmentTerm));
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAddShipmentTerm(long ShipmentTermId)
+        {
+            Status = await _shipmentTerm.DeleteShipmentTerm(ShipmentTermId);
+            if (Status)
+            {
+                Message = "Tax Code is Deleted...!";
+            }
+            else { Message = "Error Occurss..!"; }
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        #endregion Shipment Term APIs End
     }
 }

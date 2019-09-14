@@ -72,6 +72,7 @@ namespace Inventory.Application.Services.ApplicationUserServices
             var claims = new[] {
                   new Claim(JwtRegisteredClaimNames.Sub, Username),
                   new Claim(JwtRegisteredClaimNames.Email, EmailId),
+                  new Claim(JwtRegisteredClaimNames.UniqueName, Username),
                   new Claim("DateOfJoing",CurrentDateTime.ToString("yyyy-MM-dd")),
                     new Claim("UserId", UserId),
                   new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
@@ -113,7 +114,6 @@ namespace Inventory.Application.Services.ApplicationUserServices
 
             string UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
 
-            var a = _httpContextAccessor.HttpContext.User;
             return UserId;
         }
         public string GetUserId1(IPrincipal user)
