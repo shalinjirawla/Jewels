@@ -11,10 +11,6 @@ namespace Inventory.Application.Interface.ApplicationUser
     public interface IApplicationUser
     {
         Task<LoginVm> Login(LoginVm login);
-        Task<Boolean> SetCurrentLoginUserIdandTenantId(string UserId,long TenantId);
-        string GetUserId();
-        string GetUserId1( IPrincipal user);
-        long GetTenantId();
-        Task<Boolean> Logout();
+        
     }
 }

@@ -8,6 +8,7 @@ using Inventory.Application.Interface.Customer;
 using Inventory.Application.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Inventory.Application.Interface.ApplicationUser;
+using System.Linq;
 
 namespace Inventory.Web.Controllers
 {
@@ -23,21 +24,17 @@ namespace Inventory.Web.Controllers
         public bool Status = false;
         public string Message = "";
         public object Data = null;
-        public string GetUserId = "";
+        public string GetUserId="";
         public long GetTenantId = 0;
+        private readonly SessionHanlderController _SessionHanlderController;
         public CustomerController (ICustomer icustomer, IcustomerType icustomerType,
-              IApplicationUser applicationUser
+              IApplicationUser applicationUser, SessionHanlderController SessionHanlderController
             )
         {
             _icustomer = icustomer;
             _icustomerType = icustomerType;
             _applicationUser = applicationUser;
-            GetUserId = _applicationUser.GetUserId();
-            GetTenantId = _applicationUser.GetTenantId();
-            if (GetUserId == null && GetTenantId == 0)
-            {
-                _applicationUser.Logout();
-            }
+            _SessionHanlderController = SessionHanlderController;
         }
         [NonAction]
         public ApiResponse GetAjaxResponse(bool status, string message, object data)
@@ -47,15 +44,24 @@ namespace Inventory.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCustomer(AddCustomerVm Model)
         {
-            string a = "hello";
-            string UserId =  _applicationUser.GetUserId();
-            long TenantId =  _applicationUser.GetTenantId();
-            var CustomerID =await _icustomer.AddCustomer(Model,UserId,TenantId);
-            return Ok(GetAjaxResponse(true, string.Empty, a));
+            GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+            GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
+            var CustomerID =await _icustomer.AddCustomer(Model,GetUserId, GetTenantId);
+            if (CustomerID != 0) {
+                Status = true;
+                Message = "Customer Successfully Saved..";
+            }
+            else
+            {
+                Status = false;
+                Message = "Customer not Saved..";
+            }
+            return Ok(GetAjaxResponse(Status, Message, null));
         }
         [HttpGet]
         public IActionResult GetCustomerList()
         {
+          
             var customerlist =  _icustomer.GetCustomerListAsyn();
             return Ok(GetAjaxResponse(true, string.Empty, customerlist));
         }
@@ -93,6 +99,8 @@ namespace Inventory.Web.Controllers
         {
             await Task.Run(() =>
             {
+                GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+                GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
                 Data = _icustomerType.AddCustomerTypeAsyc(model, GetUserId, GetTenantId);
             });
          
@@ -105,7 +113,7 @@ namespace Inventory.Web.Controllers
             var CustomerType = _icustomerType.DeleteCustomerTypeAsyc(Id);
             return Ok(GetAjaxResponse(true, string.Empty, CustomerType));
         }
-
+        
 
     }
 }

@@ -2,14 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Inventory.Application.Interface;
 using Inventory.Application.Interface.ApplicationUser;
 using Inventory.Application.Interface.Products;
 using Inventory.Application.Services.ProductsServices;
+using Inventory.Application.ViewModel;
 using Inventory.Application.ViewModel.Products;
 using Inventory.Application.ViewModel.ProductsVm;
+using Inventory.Core.Models.ApplicationUser;
 using Inventory.Web.share;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Inventory.Web.Controllers
@@ -27,19 +31,15 @@ namespace Inventory.Web.Controllers
         public object Data = null;
         public string GetUserId = "";
         public long GetTenantId = 0;
+        private readonly SessionHanlderController _SessionHanlderController;
+
         public ProductsController(IProductCategories productCategoriesServices, IProductBrand productBrand,
-             IApplicationUser applicationUser
-            )
+             IApplicationUser applicationUser, SessionHanlderController SessionHanlderController)
         {
             _ProductCategoriesServices = productCategoriesServices;
             _ProductBrandServices = productBrand;
             _applicationUser = applicationUser;
-            GetUserId = _applicationUser.GetUserId();
-            GetTenantId = _applicationUser.GetTenantId();
-            if (GetUserId == null && GetTenantId == 0)
-            {
-                _applicationUser.Logout();
-            }
+            _SessionHanlderController = SessionHanlderController;
         }
 
         [NonAction]
@@ -55,7 +55,8 @@ namespace Inventory.Web.Controllers
             Boolean Result=false;
             string Message = "";
             if (ModelState.IsValid) {
-                
+                GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+                GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
                 Result =await _ProductCategoriesServices.SaveProductCategories(model,GetUserId,GetTenantId);
                 if (Result) { Message = "Categories Successfully Saved...!"; }
                 else { Message = model.CategoriesName + " Is Already Exist...!"; }
@@ -65,6 +66,7 @@ namespace Inventory.Web.Controllers
             }
             return Ok(GetAjaxResponse(Result, Message, null));
         }
+
         [HttpGet]
         public async Task<IActionResult> GetProductCategoriesList()
         {
@@ -89,6 +91,8 @@ namespace Inventory.Web.Controllers
             string Message = "";
             if (ModelState.IsValid)
             {
+                GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+                GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
                 Result = await _ProductCategoriesServices.UpdateProductCategories(CategoriesId,model, GetUserId);
                 if (Result) { Message = "Categories Successfully Updated...!"; }
                 else { Message = model.CategoriesName + " Is Already Exist...!"; }
@@ -131,8 +135,9 @@ namespace Inventory.Web.Controllers
         public async Task<IActionResult> SaveProductBrand(ProductBrandVm model)
         {
             if (ModelState.IsValid) {
-               
-                Result= await _ProductBrandServices.SaveProductCategories(model,GetUserId,GetTenantId);
+                GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+                GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
+                Result = await _ProductBrandServices.SaveProductCategories(model,GetUserId,GetTenantId);
                 if (Result)
                 {
                     Message = "Product Brand Successfully Saved..!";
@@ -156,6 +161,8 @@ namespace Inventory.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateProductBrand(long BrandId, ProductBrandVm model) {
             if (BrandId != 0 && ModelState.IsValid) {
+                GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+                GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
                 Result = await _ProductBrandServices.UpdateProductCategories(BrandId, model, GetUserId);
                 if (Result)
                 {

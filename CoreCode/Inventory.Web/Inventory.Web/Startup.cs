@@ -61,42 +61,9 @@ namespace Inventory.Web
              .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddSession();
             services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
+            services.AddMvc().AddControllersAsServices();
             //Password Strength Setting
-            services.Configure<IdentityOptions>(options =>
-            {
-                // Password settings
-                options.Password.RequireDigit = true;
-                options.Password.RequiredLength = 6;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = true;
-                options.Password.RequireLowercase = true;
-                options.Password.RequiredUniqueChars = 6;
-
-                // Lockout settings
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-                options.Lockout.MaxFailedAccessAttempts = 10;
-                options.Lockout.AllowedForNewUsers = true;
-
-                // User settings
-                options.User.RequireUniqueEmail = true;
-            });
-
-            //Setting the Account Login page
-            services.ConfigureApplicationCookie(options =>
-            {
-                // Cookie settings
-                options.Cookie.HttpOnly = true;
-                options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-                options.LoginPath = "/#/Login"; // If the LoginPath is not set here,
-                                                      // ASP.NET Core will default to /#/Login
-                options.LogoutPath = "/#/Logout"; // If the LogoutPath is not set here,
-                                                        // ASP.NET Core will default to /#/Logout
-                options.AccessDeniedPath = "/#/404"; // If the AccessDeniedPath is
-                                                                    // not set here, ASP.NET Core 
-                                                                    // will default to 
-                                                                    // /#/404
-                options.SlidingExpiration = true;
-            });
+           
             //adding autorization policy's
             services.AddAuthentication(options =>
             {
@@ -145,6 +112,7 @@ namespace Inventory.Web
             services.AddScoped<IApplicationUser, ApplicationUserServices>();
             services.AddScoped<IWarehouse, WarehouseService>();
             services.AddScoped<ITenants, TenantsServices>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //Configure CORS for angular2 UI
             services.AddCors(options =>
             {
@@ -159,8 +127,6 @@ namespace Inventory.Web
                 });
 
             });
-
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             //Swagger - Enable this line and the related lines in Configure method to enable swagger UI
             services.AddSwaggerGen(c =>

@@ -51,9 +51,8 @@ namespace Inventory.Application.Services.ApplicationUserServices
                 {
                     if (login != null)
                     {
-                        Status = await SetCurrentLoginUserIdandTenantId(login.UserId, login.TenantId);
                         DateTime CurrentDateTime = DateTime.Now;
-                        tokenString = GenerateJSONWebToken(login.UserName, login.EmailId, CurrentDateTime, login.UserId);
+                        tokenString = GenerateJSONWebToken(login.UserName, login.EmailId, CurrentDateTime, login.UserId,login.TenantId);
                     }
                     login.AccessToken = tokenString;
                     login.Password = null;
@@ -65,7 +64,7 @@ namespace Inventory.Application.Services.ApplicationUserServices
             }
             return login;
         }
-        private string GenerateJSONWebToken(string Username, string EmailId, DateTime CurrentDateTime,string UserId)
+        private string GenerateJSONWebToken(string Username, string EmailId, DateTime CurrentDateTime,string UserId,long TenantId)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -74,11 +73,12 @@ namespace Inventory.Application.Services.ApplicationUserServices
                   new Claim(JwtRegisteredClaimNames.Email, EmailId),
                   new Claim("DateOfJoing",CurrentDateTime.ToString("yyyy-MM-dd")),
                     new Claim("UserId", UserId),
+                    new Claim("TenantId",Convert.ToString(TenantId)),
                   new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                  };
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
               _config["Jwt:Issuer"],
-              null,
+              claims,
               null,
               expires: DateTime.Now.AddMinutes(120),
               signingCredentials: credentials);
@@ -87,62 +87,7 @@ namespace Inventory.Application.Services.ApplicationUserServices
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<Boolean> SetCurrentLoginUserIdandTenantId(string UserId, long TenantId)
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(UserId) && TenantId != 0)
-                {
-                    await Task.Run(() =>
-                    {
-                       
-                        _httpContextAccessor.HttpContext.Session.SetString("UserId", UserId);
-                        _httpContextAccessor.HttpContext.Session.SetString("TenantId", Convert.ToString(TenantId));
-                    });
-                }
-            }
-            catch (Exception e)
-            {
-
-                throw;
-            }
-            return Status;
-        }
-        public string GetUserId()
-        {
-
-            string UserId = _httpContextAccessor.HttpContext.Session.GetString("UserId");
-
-            var a = _httpContextAccessor.HttpContext.User;
-            return UserId;
-        }
-        public string GetUserId1(IPrincipal user)
-        {
-            if (user == null)
-                return string.Empty;
-           // Claim claimUserId = User.Claims.SingleOrDefault(c => c.Type == "UserId");
-            var identity = (ClaimsIdentity)user.Identity;
-            IEnumerable<Claim> claims = identity.Claims;
-            return claims.FirstOrDefault(s => s.Type == "UserId")?.Value;
-            // string UserId= _httpContextAccessor.HttpContext.Session.GetString("UserId");
-            //return UserId;
-        }
-        public long GetTenantId()
-        {
-            long TenantId= Convert.ToInt64(_httpContextAccessor.HttpContext.Session.GetString("TenantId"));
-            return TenantId;
-
-
-        }
-        public async Task<Boolean> Logout()
-        {
-            return await Task.Run(() =>
-            {
-                //_httpContextAccessor.HttpContext.Session.Clear();
-                Status = true;
-                return Status;
-            });
-        }
+       
 
 
     }
