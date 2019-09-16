@@ -28,7 +28,7 @@
                         </button>
                         <button
                             class="btn m-2 p-4  bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
-                            tabindex="0" (click)="PaymentTermModal.show()">
+                            tabindex="0" (click)="OpenPaymentTermModal()">
                             <i class="fa fa-money fa-4x text-muted text-center clearfix"></i>
                             <label>Payment Term</label>
                             <p>5</p>
@@ -296,86 +296,6 @@
                     <button type="button" class="btn btn-primary" (click)="AddCreditTerms(CreditTermForm)">Save
                         changes</button>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div bsModal #PaymentTermModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Payment Terms</h4>
-                <button type="button" class="close" (click)="PaymentTermModal.hide()" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="DividerPaymentterm">
-                <div class="divider-saveAndEdit" aria-hidden="false"></div>
-                <div class="row m-t-md">
-                    <div class="col-sm-6" aria-hidden="false">
-                        <div class="block m-b-sm text-xl ">List of Payment</div>
-                        <div class="wrap-scroll-currencies">
-                            <table class="custom-table-s table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Payment Terms code</th>
-                                        <th>Duration</th>
-                                        <th class="text-center">Action</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <form [formGroup]="PaymentTermForm" class="formData-modal col-sm-6 ">
-                        <h2>{{PaymentTermModalModelTitleString}}</h2>
-                        <input type="hidden" formControlName="PaymentTermsId">
-                        <div class="row">
-                            <div class="form-group col-sm-12">
-                                <label>PAYMENT TERM CODE</label>
-                                <input class="form-control" id="PaymentTermsCode" formControlName="PaymentTermsCode"
-                                    placeholder="PAYMENT TERM CODE" type="text"
-                                    [ngClass]="{ 'is-invalid': PaymentTermSubmiited && fPaymentTerms.PaymentTermsCode.errors }">
-                                <div *ngIf="PaymentTermSubmiited && fPaymentTerms.PaymentTermsCode.errors"
-                                    class="invalid-feedback">
-                                    <div *ngIf="fPaymentTerms.PaymentTermsCode.errors.required">Payment Term Code is
-                                        required</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-sm-12">
-                                <label>DURATION</label>
-                                <input type="number" class="form-control" id="Duration" formControlName="Duration"
-                                    placeholder="DURATION"
-                                    [ngClass]="{ 'is-invalid':PaymentTermSubmiited && fPaymentTerms.Duration.errors }">
-                                <div *ngIf="PaymentTermSubmiited && fPaymentTerms.Duration.errors"
-                                    class="invalid-feedback">
-                                    <div *ngIf="fPaymentTerms.Duration.errors.required">Duration Term Code is
-                                        required</div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-sm-12">
-                                <label>DESCRIPTION</label>
-                                <textarea class="form-control" id="Description" formControlName="Description"
-                                    placeholder="DURATION"></textarea>
-                            </div>
-                        </div>
-
-                    </form>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="PaymentTermModal.hide()">Close</button>
-                <button type="button" class="btn btn-primary" (click)="AddPaymentTerms(PaymentTermForm)">Save
-                    changes</button>
             </div>
         </div>
     </div>
@@ -836,4 +756,90 @@
             </div>
         </div>
     </div>
-</div>
+</div><figure></figure>
+
+<div bsModal #PaymentTermModel="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Shipment Method</h4>
+                <button type="button" class="close" (click)="PaymentTermReset()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="">
+                <tabset (click)="PaymentTermtabclick($event.target.id)">
+                    <tab id="PaymentTermList">
+                        <ng-template tabHeading><i class="fa fa-list text-info"></i> Shipment Method List </ng-template>
+                        <div class="table-responsive animated flash">
+                            <table class="table " id="">
+                                <thead>
+                                    <tr>
+                                        <th>Code Name</th>
+                                        <th>Description</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of ShipmentMethodList">
+                                        <td>{{item.code}}</td>
+                                        <td>{{item.description}}</td>
+                                        <td>
+                                            <span style="margin-left: 25%;">
+                                                <span class="text-primary mr-3" style="cursor: pointer;"
+                                                    (click)="GetShipmentMethod(item.shipmentMethodId)">
+                                                    <i class="fa fa-pencil"></i>
+                                                </span>
+
+                                                <span class="text-danger " style="cursor: pointer;"
+                                                    (click)="DeleteShipmentMethod(item.shipmentMethodId)">
+                                                    <i class="fa fa-trash"></i>
+                                                </span>
+                                            </span>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </tab>
+                    <tab id="PaymentTermFor">
+                        <ng-template tabHeading><i class="fa fa-plus text-info"> Shipment Method Form</i>
+                        </ng-template>
+                        <form [formGroup]="ShipmentMethodForm" class="formData-modal col-sm-12">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <input type="hidden" formControlName="shipmentMethodId">
+                                    <label for="city">SHIPMENT TERM CODE </label>
+                                    <input class="form-control" formControlName="code" (keypress)="allowalpha($event)"
+                                        [ngClass]="{ 'is-invalid': ShipmentMethodsubmit && smf.code.errors }"
+                                        placeholder="Shipment Method Code Name" type="text">
+                                    <div *ngIf="ShipmentMethodsubmit && smf.code.errors" class="invalid-feedback">
+                                        <div *ngIf="smf.code.errors.required">Shipment Method Code Name is required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label for="postal-code">DESCRIPTION</label>
+                                    <input class="form-control" id="" formControlName="description"
+                                        placeholder="Shipment Method Description" type="text">
+                                </div>
+
+                            </div>
+                        </form>
+                        <div class="form-group col-sm-12">
+                            <button type="button" class="btn btn-primary pull-right"
+                                (click)="AddShipmentMethod(ShipmentMethodForm)">Save
+                                changes</button><br />
+                        </div>
+                    </tab>
+                </tabset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="PaymentTermReset()">Close</button>
+            </div>
+        </div>
+    </div>
+</div><figure></figure>

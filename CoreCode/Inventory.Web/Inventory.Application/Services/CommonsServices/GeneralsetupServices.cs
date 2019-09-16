@@ -13,7 +13,7 @@ using static Inventory.Application.Interface.Common.IGenerealsetup;
 
 namespace Inventory.Application.Services.CommonsServices
 {
-    public class GeneralsetupServices : ICurrency, ITaxCode, ICreditTerms, IShipmentTerm, IShipmentMethod
+    public class GeneralsetupServices : ICurrency, ITaxCode, ICreditTerms, IShipmentTerm, IShipmentMethod, IPaymentTerm
     {
         private readonly ApplicationDbContext _DbContext;
         public GeneralsetupServices(ApplicationDbContext DbContext)
@@ -991,6 +991,192 @@ namespace Inventory.Application.Services.CommonsServices
         }
 
         #endregion Shipment Method Services Start
+
+        #region Paymnet Term Services Start
+
+        public async Task<bool> SavePaymentTerm(PaymentTermVm model, string UserId, long TenantId)
+        {
+            Boolean IsExist = false;
+            Boolean Result = false;
+            try
+            {
+
+                if (model != null)
+                {
+                    IsExist = await IsPaymentTermExist(model.Code);
+                    if (!IsExist)
+                    {
+                        PaymentTerm PaymentTerm = new PaymentTerm
+                        {
+                            Code = model.Code,
+                            Duration=model.Duration,
+                            Description = model.Description,
+                            CreationTime = DateTime.Now,
+                            CreatorUserId = UserId,
+                            LastModificationTime = DateTime.Now,
+                            LastModifierUserId = UserId,
+                            IsActive = true,
+                            TenantsId = TenantId
+                        };
+                        _DbContext.PaymentTerms.Add(PaymentTerm);
+                        _DbContext.SaveChanges();
+                        Result = true;
+                    }
+                    else
+                    {
+                        Result = false;
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+            return Result;
+        }
+
+        public async Task<Boolean> IsPaymentTermExist(string Code)
+        {
+
+            try
+            {
+                await Task.Run(() =>
+                {
+                    if (!string.IsNullOrEmpty(Code))
+                    {
+                        var data = _DbContext.PaymentTerms.FirstOrDefault(x => x.Code == Code);
+                        if (data != null)
+                        {
+                            Result = true;
+                        }
+                        else { Result = false; }
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+            return Result;
+        }
+
+        public async Task<List<PaymentTermVm>> GetPaymentTermList()
+        {
+            List<PaymentTermVm> PaymentTermList = new List<PaymentTermVm>();
+
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var PaymentTerm = _DbContext.PaymentTerms.ToList();
+                    foreach (var a in PaymentTerm)
+                    {
+                        PaymentTermVm PaymentTermVm = new PaymentTermVm();
+                        PaymentTermVm.PaymentTermId = a.PaymentTermId;
+                        PaymentTermVm.Code = a.Code;
+                        PaymentTermVm.Duration = a.Duration;
+                        PaymentTermVm.Description = a.Description;
+
+                        PaymentTermList.Add(PaymentTermVm);
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+            return PaymentTermList; ;
+        }
+
+        public async Task<PaymentTermVm> GetPaymentTerm(long PaymentTermId)
+        {
+            PaymentTermVm PaymentTerm = new PaymentTermVm();
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var term = _DbContext.PaymentTerms.Where(x => x.PaymentTermId == PaymentTermId).FirstOrDefault();
+                    if (term != null)
+                    {
+                        PaymentTerm.PaymentTermId = term.PaymentTermId;
+                        PaymentTerm.Code = term.Code;
+                        PaymentTerm.Description = term.Description;
+                        PaymentTerm.Duration = term.Duration;
+                    }
+
+                });
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return PaymentTerm;
+        }
+
+        public async Task<bool> UpdatePaymentTerm(long PaymentTermId, PaymentTermVm model, string UserId)
+        {
+            try
+            {
+                await Task.Run(() =>
+                {
+                    Result = false;
+                    var PaymentTerm = _DbContext.PaymentTerms.Where(x => x.PaymentTermId == PaymentTermId).FirstOrDefault();
+                    if (PaymentTerm != null && model != null)
+                    {
+                        PaymentTerm.Code = model.Code;
+                        PaymentTerm.Description = model.Description;
+                        PaymentTerm.Duration = model.Duration;
+                        PaymentTerm.LastModificationTime = DateTime.Now;
+                        PaymentTerm.LastModifierUserId = UserId;
+                        PaymentTerm.IsActive = true;
+
+                        _DbContext.PaymentTerms.Update(PaymentTerm);
+                        _DbContext.SaveChanges();
+                        Result = true;
+
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return Result;
+        }
+
+        public async Task<bool> DeletePaymentTerm(long PaymentTermId)
+        {
+            try
+            {
+                await Task.Run(() =>
+                {
+                    Result = false;
+                    var PaymentTerm = _DbContext.PaymentTerms.Where(x => x.PaymentTermId == PaymentTermId).FirstOrDefault();
+                    if (PaymentTerm != null)
+                    {
+                        _DbContext.PaymentTerms.Remove(PaymentTerm);
+                        _DbContext.SaveChanges();
+                        Result = true;
+
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return Result;
+        }
+
+        #endregion Paymnet Term Services Start
 
 
     }

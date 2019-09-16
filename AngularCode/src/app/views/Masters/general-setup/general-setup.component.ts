@@ -1,9 +1,9 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { CurrencyService, CreditTermsService, CountryService, WarehouseService, TaxCodeService, ShipmentMethodService, ShipmentTermService } from '../../../Services/Masters-Services/general-setup.service';
+import { CurrencyService, CreditTermsService, CountryService, WarehouseService, TaxCodeService, ShipmentMethodService, ShipmentTermService, PaymentTermService } from '../../../Services/Masters-Services/general-setup.service';
 import Swal from 'sweetalert2'
-import { from } from 'rxjs';
+import { from, VirtualTimeScheduler } from 'rxjs';
 import { threadId } from 'worker_threads';
 const Toast = Swal.mixin({
   toast: true,
@@ -38,12 +38,6 @@ export class GeneralSetupComponent implements OnInit {
   CreditTermList: any[];
   CreditTermbtnText = "Save Change";
   // Credit Term end
-  // Payment Term start
-  @ViewChild('PaymentTermModal', { static: false }) public PaymentTermModal: ModalDirective;
-  PaymentTermModalModelTitleString: string = "Payment Terms";
-  PaymentTermSubmiited: boolean = false;
-  PaymentTermForm: FormGroup;
-  // Payment Term end
 
   //Country Start
   @ViewChild('CountryModal', { static: false }) public CountryModal: ModalDirective;
@@ -86,6 +80,14 @@ export class GeneralSetupComponent implements OnInit {
   ShipmentMethodList: any;
   //ShipmentMethod End
 
+  //Payment Term Start
+  @ViewChild('PaymentTermModel', { static: false }) public PaymentTermModel: ModalDirective;
+  PaymentTermTitle: string = "Shipment Method"
+  PaymentTermsubmit: boolean = false;
+  PaymentTermForm: FormGroup;
+  PaymentTermList: any;
+  //Payment Term End
+
   constructor(private FormBuilder: FormBuilder,
     private CountryService: CountryService,
     private WarehouseService: WarehouseService,
@@ -94,6 +96,7 @@ export class GeneralSetupComponent implements OnInit {
     private TaxCodeService: TaxCodeService,
     private ShipmentTermService: ShipmentTermService,
     private ShipmentMethodService: ShipmentMethodService,
+    private PaymentTermService: PaymentTermService,
   ) { }
 
   ngOnInit() {
@@ -224,10 +227,10 @@ export class GeneralSetupComponent implements OnInit {
   }
   get fCurrency() { return this.CurrencyForm.controls; }
 
-  Currencytabclick(event){
-      if (event == "CurrencyList-link") {
-        this.OnloadCurrency();
-      }
+  Currencytabclick(event) {
+    if (event == "CurrencyList-link") {
+      this.OnloadCurrency();
+    }
   }
 
 
@@ -325,14 +328,46 @@ export class GeneralSetupComponent implements OnInit {
       Duration: ['', Validators.required],
       Description: [''],
     });
+
+    this.PaymentTermsubmit = false;
   }
+
+  get fPaymentTerms() { return this.PaymentTermForm.controls; }
+
   public AddPaymentTerms(PaymentTermForm: FormControl) {
-    this.PaymentTermSubmiited = true;
+    this.PaymentTermsubmit = true;
     if (PaymentTermForm.invalid) {
       return;
     }
   }
-  get fPaymentTerms() { return this.PaymentTermForm.controls; }
+
+  GetPaymentTermList() {
+    this.PaymentTermService.GetPaymentTremList().subscribe((responce: any) => {
+      debugger
+      if (responce.status) {
+        if (responce.data != null) {
+          this.ShipmentMethodList = responce.data;
+        }
+      }
+    });
+  }
+
+  OpenPaymentTermModal() {
+    this.OnloadPaymentTerms();
+    this.PaymentTermModel.show();
+  }
+
+  PaymentTermReset() {
+    this.OnloadPaymentTerms();
+    this.PaymentTermModel.hide();
+  }
+
+  PaymentTermtabclick(event) {
+    if (event == "PaymentTermList-link") {
+      this.OnloadPaymentTerms();
+    }
+  }
+
   //#endregion Payment Section Edn
 
   //#region Country Section Start

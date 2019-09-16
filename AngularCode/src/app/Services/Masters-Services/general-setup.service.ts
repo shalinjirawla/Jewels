@@ -335,3 +335,50 @@ export class ShipmentMethodService {
   }
   
 }
+
+@Injectable({
+  providedIn: 'root'
+})
+export class PaymentTermService {
+
+  Responce: any;
+  constructor(private HttpClient: HttpClient) { }
+  private BaseURL: string = "https://localhost:44315/api/Commons/";
+
+  public GetPaymentTremList(): Observable<any> {
+    let url = this.BaseURL + `GetPaymentTremList`;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+
+  public AddShipmentMethod(input): Observable<any> {
+    debugger
+    let url = this.BaseURL + `AddShipmentMethod`;
+    return this.HttpClient.post(url, JSON.stringify(input), httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+
+  public GetShipmentMethodById(i): Observable<any> {
+    let url = this.BaseURL + `GetShipmentMethodById?ShipmentMethodId=` + i;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+
+  public UpdateShipmentMethod(input): Observable<any> {
+    let url = this.BaseURL + `UpdateShipmentMethod?ShipmentMethodId=${input.shipmentMethodId}`;
+    return this.HttpClient.post(url, JSON.stringify(input), httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+
+  public DeleteShipmentMethod(i): Observable<any> {
+    let url = this.BaseURL + `DeleteShipmentMethod?ShipmentMethodId=` + i;
+    return this.HttpClient.delete(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+  
+}

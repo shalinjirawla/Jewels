@@ -30,6 +30,7 @@ namespace Inventory.Web.Controllers
         private readonly IWarehouse _warehouse;
         private readonly IShipmentTerm _shipmentTerm;
         private readonly IShipmentMethod _shipmentMethod;
+        private readonly IPaymentTerm _ipaymentTerm;
         public Boolean Status = false;
         public string Message = "";
         public object Data = null;
@@ -40,7 +41,7 @@ namespace Inventory.Web.Controllers
             IGenerealsetup.ICurrency currency, ICreditTerms icreditTerms,
             ICountry country, IWarehouse warehouse,
             ITaxCode itaxCode, IShipmentTerm shipmentTerm,
-            IShipmentMethod shipmentMethod,
+            IShipmentMethod shipmentMethod, IPaymentTerm ipaymentTerm,
             SessionHanlderController SessionHanlderController
             )
         {
@@ -51,10 +52,9 @@ namespace Inventory.Web.Controllers
             _taxCode = itaxCode;
             _icreditTerms = icreditTerms;
             _warehouse = warehouse;
-            _applicationUser = applicationUser;
-            _itaxCode = itaxCode;
             _shipmentTerm = shipmentTerm;
             _shipmentMethod = shipmentMethod;
+            _ipaymentTerm = ipaymentTerm;
 
             _SessionHanlderController = SessionHanlderController;
            
@@ -677,5 +677,74 @@ namespace Inventory.Web.Controllers
         }
 
         #endregion Shipment Method APIs End
+
+        #region Payment Term APIs Start
+
+        [HttpPost]
+        public async Task<IActionResult> AddPaymentTerm(PaymentTermVm model)
+        {
+            if (ModelState.IsValid && model != null)
+            {
+                GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
+                GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+                Status = await _ipaymentTerm.SavePaymentTerm(model, GetUserId, GetTenantId);
+                if (Status)
+                {
+                    Message = "Payment Term is  Added....!";
+                }
+                else { Message = "Error Occurss..!"; }
+            }
+            else { return BadRequest(); }
+
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdatePaymentTerm(long PaymentTermId, PaymentTermVm model)
+        {
+            GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+            Status = await _ipaymentTerm.UpdatePaymentTerm(PaymentTermId, model, GetUserId);
+            if (Status)
+            {
+                Message = "Payment Term is Updated....!";
+            }
+            else { Message = "Error Occurss..!"; }
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPaymentTermList()
+        {
+
+            var paymentTerm = await _ipaymentTerm.GetPaymentTermList();
+            return Ok(GetAjaxResponse(true, string.Empty, paymentTerm));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPaymentTermById(long PaymentTermId)
+        {
+            PaymentTermVm PaymentTermVm = new PaymentTermVm();
+            if (PaymentTermId != 0)
+            {
+                PaymentTermVm = await _ipaymentTerm.GetPaymentTerm(PaymentTermId);
+            }
+            else { return BadRequest(); }
+
+            return Ok(GetAjaxResponse(true, string.Empty, PaymentTermVm));
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeletePaymentTerm(long PaymentTermId)
+        {
+            Status = await _ipaymentTerm.DeletePaymentTerm(PaymentTermId);
+            if (Status)
+            {
+                Message = "PaymentTerm Term is Deleted...!";
+            }
+            else { Message = "Error Occurss..!"; }
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        #endregion Payment Term APIs End
     }
 }

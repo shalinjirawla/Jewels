@@ -54,5 +54,14 @@ namespace Inventory.Application.Interface.Common
             Task<Boolean> UpdateShipmentMethod(long ShipmentMethodId, ShipmentMethodVm model, string UserId);
             Task<Boolean> DeleteShipmentMethod(long ShipmentMethodId);
         }
+
+        public interface IPaymentTerm
+        {
+            Task<Boolean> SavePaymentTerm(PaymentTermVm model, string UserId, long TenantId);
+            Task<List<PaymentTermVm>> GetPaymentTermList();
+            Task<PaymentTermVm> GetPaymentTerm(long PaymentTermId);
+            Task<Boolean> UpdatePaymentTerm(long PaymentTermId, PaymentTermVm model, string UserId);
+            Task<Boolean> DeletePaymentTerm(long PaymentTermId);
+        }
     }
-}
+}   
