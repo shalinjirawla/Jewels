@@ -69,16 +69,16 @@ export class CustomerComponent implements OnInit {
   AddressList: any = { "Address": [] };
   AddCustomervalue: any = [];
   ngOnInit() {
-   
+
     this.onLoad();
     this.GetCustomerType();
     this.GetCurrencyList();
     this.GetCountry();
     this.GetDiscountType();
     this.GetCreditTermsList();
-    
+
   }
-  
+
   onLoad() {
     this.AddCustomerForm = this.formBuilder.group({
       customerId: [0],
@@ -120,6 +120,9 @@ export class CustomerComponent implements OnInit {
       defaultContact: [false],
 
     })
+    this.submitted = false;
+    this.contactsubmitted = false;
+    this.Addresssubmitted = false;
   }
 
   get f() { return this.AddCustomerForm.controls; }
@@ -130,7 +133,7 @@ export class CustomerComponent implements OnInit {
     this.largeModal.show();
     this.onLoad();
   }
- 
+
   allownumberwithdot(event: any) {
     const pattern = /[0-9\+\.]/;
     let inputChar = String.fromCharCode(event.charCode);
@@ -153,7 +156,7 @@ export class CustomerComponent implements OnInit {
       event.preventDefault();
     }
   }
-  click(event){
+  click(event) {
     debugger
   }
 
@@ -243,7 +246,7 @@ export class CustomerComponent implements OnInit {
         this.CountryList.map((result: any) => {
           if (countrycodeflag) {
             if (AddCustomerAddressForm.value.countryId == result.countryId) {
-              this.countryCode ="+" + result.countryCode;
+              this.countryCode = "+" + result.countryCode;
               countrycodeflag = false;
             }
             else {
@@ -376,7 +379,7 @@ export class CustomerComponent implements OnInit {
         let countrycodeflag = true;
         this.CountryList.map((result: any) => {
           if (countrycodeflag) {
-            if (this.AddressList.Address[index].countryId  == result.countryId) {
+            if (this.AddressList.Address[index].countryId == result.countryId) {
               this.countryCode = "+" + result.countryCode;
               countrycodeflag = false;
             }
@@ -672,8 +675,8 @@ export class CustomerComponent implements OnInit {
           let countrycodeflag = true;
           this.CountryList.map((result: any) => {
             if (countrycodeflag) {
-              if (res.countryId  == result.countryId) {
-                this.countryCode ="+" + result.countryCode;
+              if (res.countryId == result.countryId) {
+                this.countryCode = "+" + result.countryCode;
                 countrycodeflag = false;
               }
               else {
