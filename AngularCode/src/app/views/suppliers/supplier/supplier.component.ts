@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { CurrencyService, TaxCodeService, CountryService } from '../../../Services/Masters-Services/general-setup.service';
+import { CurrencyService, TaxCodeService, CountryService, ShipmentTermService,ShipmentMethodService } from '../../../Services/Masters-Services/general-setup.service';
 import Swal from 'sweetalert2';
 @Component({
   selector: 'app-supplier',
@@ -41,6 +41,8 @@ export class SupplierComponent implements OnInit {
   DefaultCurrenyList: any[];
   DefaultPaymentTermsList: any[];
   DefaultTaxCodeList: any[];
+  ShipmentTermsList: any[];
+  ShipmentMethodList:any[];
   //Dropwdownlist items
 
   //SupplierAddress Start
@@ -67,6 +69,8 @@ export class SupplierComponent implements OnInit {
     private CurrencyService: CurrencyService,
     private TaxCodeService: TaxCodeService,
     private CountryService: CountryService,
+    private ShipmentTermService: ShipmentTermService,
+    private ShipmentMethodService:ShipmentMethodService,
   ) { }
 
   ngOnInit() {
@@ -119,16 +123,45 @@ export class SupplierComponent implements OnInit {
     this.CurrencyService.GetCurrencyList().subscribe((responce: any) => {
       if (responce.status) {
         this.DefaultCurrenyList = responce.data;
+      }else{
+        Swal.fire({
+          type:'error',
+          title:responce.message,
+        });
       }
     });
     this.TaxCodeService.GetTaxCodeList().subscribe((responce: any) => {
       if (responce.status) {
         this.DefaultTaxCodeList = responce.data;
+      }else{
+        Swal.fire({
+          type:'error',
+          title:responce.message,
+        });
+      }
+    });
+    this.ShipmentTermService.GetShipmentTermList().subscribe((responce: any) => {
+      if(responce.status){
+        this.ShipmentTermsList=responce.data;
+      }else{
+        Swal.fire({
+          type:'error',
+          title:responce.message,
+        });
+      }
+    })
+    this.ShipmentMethodService.GetShipmentMethodList().subscribe((responce:any)=>{
+      if(responce.status){
+        this.ShipmentMethodList=responce.data;
+      }else{
+        Swal.fire({
+          type:'error',
+          title:responce.message
+        });
       }
     });
   }
-  public TabClick(event)
-  {
+  public TabClick(event) {
 
   }
   public saveSuppliers(AddSuppliersForm: FormControl) {
@@ -257,7 +290,7 @@ export class SupplierComponent implements OnInit {
 
     }
   }
- public AddNewAddress() {
+  public AddNewAddress() {
     this.AddressLenghtcount = false;
     //this.onLoad();
     this.AddSuppliersAddressForm = this.FormBuilder.group({
@@ -323,7 +356,7 @@ export class SupplierComponent implements OnInit {
       }
     })
   }
- public EditAddress(i: any) {
+  public EditAddress(i: any) {
     let a = this.AddressList.Address.map((result: any, index) => {
       if (i == index) {
         this.AddSuppliersAddressForm.patchValue({
@@ -342,7 +375,7 @@ export class SupplierComponent implements OnInit {
     this.AddressLenghtcount = false;
   }
 
-public  DeleteAddress(i: any) {
+  public DeleteAddress(i: any) {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -382,7 +415,7 @@ public  DeleteAddress(i: any) {
 
   public ResetForm() {
     this.FormSubmittedSupplliers = false;
-    this.Addresssubmitted=false;
+    this.Addresssubmitted = false;
     this.OnloadSupplliers();
     this.largeModal.hide();
   }
@@ -390,11 +423,11 @@ public  DeleteAddress(i: any) {
   get add() { return this.AddSuppliersAddressForm.controls; }
   get con() { return this.AddSuppliersContactForm.controls; }
 
- 
-public  CheckAddress(event) {
+
+  public CheckAddress(event) {
     this.BillingShippingAddress = event;
   }
- public changeaddresstype(event) {
+  public changeaddresstype(event) {
     if (event == "1") {
       this.CheckboxFlag = true;
       this.copyAddress = "Shiping Address is same as Billing Address"
@@ -431,7 +464,7 @@ public  CheckAddress(event) {
       event.preventDefault();
     }
   }
- public GetCountry() {
+  public GetCountry() {
     this.CountryService.GetCountryList().subscribe((responce: any) => {
       if (responce.status) {
         this.CountryList = responce.data;
@@ -439,7 +472,7 @@ public  CheckAddress(event) {
     });
   }
 
- public AddSuppliersContact(AddSuppliersContactForm: FormControl) {
+  public AddSuppliersContact(AddSuppliersContactForm: FormControl) {
     this.contactsubmitted = true;
     if (this.AddSuppliersContactForm.invalid) {
       return;
@@ -534,7 +567,7 @@ public  CheckAddress(event) {
         })
       }
     })
-   
+
   }
 
   AddNewContact() {
@@ -555,7 +588,7 @@ public  CheckAddress(event) {
     })
 
   }
- public CancelAddSuppliersContact() {
+  public CancelAddSuppliersContact() {
     if (this.ContactList.Contact.length == 0) {
       this.ContactLenghtcount = false;
     }

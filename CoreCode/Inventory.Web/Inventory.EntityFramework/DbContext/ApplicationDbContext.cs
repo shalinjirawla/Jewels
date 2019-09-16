@@ -4,6 +4,7 @@ using Inventory.Core.Models.Commons;
 using Inventory.Core.Models.Currency;
 using Inventory.Core.Models.Customer;
 using Inventory.Core.Models.Products;
+using Inventory.Core.Models.Supplier;
 using Inventory.Core.Models.Tenants;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -33,8 +34,8 @@ namespace Inventory.EntityFrameworkCore.DbContext
         public DbSet<Customer> Customers { get; set; }
         public DbSet<CustomerType> CustomerTypes { get; set; }
         public DbSet<Currency> Currencies { get; set; }
-        public DbSet<CustomerAdderss> customerAddersses { get; set; }
-        public DbSet<CustomerContacts> customerContacts { get; set; }
+        public DbSet<Adderss> Addersses { get; set; }
+        public DbSet<Contacts> Contacts { get; set; }
         public DbSet<Country> country { get; set; }
         public DbSet<DiscountType> discountTypes { get; set; }
         public DbSet<ProductCategories> ProductCategories { get; set; }
@@ -45,5 +46,6 @@ namespace Inventory.EntityFrameworkCore.DbContext
         public DbSet<ShipmentTerm> ShipmentTerms { get; set; }
         public DbSet<ShipmentMethod> ShipmentMethods { get; set; }
         public DbSet<PaymentTerm> PaymentTerms { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
     }
 }

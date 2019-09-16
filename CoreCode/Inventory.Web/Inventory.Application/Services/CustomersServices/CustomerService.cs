@@ -81,21 +81,21 @@ namespace Inventory.Application.Services
 
                                 foreach (var list in Model.AddressList.Address)
                                 {
-                                    CustomerAdderss customerAdderss = new CustomerAdderss();
-                                    customerAdderss.AddressType = list.AddressType;
-                                    customerAdderss.Address = list.Address;
-                                    customerAdderss.DefaultAddress = list.DefaultAddress;
-                                    customerAdderss.CustomerId = customer.CustomerId;
-                                    customerAdderss.CountryId = list.CountryId != null && list.CountryId != "" ? long.Parse(list.CountryId) : 0;
-                                    if (customerAdderss.DefaultAddress)
+                                    Adderss Adderss = new Adderss();
+                                    Adderss.AddressType = list.AddressType;
+                                    Adderss.Address = list.Address;
+                                    Adderss.DefaultAddress = list.DefaultAddress;
+                                    Adderss.CustomerId = customer.CustomerId;
+                                    Adderss.CountryId = list.CountryId != null && list.CountryId != "" ? long.Parse(list.CountryId) : 0;
+                                    if (Adderss.DefaultAddress)
                                     {
-                                        CountryId = customerAdderss.CountryId;
+                                        CountryId = Adderss.CountryId;
                                     }
-                                    customerAdderss.State = list.State;
-                                    customerAdderss.City = list.City;
-                                    customerAdderss.PostalCode = list.PostalCode;
+                                    Adderss.State = list.State;
+                                    Adderss.City = list.City;
+                                    Adderss.PostalCode = list.PostalCode;
 
-                                    _DbContext.customerAddersses.Add(customerAdderss);
+                                    _DbContext.Addersses.Add(Adderss);
                                     _DbContext.SaveChanges();
 
                                 }
@@ -105,20 +105,20 @@ namespace Inventory.Application.Services
                             {
                                 foreach (var list in Model.ContactList.Contact)
                                 {
-                                    CustomerContacts customerContacts = new CustomerContacts();
+                                    Contacts Contacts = new Contacts();
 
-                                    customerContacts.CustomerId = customer.CustomerId;
-                                    customerContacts.Designation = list.Designation;
-                                    customerContacts.Email = list.Email;
-                                    customerContacts.FirstName = list.FirstName;
-                                    customerContacts.LastName = list.LastName;
-                                    customerContacts.DefaultContact = list.DefaultContact;
-                                    customerContacts.Mobile = list.Mobile;
-                                    customerContacts.CountryId = CountryId;
-                                    customerContacts.Fax = list.Fax;
-                                    customerContacts.Office = list.Office;
+                                    Contacts.CustomerId = customer.CustomerId;
+                                    Contacts.Designation = list.Designation;
+                                    Contacts.Email = list.Email;
+                                    Contacts.FirstName = list.FirstName;
+                                    Contacts.LastName = list.LastName;
+                                    Contacts.DefaultContact = list.DefaultContact;
+                                    Contacts.Mobile = list.Mobile;
+                                    Contacts.CountryId = CountryId;
+                                    Contacts.Fax = list.Fax;
+                                    Contacts.Office = list.Office;
 
-                                    _DbContext.customerContacts.Add(customerContacts);
+                                    _DbContext.Contacts.Add(Contacts);
                                     _DbContext.SaveChanges();
 
                                 }
@@ -130,93 +130,90 @@ namespace Inventory.Application.Services
                             var alreadycustomer = _DbContext.Customers.FirstOrDefault(x => x.CustomerId == Model.CustomerId);
                             if (alreadycustomer != null)
                             {
-                                customer.CustomerId = Model.CustomerId;
-                                customer.CustomerName = Model.CustomerName;
-                                customer.CusromerCode = Model.CustomerCode;
+                                alreadycustomer.CustomerName = Model.CustomerName;
+                                alreadycustomer.CusromerCode = Model.CustomerCode;
                                 int typeid;
                                 typeid = Model.CustomerTypeId != null && Model.CustomerTypeId != "" ? int.Parse(Model.CustomerTypeId) : 0;
                                 if (typeid != 0 && typeid > 0)
                                 {
-                                    customer.CustomerTypeId = typeid;
+                                    alreadycustomer.CustomerTypeId = typeid;
                                 }
-                                customer.Website = Model.Website;
-                                customer.TaxRegistrationNumber = Model.TaxRegistrationNumber;
-                                customer.Remarks = Model.Remarks;
-                                customer.CreditTermId = Model.DefaultCreditTerms;
-                                customer.DefaultCreditLimit = Model.DefaultCreditLimit != null && Model.DefaultCreditLimit != "" ? long.Parse(Model.DefaultCreditLimit) : 0;
+                                alreadycustomer.Website = Model.Website;
+                                alreadycustomer.TaxRegistrationNumber = Model.TaxRegistrationNumber;
+                                alreadycustomer.Remarks = Model.Remarks;
+                                alreadycustomer.CreditTermId = Model.DefaultCreditTerms;
+                                alreadycustomer.DefaultCreditLimit = Model.DefaultCreditLimit != null && Model.DefaultCreditLimit != "" ? long.Parse(Model.DefaultCreditLimit) : 0;
                                 if (Model.DiscountOption != null && Model.DiscountOption != "" && Model.DiscountOption != "0")
                                 {
-                                    customer.DiscountOption = long.Parse(Model.DiscountOption);
+                                    alreadycustomer.DiscountOption = long.Parse(Model.DiscountOption);
 
                                 }
-                                if (customer.DiscountOption != 0 && customer.DiscountOption != null)
+                                if (alreadycustomer.DiscountOption != 0 && alreadycustomer.DiscountOption != null)
                                 {
-                                    customer.DiscountAmount = Model.DiscountAmount != null && Model.DiscountAmount != "" ? double.Parse(Model.DiscountAmount) : 0;
+                                    alreadycustomer.DiscountAmount = Model.DiscountAmount != null && Model.DiscountAmount != "" ? double.Parse(Model.DiscountAmount) : 0;
                                 }
                                 else
                                 {
-                                    customer.DiscountAmount = 0;
+                                    alreadycustomer.DiscountAmount = 0;
                                 }
                                 if (Model.DefaultCurrency != null && Model.DefaultCurrency != "" && Model.DefaultCurrency != "0")
                                 {
-                                    customer.DefaultCurrency = long.Parse(Model.DefaultCurrency);
+                                    alreadycustomer.DefaultCurrency = long.Parse(Model.DefaultCurrency);
 
                                 }
-                                customer.CreatorUserId = alreadycustomer.CreatorUserId;
-                                customer.CreationTime = alreadycustomer.CreationTime;
-                                customer.LastModifierUserId = "1";
+                                alreadycustomer.LastModifierUserId = UserId;
                                 DateTime date = new DateTime();
-                                customer.LastModificationTime = date;
-                                customer.IsActive = true;
+                                alreadycustomer.LastModificationTime = date;
+                                alreadycustomer.IsActive = true;
 
-                                _DbContext.Update(customer);
+                                _DbContext.Update(alreadycustomer);
                                 _DbContext.SaveChanges();
                                 if (Model.AddressList != null)
                                 {
-                                    var deleteaddresslist = _DbContext.customerAddersses.Where(x => x.CustomerId == customer.CustomerId).ToList();
-                                    _DbContext.customerAddersses.RemoveRange(deleteaddresslist);
+                                    var deleteaddresslist = _DbContext.Addersses.Where(x => x.CustomerId == alreadycustomer.CustomerId).ToList();
+                                    _DbContext.Addersses.RemoveRange(deleteaddresslist);
                                     foreach (var list in Model.AddressList.Address)
                                     {
-                                        CustomerAdderss customerAdderss = new CustomerAdderss();
-                                        customerAdderss.AddressType = list.AddressType;
-                                        customerAdderss.Address = list.Address;
-                                        customerAdderss.DefaultAddress = list.DefaultAddress;
-                                        customerAdderss.CustomerId = customer.CustomerId;
-                                        customerAdderss.CountryId = list.CountryId != null && list.CountryId != "" ? long.Parse(list.CountryId) : 0;
-                                        if (customerAdderss.DefaultAddress)
+                                        Adderss Adderss = new Adderss();
+                                        Adderss.AddressType = list.AddressType;
+                                        Adderss.Address = list.Address;
+                                        Adderss.DefaultAddress = list.DefaultAddress;
+                                        Adderss.CustomerId = alreadycustomer.CustomerId;
+                                        Adderss.CountryId = list.CountryId != null && list.CountryId != "" ? long.Parse(list.CountryId) : 0;
+                                        if (Adderss.DefaultAddress)
                                         {
-                                            CountryId = customerAdderss.CountryId;
+                                            CountryId = Adderss.CountryId;
                                         }
-                                        customerAdderss.State = list.State;
-                                        customerAdderss.City = list.City;
-                                        customerAdderss.PostalCode = list.PostalCode;
+                                        Adderss.State = list.State;
+                                        Adderss.City = list.City;
+                                        Adderss.PostalCode = list.PostalCode;
 
-                                        _DbContext.customerAddersses.Add(customerAdderss);
+                                        _DbContext.Addersses.Add(Adderss);
                                         _DbContext.SaveChanges();
                                     }
 
                                 }
                                 if (Model.ContactList != null)
                                 {
-                                    var deletecontactlist = _DbContext.customerContacts.Where(x => x.CustomerId == customer.CustomerId).ToList();
-                                    _DbContext.customerContacts.RemoveRange(deletecontactlist);
+                                    var deletecontactlist = _DbContext.Contacts.Where(x => x.CustomerId == alreadycustomer.CustomerId).ToList();
+                                    _DbContext.Contacts.RemoveRange(deletecontactlist);
                                     foreach (var list in Model.ContactList.Contact)
                                     {
 
                                         if (list.contactId != null && list.contactId != "")
                                         {
-                                            CustomerContacts customerContacts = new CustomerContacts();
-                                            customerContacts.CustomerId = customer.CustomerId;
-                                            customerContacts.Designation = list.Designation;
-                                            customerContacts.Email = list.Email;
-                                            customerContacts.CountryId = CountryId;
-                                            customerContacts.FirstName = list.FirstName;
-                                            customerContacts.LastName = list.LastName;
-                                            customerContacts.DefaultContact = list.DefaultContact;
-                                            customerContacts.Mobile = list.Mobile;
-                                            customerContacts.Fax = list.Fax;
-                                            customerContacts.Office = list.Office;
-                                            _DbContext.customerContacts.Add(customerContacts);
+                                            Contacts Contacts = new Contacts();
+                                            Contacts.CustomerId = alreadycustomer.CustomerId;
+                                            Contacts.Designation = list.Designation;
+                                            Contacts.Email = list.Email;
+                                            Contacts.CountryId = CountryId;
+                                            Contacts.FirstName = list.FirstName;
+                                            Contacts.LastName = list.LastName;
+                                            Contacts.DefaultContact = list.DefaultContact;
+                                            Contacts.Mobile = list.Mobile;
+                                            Contacts.Fax = list.Fax;
+                                            Contacts.Office = list.Office;
+                                            _DbContext.Contacts.Add(Contacts);
                                             _DbContext.SaveChanges();
 
                                         }
@@ -277,13 +274,13 @@ namespace Inventory.Application.Services
             AddCustomerVm customer = new AddCustomerVm();
             try
             {
-                var customerAddressList = _DbContext.customerAddersses.Where(x => x.CustomerId == Id).ToList();
+                var customerAddressList = _DbContext.Addersses.Where(x => x.CustomerId == Id).ToList();
                 List<CustomerAddressVm> Address = new List<CustomerAddressVm>();
                 AddressList AddressList = new AddressList();
                 foreach (var address in customerAddressList)
                 {
                     CustomerAddressVm customeraddress = new CustomerAddressVm();
-                    customeraddress.addressId = address.CustomerAddressId.ToString();
+                    customeraddress.addressId = address.AddressId.ToString();
                     customeraddress.AddressType = address.AddressType;
                     customeraddress.Address = address.Address;
                     customeraddress.DefaultAddress = address.DefaultAddress;
@@ -296,13 +293,13 @@ namespace Inventory.Application.Services
                 AddressList.Address = Address;
                 customer.AddressList = AddressList;
 
-                var customerContactList = _DbContext.customerContacts.Where(x => x.CustomerId == Id).ToList();
+                var customerContactList = _DbContext.Contacts.Where(x => x.CustomerId == Id).ToList();
                 List<CustomerContactVm> Contact = new List<CustomerContactVm>();
                 ContactList ContactList = new ContactList();
                 foreach (var contact in customerContactList)
                 {
                     CustomerContactVm customerContact = new CustomerContactVm();
-                    customerContact.contactId = contact.CustomerContactId.ToString();
+                    customerContact.contactId = contact.ContactId.ToString();
                     customerContact.Designation = contact.Designation;
                     customerContact.Email = contact.Email;
                     customerContact.FirstName = contact.FirstName;
@@ -349,11 +346,11 @@ namespace Inventory.Application.Services
 
             try
             {
-                var customerAddress = _DbContext.customerAddersses.Where(x => x.CustomerId == Id).ToList();
-                var customerContact = _DbContext.customerContacts.Where(x => x.CustomerId == Id).ToList();
+                var customerAddress = _DbContext.Addersses.Where(x => x.CustomerId == Id).ToList();
+                var customerContact = _DbContext.Contacts.Where(x => x.CustomerId == Id).ToList();
                 var customer = _DbContext.Customers.Where(x => x.CustomerId == Id).FirstOrDefault();
-                _DbContext.customerAddersses.RemoveRange(customerAddress);
-                _DbContext.customerContacts.RemoveRange(customerContact);
+                _DbContext.Addersses.RemoveRange(customerAddress);
+                _DbContext.Contacts.RemoveRange(customerContact);
                 _DbContext.Customers.Remove(customer);
                 _DbContext.SaveChanges();
                 cId = Id;

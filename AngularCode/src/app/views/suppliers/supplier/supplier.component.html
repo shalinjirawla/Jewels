@@ -138,8 +138,8 @@
                                     <label for="postal-code">SHIPMENT TERMS </label>
                                     <select class="form-control" formControlName="ShipmentTerms">
                                         <option value="">--Select--</option>
-                                        <option *ngFor="let type of CustomerTypeList" [value]="type.customerTypeId">
-                                            {{type.customerTypeName}}
+                                        <option *ngFor="let type of ShipmentTermsList" [value]="type.shipmentMethodId">
+                                            {{type.code}}
                                         </option>
 
                                     </select>
@@ -148,8 +148,8 @@
                                     <label for="postal-code">SHIPMENT METHOD</label>
                                     <select class="form-control" formControlName="Shipmentmethod">
                                         <option value="">--Select--</option>
-                                        <option *ngFor="let type of CustomerTypeList" [value]="type.customerTypeId">
-                                            {{type.customerTypeName}}
+                                        <option *ngFor="let type of ShipmentMethodList" [value]="type.customerTypeId">
+                                            {{type.code}}
                                         </option>
 
                                     </select>

@@ -21,7 +21,7 @@
 
                         <button
                             class="btn m-2 p-4 bg-white btn-outline-success box-shadow b-4x b-light btn-lg m-r m-t w-160"
-                            tabindex="0" (click)="CreditTermModal.show()">
+                            tabindex="0" (click)="OpenCreditTermModal()">
                             <i class="fa fa-money fa-4x text-muted text-center"></i>
                             <label>Credit Term</label>
                             <p>5</p>
@@ -124,7 +124,7 @@
             <div class="modal-body" id="">
                 <tabset (click)="Currencytabclick($event.target.id)">
                     <tab id="CurrencyList">
-                        <ng-template tabHeading><i class="fa fa-list text-info"></i> Currency  List </ng-template>
+                        <ng-template tabHeading><i class="fa fa-list text-info"></i> Currency List </ng-template>
                         <div class="table-responsive animated flash">
                             <table class="custom-table-s table table-striped">
                                 <thead>
@@ -217,85 +217,81 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" id="DividerCreditterm">
-                <div class="divider-saveAndEdit" aria-hidden="false"></div>
-                <div class="row m-t-md">
-                    <div class="col-sm-6" aria-hidden="false">
-                        <div class="block m-b-sm text-xl ">List of Currencies</div>
-                        <div class="wrap-scroll-currencies">
-                            <table class="custom-table-s table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Credit Terms Code</th>
-                                        <th>Duration</th>
-                                        <th class="text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let item of CreditTermList">
-                                        <td>{{item.code}}</td>
-                                        <td>{{item.duration}}</td>
 
-                                        <td>
-                                            <span class="text-primary mr-3" style="cursor: pointer;"
-                                                (click)="GetCreditTerms(item.creditTermId)">
-                                                <i class="fa fa-pencil"></i>
-                                            </span>
+            <div class="divider-saveAndEdit" aria-hidden="false"></div>
+            <div class="row m-t-md">
+                <div class="col-sm-6" aria-hidden="false">
+                    <div class="block m-b-sm text-xl ">List of Currencies</div>
+                    <div class="wrap-scroll-currencies">
+                        <table class="custom-table-s table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Credit Terms Code</th>
+                                    <th>Duration</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of CreditTermList">
+                                    <td>{{item.code}}</td>
+                                    <td>{{item.duration}}</td>
 
-                                            <span class="text-danger " style="cursor: pointer;"
-                                                (click)="DeleteCreditTerms(item.creditTermId)">
-                                                <i class="fa fa-trash"></i>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                    <td>
+                                        <span class="text-primary mr-3" style="cursor: pointer;"
+                                            (click)="GetCreditTerms(item.creditTermId)">
+                                            <i class="fa fa-pencil"></i>
+                                        </span>
+
+                                        <span class="text-danger " style="cursor: pointer;"
+                                            (click)="DeleteCreditTerms(item.creditTermId)">
+                                            <i class="fa fa-trash"></i>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <form [formGroup]="CreditTermForm" class="formData-modal col-sm-6 ">
+                    <h2>{{CreditTermModalModelTitleString}}</h2>
+                    <input type="hidden" formControlName="CreditTermId">
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label>CREDIT TERM CODE</label>
+                            <input class="form-control" id="Code" formControlName="Code" placeholder="CREDIT TERM CODE"
+                                type="text"
+                                [ngClass]="{ 'is-invalid': CreditTermSubmiited && fCreditTerms.Code.errors }">
+                            <div *ngIf="CreditTermSubmiited && fCreditTerms.Code.errors" class="invalid-feedback">
+                                <div *ngIf="fCreditTerms.Code.errors.required">Credit Term Code is
+                                    required</div>
+                            </div>
                         </div>
                     </div>
-                    <form [formGroup]="CreditTermForm" class="formData-modal col-sm-6 ">
-                        <h2>{{CreditTermModalModelTitleString}}</h2>
-                        <input type="hidden" formControlName="CreditTermId">
-                        <div class="row">
-                            <div class="form-group col-sm-12">
-                                <label>CREDIT TERM CODE</label>
-                                <input class="form-control" id="Code" formControlName="Code"
-                                    placeholder="CREDIT TERM CODE" type="text"
-                                    [ngClass]="{ 'is-invalid': CreditTermSubmiited && fCreditTerms.Code.errors }">
-                                <div *ngIf="CreditTermSubmiited && fCreditTerms.Code.errors" class="invalid-feedback">
-                                    <div *ngIf="fCreditTerms.Code.errors.required">Credit Term Code is
-                                        required</div>
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label>DURATION</label>
+                            <input type="number" class="form-control" id="Duration" formControlName="Duration"
+                                placeholder="DURATION"
+                                [ngClass]="{ 'is-invalid': CreditTermSubmiited && fCreditTerms.Duration.errors }">
+                            <div *ngIf="CreditTermSubmiited && fCreditTerms.Duration.errors" class="invalid-feedback">
+                                <div *ngIf="fCreditTerms.Duration.errors.required">Credit Term Code is required
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="form-group col-sm-12">
-                                <label>DURATION</label>
-                                <input type="number" class="form-control" id="Duration" formControlName="Duration"
-                                    placeholder="DURATION"
-                                    [ngClass]="{ 'is-invalid': CreditTermSubmiited && fCreditTerms.Duration.errors }">
-                                <div *ngIf="CreditTermSubmiited && fCreditTerms.Duration.errors"
-                                    class="invalid-feedback">
-                                    <div *ngIf="fCreditTerms.Duration.errors.required">Credit Term Code is required
-                                    </div>
-                                </div>
-                            </div>
 
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label>DESCRIPTION</label>
+                            <textarea class="form-control" id="Description" formControlName="Description"
+                                placeholder="DURATION"></textarea>
                         </div>
-                        <div class="row">
-                            <div class="form-group col-sm-12">
-                                <label>DESCRIPTION</label>
-                                <textarea class="form-control" id="Description" formControlName="Description"
-                                    placeholder="DURATION"></textarea>
-                            </div>
-                        </div>
+                    </div>
 
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="CreditTermModal.hide()">Close</button>
-                    <button type="button" class="btn btn-primary" (click)="AddCreditTerms(CreditTermForm)">Save
-                        changes</button>
-                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="ResetCreditTerm()">Close</button>
             </div>
         </div>
     </div>
@@ -456,7 +452,7 @@
                                     <input class="form-control" formControlName="WarehouseName"
                                         (keypress)="allowalpha($event)"
                                         [ngClass]="{ 'is-invalid': Locationsubmit && locaform.WarehouseName.errors }"
-                                        placeholder="Country Name" type="text">
+                                        placeholder="Location Name" type="text">
                                     <div *ngIf="Locationsubmit && locaform.WarehouseName.errors"
                                         class="invalid-feedback">
                                         <div *ngIf="locaform.WarehouseName.errors.required">Location Name is required
@@ -467,7 +463,7 @@
                                     <label for="postal-code">CODE</label>
                                     <input class="form-control" id="" formControlName="Warehousecode"
                                         [ngClass]="{ 'is-invalid': Locationsubmit && locaform.Warehousecode.errors }"
-                                        (keypress)="allownumber($event)" placeholder="Country Code" type="text">
+                                        (keypress)="allownumber($event)" placeholder="Location Code" type="text">
                                     <div *ngIf="Locationsubmit && locaform.Warehousecode.errors"
                                         class="invalid-feedback">
                                         <div *ngIf="locaform.Warehousecode.errors.required">Location Code is required
@@ -726,7 +722,7 @@
                             <div class="row">
                                 <div class="form-group col-sm-12">
                                     <input type="hidden" formControlName="shipmentMethodId">
-                                    <label for="city">SHIPMENT TERM CODE </label>
+                                    <label for="city">SHIPMENT METHOD CODE </label>
                                     <input class="form-control" formControlName="code" (keypress)="allowalpha($event)"
                                         [ngClass]="{ 'is-invalid': ShipmentMethodsubmit && smf.code.errors }"
                                         placeholder="Shipment Method Code Name" type="text">
@@ -756,14 +752,15 @@
             </div>
         </div>
     </div>
-</div><figure></figure>
+</div>
+<figure></figure>
 
-<div bsModal #PaymentTermModel="bs-modal" class="modal fade" tabindex="-1" role="dialog"
-    aria-labelledby="myModalLabel" aria-hidden="true">
+<div bsModal #PaymentTermModel="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Shipment Method</h4>
+                <h4 class="modal-title">Payment Term</h4>
                 <button type="button" class="close" (click)="PaymentTermReset()" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -771,29 +768,31 @@
             <div class="modal-body" id="">
                 <tabset (click)="PaymentTermtabclick($event.target.id)">
                     <tab id="PaymentTermList">
-                        <ng-template tabHeading><i class="fa fa-list text-info"></i> Shipment Method List </ng-template>
+                        <ng-template tabHeading><i class="fa fa-list text-info"></i> Payment Term List </ng-template>
                         <div class="table-responsive animated flash">
                             <table class="table " id="">
                                 <thead>
                                     <tr>
                                         <th>Code Name</th>
+                                        <th>Duration</th>
                                         <th>Description</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let item of ShipmentMethodList">
+                                    <tr *ngFor="let item of PaymentTermList">
                                         <td>{{item.code}}</td>
+                                        <td>{{item.duration}}</td>
                                         <td>{{item.description}}</td>
                                         <td>
                                             <span style="margin-left: 25%;">
                                                 <span class="text-primary mr-3" style="cursor: pointer;"
-                                                    (click)="GetShipmentMethod(item.shipmentMethodId)">
+                                                    (click)="GetPaymentTerm(item.paymentTermId)">
                                                     <i class="fa fa-pencil"></i>
                                                 </span>
 
                                                 <span class="text-danger " style="cursor: pointer;"
-                                                    (click)="DeleteShipmentMethod(item.shipmentMethodId)">
+                                                    (click)="DeletePaymentTerm(item.paymentTermId)">
                                                     <i class="fa fa-trash"></i>
                                                 </span>
                                             </span>
@@ -806,32 +805,47 @@
                         </div>
                     </tab>
                     <tab id="PaymentTermFor">
-                        <ng-template tabHeading><i class="fa fa-plus text-info"> Shipment Method Form</i>
+                        <ng-template tabHeading><i class="fa fa-plus text-info"> Payment Term Form</i>
                         </ng-template>
-                        <form [formGroup]="ShipmentMethodForm" class="formData-modal col-sm-12">
+                        <form [formGroup]="PaymentTermForm" class="formData-modal col-sm-12">
                             <div class="row">
                                 <div class="form-group col-sm-12">
-                                    <input type="hidden" formControlName="shipmentMethodId">
-                                    <label for="city">SHIPMENT TERM CODE </label>
+                                    <input type="hidden" formControlName="paymentTermId">
+                                    <label for="city">PAYMENT TERM CODE </label>
                                     <input class="form-control" formControlName="code" (keypress)="allowalpha($event)"
-                                        [ngClass]="{ 'is-invalid': ShipmentMethodsubmit && smf.code.errors }"
-                                        placeholder="Shipment Method Code Name" type="text">
-                                    <div *ngIf="ShipmentMethodsubmit && smf.code.errors" class="invalid-feedback">
-                                        <div *ngIf="smf.code.errors.required">Shipment Method Code Name is required
+                                        [ngClass]="{ 'is-invalid': PaymentTermsubmit && fPaymentTerms.code.errors }"
+                                        placeholder="Payment Term Code Name" type="text">
+                                    <div *ngIf="PaymentTermsubmit && fPaymentTerms.code.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="fPaymentTerms.code.errors.required">Payment Term Code Name is
+                                            required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label for="city">PAYMENT TERM DURATION </label>
+                                    <input class="form-control" formControlName="duration"
+                                        (keypress)="allownumber($event)"
+                                        [ngClass]="{ 'is-invalid': PaymentTermsubmit && fPaymentTerms.duration.errors }"
+                                        placeholder="Payment Term duration" type="text">
+                                    <div *ngIf="PaymentTermsubmit && fPaymentTerms.duration.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="fPaymentTerms.duration.errors.required">Payment Term Duration is
+                                            required
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-12">
                                     <label for="postal-code">DESCRIPTION</label>
                                     <input class="form-control" id="" formControlName="description"
-                                        placeholder="Shipment Method Description" type="text">
+                                        placeholder="Payment Term Description" type="text">
                                 </div>
 
                             </div>
                         </form>
                         <div class="form-group col-sm-12">
                             <button type="button" class="btn btn-primary pull-right"
-                                (click)="AddShipmentMethod(ShipmentMethodForm)">Save
+                                (click)="AddPaymentTerms(PaymentTermForm)">Save
                                 changes</button><br />
                         </div>
                     </tab>
@@ -842,4 +856,5 @@
             </div>
         </div>
     </div>
-</div><figure></figure>
+</div>
+<figure></figure>

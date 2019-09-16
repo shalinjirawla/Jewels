@@ -179,7 +179,7 @@ export class CustomerComponent implements OnInit {
     this.AddCustomervalue.ContactList = this.ContactList;
     this.customerservice.AddCustomer(this.AddCustomervalue).subscribe((responce: any) => {
       this.Result = responce;
-      if (responce.body.status) {
+      if (responce.status) {
         this.GetCustomerList();
         if (this.AddCustomerForm.value.customerId == 0) {
           Swal.fire(
