@@ -345,37 +345,37 @@ export class PaymentTermService {
   constructor(private HttpClient: HttpClient) { }
   private BaseURL: string = "https://localhost:44315/api/Commons/";
 
-  public GetPaymentTremList(): Observable<any> {
-    let url = this.BaseURL + `GetPaymentTremList`;
+  public GetPaymentTermList(): Observable<any> {
+    let url = this.BaseURL + `GetPaymentTermList`;
     return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
       return this.Responce = responce;
     });
   }
 
-  public AddShipmentMethod(input): Observable<any> {
+  public AddPaymentTerm(input): Observable<any> {
     debugger
-    let url = this.BaseURL + `AddShipmentMethod`;
+    let url = this.BaseURL + `AddPaymentTerm`;
     return this.HttpClient.post(url, JSON.stringify(input), httpOption).pipe((responce: any) => {
       return this.Responce = responce;
     });
   }
 
-  public GetShipmentMethodById(i): Observable<any> {
-    let url = this.BaseURL + `GetShipmentMethodById?ShipmentMethodId=` + i;
+  public GetPaymentTermById(i): Observable<any> {
+    let url = this.BaseURL + `GetPaymentTermById?PaymentTermId=` + i;
     return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
       return this.Responce = responce;
     });
   }
 
-  public UpdateShipmentMethod(input): Observable<any> {
-    let url = this.BaseURL + `UpdateShipmentMethod?ShipmentMethodId=${input.shipmentMethodId}`;
+  public UpdatePaymentTerm(input): Observable<any> {
+    let url = this.BaseURL + `UpdatePaymentTerm?PaymentTermId=${input.paymentTermId}`;
     return this.HttpClient.post(url, JSON.stringify(input), httpOption).pipe((responce: any) => {
       return this.Responce = responce;
     });
   }
 
-  public DeleteShipmentMethod(i): Observable<any> {
-    let url = this.BaseURL + `DeleteShipmentMethod?ShipmentMethodId=` + i;
+  public DeletePaymentTerm(i): Observable<any> {
+    let url = this.BaseURL + `DeletePaymentTerm?PaymentTermId=` + i;
     return this.HttpClient.delete(url, httpOption).pipe((responce: any) => {
       return this.Responce = responce;
     });

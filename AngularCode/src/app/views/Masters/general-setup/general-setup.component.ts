@@ -107,6 +107,7 @@ export class GeneralSetupComponent implements OnInit {
     this.onLoadLocation();
     this.onLoadTaxCode();
     this.onLoadShipmentTerm();
+    this.OnloadPaymentTerms();
     this.onLoadShipmentMethod();
   }
   //#region Currency Section Start 
@@ -235,6 +236,8 @@ export class GeneralSetupComponent implements OnInit {
 
 
   //#endregion Currency Section End 
+
+  //#region Credit Term Section Start
   public OnloadCrediTTerms() {
     this.CreditTermForm = this.FormBuilder.group({
       CreditTermId: [0],
@@ -264,6 +267,7 @@ export class GeneralSetupComponent implements OnInit {
           type: 'success',
           title: responce.message,
         });
+        document.getElementById("CreditTermList-link").click();
       } else {
         Toast.fire({
           type: 'error',
@@ -283,6 +287,7 @@ export class GeneralSetupComponent implements OnInit {
             Duration: this.CreditTermResponce.duration,
             Description: this.CreditTermResponce.description,
           });
+          document.getElementById("CreditTermFor-link").click();
         } else {
           Toast.fire({
             type: 'error',
@@ -320,36 +325,129 @@ export class GeneralSetupComponent implements OnInit {
   }
   get fCreditTerms() { return this.CreditTermForm.controls; }
 
+  ResetCreditTerm() {
+    this.CreditTermSubmiited = false;
+    this.CreditTermModal.hide();
+  }
+
+  CreditTermtabclick(event) {
+
+    if (event == "CreditTermList-link") {
+      this.OnloadCrediTTerms();
+      document.getElementById("CreditTermList-link").click();
+    }
+  }
+
+  OpenCreditTermModal() {
+    this.CreditTermSubmiited = false;
+    this.OnloadCrediTTerms();
+    this.CreditTermModal.show();
+  }
+
+  //#endregion Credit Term Section Start
+
   //#region Payment Section Start
   public OnloadPaymentTerms() {
     this.PaymentTermForm = this.FormBuilder.group({
-      PaymentTermsId: [0],
-      PaymentTermsCode: ['', Validators.required],
-      Duration: ['', Validators.required],
-      Description: [''],
+      paymentTermId: [0],
+      code: ['', Validators.required],
+      duration: [, Validators.required],
+      description: [''],
     });
-
+    this.GetPaymentTermList();
     this.PaymentTermsubmit = false;
   }
 
   get fPaymentTerms() { return this.PaymentTermForm.controls; }
 
   public AddPaymentTerms(PaymentTermForm: FormControl) {
+    debugger
     this.PaymentTermsubmit = true;
     if (PaymentTermForm.invalid) {
       return;
     }
+    this.PaymentTermsubmit = false;
+    if (PaymentTermForm.value.paymentTermId == 0) {
+      this.PaymentTermService.AddPaymentTerm(PaymentTermForm.value).subscribe((responce: any) => {
+        let result = responce.data;
+        if (responce.status) {
+          this.OnloadPaymentTerms();
+          Toast.fire({
+            type: 'success',
+            title: responce.message,
+          });
+          document.getElementById("PaymentTermList-link").click();
+        }
+
+      })
+    }
+    else {
+      this.PaymentTermService.UpdatePaymentTerm(PaymentTermForm.value).subscribe((responce: any) => {
+        let result = responce.data;
+        if (responce.status) {
+          this.OnloadPaymentTerms();
+          Toast.fire({
+            type: 'success',
+            title: responce.message,
+          });
+          document.getElementById("PaymentTermList-link").click();
+        }
+
+      })
+    }
   }
 
   GetPaymentTermList() {
-    this.PaymentTermService.GetPaymentTremList().subscribe((responce: any) => {
-      debugger
+    this.PaymentTermService.GetPaymentTermList().subscribe((responce: any) => {
       if (responce.status) {
         if (responce.data != null) {
-          this.ShipmentMethodList = responce.data;
+          this.PaymentTermList = responce.data;
         }
       }
     });
+  }
+
+  GetPaymentTerm(Id: any) {
+    this.PaymentTermService.GetPaymentTermById(Id).subscribe((responce: any) => {
+      let result = responce.data;
+      if (responce.status) {
+        if (result != null) {
+          this.PaymentTermForm.patchValue({
+            paymentTermId: result.paymentTermId,
+            code: result.code,
+            duration: result.duration,
+            description: result.description,
+          })
+          document.getElementById("PaymentTermFor-link").click();
+        }
+      }
+    })
+  }
+  DeletePaymentTerm(Id: any) {
+    if (Id != 0) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.value) {
+          this.PaymentTermService.DeletePaymentTerm(Id).subscribe((responce: any) => {
+            if (responce.status) {
+              Swal.fire(
+                'Deleted!',
+                responce.message,
+                'success'
+              )
+              this.OnloadPaymentTerms();
+            }
+          });
+        }
+      })
+    }
   }
 
   OpenPaymentTermModal() {
@@ -482,6 +580,7 @@ export class GeneralSetupComponent implements OnInit {
       IsActive: [true],
     })
     this.getLocationList();
+    this.Locationsubmit = false;
   }
 
   get locaform() { return this.LocationForm.controls }
@@ -778,7 +877,6 @@ export class GeneralSetupComponent implements OnInit {
       let result = responce.data;
       if (responce.status) {
         if (result != null) {
-          debugger
           this.ShipmentTermForm.patchValue({
             shipmentTermId: result.shipmentTermId,
             code: result.code,
@@ -859,7 +957,6 @@ export class GeneralSetupComponent implements OnInit {
 
   GetShipmentMethodList() {
     this.ShipmentMethodService.GetShipmentMethodList().subscribe((responce: any) => {
-      debugger
       if (responce.status) {
         if (responce.data != null) {
           this.ShipmentMethodList = responce.data;
@@ -869,7 +966,6 @@ export class GeneralSetupComponent implements OnInit {
   }
 
   AddShipmentMethod(ShipmentMethodForm: FormControl) {
-    debugger
     this.ShipmentMethodsubmit = true;
     if (ShipmentMethodForm.invalid) {
       return
@@ -910,7 +1006,6 @@ export class GeneralSetupComponent implements OnInit {
       let result = responce.data;
       if (responce.status) {
         if (result != null) {
-          debugger
           this.ShipmentMethodForm.patchValue({
             shipmentMethodId: result.shipmentMethodId,
             code: result.code,
