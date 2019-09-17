@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { CurrencyService, TaxCodeService, CountryService, ShipmentTermService,ShipmentMethodService } from '../../../Services/Masters-Services/general-setup.service';
+import { CurrencyService, TaxCodeService, CountryService, ShipmentTermService, ShipmentMethodService, PaymentTermService } from '../../../Services/Masters-Services/general-setup.service';
+import { SupplierServicesService } from '../../../Services/SuppliersServices/supplier-services.service';
 import Swal from 'sweetalert2';
 @Component({
   selector: 'app-supplier',
@@ -10,10 +11,12 @@ import Swal from 'sweetalert2';
 })
 export class SupplierComponent implements OnInit {
   @ViewChild('largeModal', { static: false }) public largeModal: ModalDirective;
+
   ModelTitleString: string = "Add New Supplier";
   FormSubmittedSupplliers: boolean = false;
   SuppliersList: any[];
   Supplieremplty: boolean = true;
+  SupplierNoDataFound: boolean = true;
   AddSuppliersForm: FormGroup;
   SaveBtnTest: string = "Save & Next";
   BillingShippingAddress: boolean = false;
@@ -34,15 +37,16 @@ export class SupplierComponent implements OnInit {
   NewCondAddress: any;
   Address: any;
   Contact: any;
-  ContactList: any = { "Contact": [] };
-  AddressList: any = { "Address": [] };
+  ContactList: any = { "contact": [] };
+  AddressList: any = { "address": [] };
   countryCode: string = "";
   //DropDownlist items
   DefaultCurrenyList: any[];
   DefaultPaymentTermsList: any[];
   DefaultTaxCodeList: any[];
   ShipmentTermsList: any[];
-  ShipmentMethodList:any[];
+  ShipmentMethodList: any[];
+  DefaultPaymentTermList: any[];
   //Dropwdownlist items
 
   //SupplierAddress Start
@@ -70,25 +74,28 @@ export class SupplierComponent implements OnInit {
     private TaxCodeService: TaxCodeService,
     private CountryService: CountryService,
     private ShipmentTermService: ShipmentTermService,
-    private ShipmentMethodService:ShipmentMethodService,
+    private ShipmentMethodService: ShipmentMethodService,
+    private PaymentTermService: PaymentTermService,
+    private SupplierServicesService: SupplierServicesService,
   ) { }
 
   ngOnInit() {
+  
     this.OnloadSupplliers();
-    this.GetCountry();
+    this.GetSuppliersList();
   }
   public OnloadSupplliers() {
     this.AddSuppliersForm = this.FormBuilder.group({
-      SupplierId: [0],
-      CompanyName: ['', Validators.required],
-      SupplierCode: [''],
-      Website: [''],
-      Remarks: [''],
-      DefaultCurrency: [''],
-      DefaultPaymentTerms: [''],
-      DefaultTax: [''],
-      ShipmentTerms: [''],
-      Shipmentmethod: [''],
+      supplierId: [0],
+      companyName: ['', Validators.required],
+      supplierCode: [''],
+      website: [''],
+      remarks: [''],
+      defaultCurrency: [''],
+      defaultPaymentTerms: [''],
+      defaultTaxCode: [''],
+      shipmentterms: [''],
+      shipmentmethod: [''],
 
     });
     this.AddSuppliersAddressForm = this.FormBuilder.group({
@@ -104,7 +111,7 @@ export class SupplierComponent implements OnInit {
 
     this.AddSuppliersContactForm = this.FormBuilder.group({
       contactId: ['0'],
-      CountryId: [0],
+      countryId: [0],
       designation: [''],
       email: ['', Validators.email],
       firstName: ['', Validators.required],
@@ -119,44 +126,78 @@ export class SupplierComponent implements OnInit {
   }
 
   public GetDropDownValues() {
+    this.CountryService.GetCountryList().subscribe((responce: any) => {
+      if (responce.status) {
+        this.CountryList = responce.data;
+      }
+    });
 
     this.CurrencyService.GetCurrencyList().subscribe((responce: any) => {
       if (responce.status) {
         this.DefaultCurrenyList = responce.data;
-      }else{
+      } else {
         Swal.fire({
-          type:'error',
-          title:responce.message,
+          type: 'error',
+          title: responce.message,
         });
       }
     });
     this.TaxCodeService.GetTaxCodeList().subscribe((responce: any) => {
       if (responce.status) {
         this.DefaultTaxCodeList = responce.data;
-      }else{
+      } else {
         Swal.fire({
-          type:'error',
-          title:responce.message,
+          type: 'error',
+          title: responce.message,
         });
       }
     });
     this.ShipmentTermService.GetShipmentTermList().subscribe((responce: any) => {
-      if(responce.status){
-        this.ShipmentTermsList=responce.data;
-      }else{
+      if (responce.status) {
+        this.ShipmentTermsList = responce.data;
+      } else {
         Swal.fire({
-          type:'error',
-          title:responce.message,
+          type: 'error',
+          title: responce.message,
         });
       }
     })
-    this.ShipmentMethodService.GetShipmentMethodList().subscribe((responce:any)=>{
-      if(responce.status){
-        this.ShipmentMethodList=responce.data;
-      }else{
+    this.ShipmentMethodService.GetShipmentMethodList().subscribe((responce: any) => {
+      if (responce.status) {
+        this.ShipmentMethodList = responce.data;
+      } else {
         Swal.fire({
-          type:'error',
-          title:responce.message
+          type: 'error',
+          title: responce.message
+        });
+      }
+    });
+    this.PaymentTermService.GetPaymentTermList().subscribe((responce: any) => {
+      if (responce.status) {
+        this.DefaultPaymentTermList = responce.data;
+      } else {
+        Swal.fire({
+          type: 'error',
+          title: responce.message,
+        })
+      }
+    });
+  }
+  public GetSuppliersList() {
+    this.SupplierServicesService.GetSuppliersList().subscribe((responce: any) => {
+      if (responce.status) {
+        this.Supplieremplty = false;
+        if (responce.data != null && responce.data != undefined && responce.data.length > 0) {
+          this.SuppliersList = responce.data;
+          this.SupplierNoDataFound = false;
+        } else {
+          this.SupplierNoDataFound = true;
+        }
+
+      } else {
+        Swal.fire({
+          type: 'error',
+          title: responce.message,
         });
       }
     });
@@ -179,12 +220,42 @@ export class SupplierComponent implements OnInit {
       document.getElementById("SuppliersContact-link").click();
       return;
     }
+    debugger
     this.AddSuppliersvalue.SuppliersDetail = AddSuppliersForm.value;
+    this.AddSuppliersvalue.SuppliersDetail.defaultCurrency = Number(this.AddSuppliersvalue.SuppliersDetail.defaultCurrency);
+    this.AddSuppliersvalue.SuppliersDetail.defaultPaymentTerms = Number(this.AddSuppliersvalue.SuppliersDetail.defaultPaymentTerms);
+    this.AddSuppliersvalue.SuppliersDetail.defaultTaxCode = Number(this.AddSuppliersvalue.SuppliersDetail.defaultTaxCode);
+    this.AddSuppliersvalue.SuppliersDetail.shipmentterms = Number(this.AddSuppliersvalue.SuppliersDetail.shipmentterms);
+    this.AddSuppliersvalue.SuppliersDetail.shipmentmethod = Number(this.AddSuppliersvalue.SuppliersDetail.shipmentmethod);
+
     this.AddSuppliersvalue.AddressList = this.AddressList;
     this.AddSuppliersvalue.ContactList = this.ContactList;
+
+    this.SupplierServicesService.AddUpdate(this.AddSuppliersvalue).subscribe((responce: any) => {
+     
+      this.AddressList.address=[];
+      this.ContactList.contact=[];
+      this.AddressLenghtcount=false;
+      this.ContactLenghtcount=false;
+      this.ModelTitleString="Add New Supplier";
+       if (responce.status) {
+        Swal.fire({
+          type: 'success',
+          title: responce.message,
+        });
+        this.GetSuppliersList();
+        this.largeModal.hide();
+      } else {
+        Swal.fire({
+          type: 'error',
+          title: responce.message,
+        });
+      }
+    })
   }
 
   public AddSupplliersAddress(AddSuppliersAddressForm: FormControl) {
+    debugger
     this.Addresssubmitted = true;
     if (this.AddSuppliersAddressForm.invalid) {
       return;
@@ -206,14 +277,7 @@ export class SupplierComponent implements OnInit {
             }
           }
         })
-        if (this.ContactList.Contact.length != 0) {
-          this.ContactLenghtcount = true;
-          this.Contact = null;
-        }
-        else {
-          this.ContactLenghtcount = false;
-        }
-
+        
         this.DefaultFlag = false;
       }
       let a = JSON.stringify(AddSuppliersAddressForm.value);
@@ -222,9 +286,9 @@ export class SupplierComponent implements OnInit {
       this.Address = AddSuppliersAddressForm.value;
 
       if (this.Address != undefined) {
-        this.AddressList.Address.push(this.Address);
+        this.AddressList.address.push(this.Address);
         if (!this.BillingShippingAddress) {
-          if (this.AddressList.Address.length != 0) {
+          if (this.AddressList.address.length != 0) {
             this.CheckboxFlag = false;
             this.Addresssubmitted = false;
             this.AddressLenghtcount = true;
@@ -245,8 +309,8 @@ export class SupplierComponent implements OnInit {
           this.secondAddress.defaultAddress = false;
           let elem: any = document.getElementById("copyaddress");
           elem.checked = false;
-          this.AddressList.Address.push(this.secondAddress);
-          if (this.AddressList.Address.length != 0) {
+          this.AddressList.address.push(this.secondAddress);
+          if (this.AddressList.address.length != 0) {
             this.CheckboxFlag = false;
             this.Addresssubmitted = false;
             this.secondAddress = null;
@@ -274,7 +338,7 @@ export class SupplierComponent implements OnInit {
             }
           }
         })
-        if (this.ContactList.Contact.length != 0) {
+        if (this.ContactList.contact.length != 0) {
           this.ContactLenghtcount = true;
           this.Contact = null;
         }
@@ -283,7 +347,7 @@ export class SupplierComponent implements OnInit {
         }
       }
       this.AddressList.Address[elementPos] = this.Address;
-      if (this.AddressList.Address.length != 0) {
+      if (this.AddressList.address.length != 0) {
         this.AddressLenghtcount = true;
         this.Address = null;
       }
@@ -306,7 +370,7 @@ export class SupplierComponent implements OnInit {
     this.addaddresstitle = "Add";
   }
   public CancelAddSuppilresAddress() {
-    if (this.AddressList.Address.length == 0) {
+    if (this.AddressList.address.length == 0) {
       this.AddressLenghtcount = false;
     } else {
       this.AddressLenghtcount = true;
@@ -324,14 +388,14 @@ export class SupplierComponent implements OnInit {
   }
   public SetDeafult(valaue: any, i: any) {
     let AnyDefaultSet: boolean = false;
-    let a = this.AddressList.Address.map((result: any, index) => {
+    let a = this.AddressList.address.map((result: any, index) => {
       if (i == index && !valaue) {
-        this.AddressList.Address[index].defaultAddress = true;
+        this.AddressList.address[index].defaultAddress = true;
 
         let countrycodeflag = true;
         this.CountryList.map((result: any) => {
           if (countrycodeflag) {
-            if (this.AddressList.Address[index].countryId == result.countryId) {
+            if (this.AddressList.address[index].countryId == result.countryId) {
               this.countryCode = "+" + result.countryCode;
               countrycodeflag = false;
             }
@@ -340,7 +404,7 @@ export class SupplierComponent implements OnInit {
             }
           }
         })
-        if (this.ContactList.Contact.length != 0) {
+        if (this.ContactList.contact.length != 0) {
           this.ContactLenghtcount = true;
           this.Contact = null;
         }
@@ -349,7 +413,7 @@ export class SupplierComponent implements OnInit {
         }
         AnyDefaultSet = true;
       } else {
-        this.AddressList.Address[index].defaultAddress = false;
+        this.AddressList.address[index].defaultAddress = false;
         if (!AnyDefaultSet) {
           this.countryCode = "";
         }
@@ -386,38 +450,96 @@ export class SupplierComponent implements OnInit {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.value) {
-        let a = this.AddressList.Address.map((result: any, index) => {
+        let a = this.AddressList.address.map((result: any, index) => {
           if (i == index) {
-            var elementPos = this.AddressList.Address.map(function (x) { return x.addressId; }).indexOf(result.addressId);
-            this.AddressList.Address.splice(elementPos, 1);
+            var elementPos = this.AddressList.address.map(function (x) { return x.addressId; }).indexOf(result.addressId);
+            this.AddressList.address.splice(elementPos, 1);
             let setDefaultAddress = false;
-            let a = this.AddressList.Address.map((result: any, index) => {
+            let a = this.AddressList.address.map((result: any, index) => {
               if (result.defaultAddress) {
                 setDefaultAddress = true;
               }
             })
             if (!setDefaultAddress) {
-              if (this.AddressList.Address.length != 0) {
-                this.AddressList.Address[0].defaultAddress = true;
+              if (this.AddressList.address.length != 0) {
+                this.AddressList.address[0].defaultAddress = true;
               }
             }
-            if (this.AddressList.Address.length == 0) {
+            if (this.AddressList.address.length == 0) {
               this.DefaultFlag = true;
               this.CheckboxFlag = true;
               this.AddressLenghtcount = false;
-              this.OnloadSupplliers();
+
             }
           }
         })
       }
     })
   }
-
+  public EditSuppliers(SupplierId: number) {
+    this.ContactList.contact = [];
+    this.AddressList.address = [];
+    if (SupplierId != 0) {
+      this.SupplierServicesService.GetSuppliers(SupplierId).subscribe((responce: any) => {
+        if (responce.status) {
+          this.largeModal.show();
+          this.ModelTitleString="Update Supplier";
+          let data = responce.data;
+          this.AddSuppliersForm.patchValue({
+            supplierId: data.supplierId,
+            companyName: data.companyName,
+            supplierCode: data.supplierCode,
+            website: data.website,
+            remarks: data.remarks,
+            defaultCurrency: data.defaultCurrency,
+            defaultPaymentTerms: data.defaultPaymentTerms,
+            defaultTaxCode: data.defaultTaxCode,
+            shipmentterms: data.shipmentterms,
+            shipmentmethod: data.shipmentmethod,
+          });
+          if (data.contactList != null && data.contactList != undefined && data.contactList.contact.length > 0) {
+            data.contactList.contact.map((res: any, index) => {
+              this.ContactList.contact.push(res);
+            })
+            if (this.ContactList.contact.length != 0) {
+              this.ContactLenghtcount = true;
+              this.ContactDefaultFlag = false;
+            }
+            else {
+              this.ContactLenghtcount = false;
+              this.ContactDefaultFlag = true;
+            }
+          }
+          if (data.addressList != null && data.addressList != undefined && data.addressList.address.length > 0) {
+            data.addressList.address.map((res: any, index) => {
+              this.AddressList.address.push(res);
+            })
+            if (this.AddressList.address.length != 0) {
+              this.AddressLenghtcount = true;
+            }
+            else {
+              this.AddressLenghtcount = false;
+            }
+          }
+        } else {
+          Swal.fire({
+            type: 'error',
+            title: responce.message,
+          });
+        }
+      });
+    }
+  }
   public ResetForm() {
     this.FormSubmittedSupplliers = false;
     this.Addresssubmitted = false;
     this.OnloadSupplliers();
     this.largeModal.hide();
+    this.AddressList.address=[];
+    this.ContactList.contact=[];
+    this.AddressLenghtcount=false;
+    this.ContactLenghtcount=false;
+    this.ModelTitleString="Add New Supplier";
   }
   get f() { return this.AddSuppliersForm.controls; }
   get add() { return this.AddSuppliersAddressForm.controls; }
@@ -464,13 +586,6 @@ export class SupplierComponent implements OnInit {
       event.preventDefault();
     }
   }
-  public GetCountry() {
-    this.CountryService.GetCountryList().subscribe((responce: any) => {
-      if (responce.status) {
-        this.CountryList = responce.data;
-      }
-    });
-  }
 
   public AddSuppliersContact(AddSuppliersContactForm: FormControl) {
     this.contactsubmitted = true;
@@ -479,7 +594,7 @@ export class SupplierComponent implements OnInit {
     }
     this.contactsubmitted = false;
     if (AddSuppliersContactForm.value.contactId == 0) {
-      if (this.ContactList.Contact.length == 0) {
+      if (this.ContactList.contact.length == 0) {
         this.ContactDefaultFlag = true;
         AddSuppliersContactForm.value.defaultContact = true;
         this.ContactDefaultFlag = false;
@@ -491,21 +606,22 @@ export class SupplierComponent implements OnInit {
       }
       AddSuppliersContactForm.value.contactId = '_' + Math.random().toString(36).substr(2, 9);
       this.Contact = AddSuppliersContactForm.value;
+      debugger
       if (this.Contact != undefined) {
-        this.ContactList.Contact.push(this.Contact);
-        if (this.ContactList.Contact.length != 0) {
+        this.ContactList.contact.push(this.Contact);
+        if (this.ContactList.contact.length != 0) {
           this.ContactLenghtcount = true;
           this.Contact = null;
         }
       }
     }
     else {
-      var elementPos = this.ContactList.Contact.map(function (x) { return x.contactId; }).indexOf(AddSuppliersContactForm.value.contactId);
+      var elementPos = this.ContactList.contact.map(function (x) { return x.contactId; }).indexOf(AddSuppliersContactForm.value.contactId);
       this.Contact = AddSuppliersContactForm.value;
       var objectFound = this.ContactList.Contact[elementPos];
 
       this.ContactList.Contact[elementPos] = this.Contact;
-      if (this.ContactList.Contact.length != 0) {
+      if (this.ContactList.contact.length != 0) {
         this.ContactLenghtcount = true;
         this.Contact = null;
       }
@@ -514,7 +630,7 @@ export class SupplierComponent implements OnInit {
   }
 
   EditContact(i: any) {
-    let a = this.ContactList.Contact.map((result: any, index) => {
+    let a = this.ContactList.contact.map((result: any, index) => {
       if (i == index) {
         this.AddSuppliersContactForm.patchValue({
           contactId: result.contactId,
@@ -534,13 +650,13 @@ export class SupplierComponent implements OnInit {
   }
 
   SetDeafultContact(valaue: any, i: any) {
-    let a = this.ContactList.Contact.map((result: any, index) => {
-      if (result.defaultContact) {
-        this.ContactList.Contact[index].defaultContact = false;
+    let a = this.ContactList.contact.map((result: any, index) => {
+      if (!result.defaultContact && !valaue && i == index) {
+        this.ContactList.contact[index].defaultContact = true;
+      } else {
+        this.ContactList.contact[index].defaultContact = false;
       }
-      if (i == index) {
-        this.ContactList.Contact[index].defaultContact = true;
-      }
+
     })
   }
 
@@ -555,11 +671,11 @@ export class SupplierComponent implements OnInit {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.value) {
-        let a = this.ContactList.Contact.map((result: any, index) => {
+        let a = this.ContactList.contact.map((result: any, index) => {
           if (i == index) {
-            var elementPos = this.ContactList.Contact.map(function (x) { return x.contactId; }).indexOf(result.contactId);
-            this.ContactList.Contact.splice(elementPos, 1)
-            if (this.ContactList.Contact.length == 0) {
+            var elementPos = this.ContactList.contact.map(function (x) { return x.contactId; }).indexOf(result.contactId);
+            this.ContactList.contact.splice(elementPos, 1)
+            if (this.ContactList.contact.length == 0) {
               this.ContactLenghtcount = false;
               this.OnloadSupplliers();
             }
@@ -575,7 +691,7 @@ export class SupplierComponent implements OnInit {
     this.addcontacttitle = "Add";
     this.AddSuppliersContactForm = this.FormBuilder.group({
       contactId: ['0'],
-      CountryId: [0],
+      countryId: [0],
       designation: [''],
       email: ['', Validators.email],
       firstName: ['', Validators.required],
@@ -589,7 +705,7 @@ export class SupplierComponent implements OnInit {
 
   }
   public CancelAddSuppliersContact() {
-    if (this.ContactList.Contact.length == 0) {
+    if (this.ContactList.contact.length == 0) {
       this.ContactLenghtcount = false;
     }
     else {
@@ -597,7 +713,7 @@ export class SupplierComponent implements OnInit {
     }
     this.AddSuppliersContactForm = this.FormBuilder.group({
       contactId: ['0'],
-      CountryId: [0],
+      countryId: [0],
       designation: [''],
       email: ['', Validators.email],
       firstName: ['', Validators.required],
@@ -608,5 +724,37 @@ export class SupplierComponent implements OnInit {
       defaultContact: [false],
 
     })
+  }
+  public DeleteSupplier(SuppliersId: number) {
+    if (SuppliersId != 0) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.value) {
+          this.SupplierServicesService.DeleteSuppliers(SuppliersId).subscribe((responce: any) => {
+            if (responce.status) {
+              this.GetSuppliersList();
+              this.ContactList.contact = [];
+              this.AddressList.address = [];
+              Swal.fire({
+                type: 'success',
+                title: responce.message,
+              })
+            } else {
+              Swal.fire({
+                type: 'error',
+                title: responce.message,
+              })
+            }
+          });
+        }
+      })
+    }
   }
 }

@@ -153,9 +153,7 @@ export class CustomerComponent implements OnInit {
       event.preventDefault();
     }
   }
-  click(event){
-    debugger
-  }
+ 
 
 
   AddCustomer(AddCustomerForm: FormControl) {
@@ -179,7 +177,7 @@ export class CustomerComponent implements OnInit {
     this.AddCustomervalue.ContactList = this.ContactList;
     this.customerservice.AddCustomer(this.AddCustomervalue).subscribe((responce: any) => {
       this.Result = responce;
-      if (responce.status) {
+      if (responce.body.status) {
         this.GetCustomerList();
         if (this.AddCustomerForm.value.customerId == 0) {
           Swal.fire(

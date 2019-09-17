@@ -13,5 +13,5 @@ namespace Inventory.Application.Interface.Products
         Task<ProductBrandVm> GetCategories(long BrandId);
         Task<Boolean> UpdateProductCategories(long BrandId, ProductBrandVm model, string UserId);
         Task<Boolean> DeleteProductCategorie(long BrandId);
-    }
+    }   
 }
