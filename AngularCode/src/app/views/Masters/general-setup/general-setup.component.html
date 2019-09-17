@@ -146,7 +146,7 @@
                                                     (change)="CurrencyChange($event.target.checked,item.currencyId)">
                                                 <span class="switch-slider"></span>
                                             </label></td>
-                                        <td>
+                                        <td class="h5">
                                             <span class="text-primary mr-3" style="cursor: pointer;"
                                                 (click)="GetCurrency(item.currencyId)">
                                                 <i class="fa fa-pencil"></i>
@@ -235,7 +235,7 @@
                                         <td>{{item.code}}</td>
                                         <td>{{item.duration}}</td>
 
-                                        <td>
+                                        <td class="h5"> 
                                             <span class="text-primary mr-3" style="cursor: pointer;"
                                                 (click)="GetCreditTerms(item.creditTermId)">
                                                 <i class="fa fa-pencil"></i>
@@ -334,7 +334,7 @@
                                     <tr *ngFor="let item of CoutryList">
                                         <td>{{item.countryName}}</td>
                                         <td>+{{item.countryCode}}</td>
-                                        <td>
+                                        <td class="h5">
                                             <span style="margin-left: 25%;">
                                                 <span class="text-primary mr-3" style="cursor: pointer;"
                                                     (click)="GetCountry(item.countryId)">
@@ -425,7 +425,7 @@
                                     <tr *ngFor="let item of LocationList">
                                         <td>{{item.warehouseName}}</td>
                                         <td>{{item.warehousecode}}</td>
-                                        <td>
+                                        <td class="h5">
                                             <span style="margin-left: 25%;">
                                                 <span class="text-primary mr-3" style="cursor: pointer;"
                                                     (click)="GetLocation(item.warehouseId)">
@@ -525,7 +525,7 @@
                                     <tr *ngFor="let item of TaxcodeList">
                                         <td>{{item.code}}</td>
                                         <td>{{item.amount}}</td>
-                                        <td>
+                                        <td class="h5">
                                             <span style="margin-left: 25%;">
                                                 <span class="text-primary mr-3" style="cursor: pointer;"
                                                     (click)="GetTaxcode(item.taxId)">
@@ -617,7 +617,7 @@
                                     <tr *ngFor="let item of ShipmentTermList">
                                         <td>{{item.code}}</td>
                                         <td>{{item.description}}</td>
-                                        <td>
+                                        <td class="h5">
                                             <span style="margin-left: 25%;">
                                                 <span class="text-primary mr-3" style="cursor: pointer;"
                                                     (click)="GetShipmentTerm(item.shipmentTermId)">
@@ -657,8 +657,8 @@
                                 </div>
                                 <div class="form-group col-sm-12">
                                     <label for="postal-code">DESCRIPTION</label>
-                                    <input class="form-control" id="" formControlName="description"
-                                        placeholder="Shipment Term Description" type="text">
+                                    <textarea class="form-control" id="" formControlName="description"
+                                        placeholder="Shipment Term Description" type="text"></textarea>
                                 </div>
 
                             </div>
@@ -705,7 +705,7 @@
                                     <tr *ngFor="let item of ShipmentMethodList">
                                         <td>{{item.code}}</td>
                                         <td>{{item.description}}</td>
-                                        <td>
+                                        <td class="h5">
                                             <span style="margin-left: 25%;">
                                                 <span class="text-primary mr-3" style="cursor: pointer;"
                                                     (click)="GetShipmentMethod(item.shipmentMethodId)">
@@ -743,8 +743,8 @@
                                 </div>
                                 <div class="form-group col-sm-12">
                                     <label for="postal-code">DESCRIPTION</label>
-                                    <input class="form-control" id="" formControlName="description"
-                                        placeholder="Shipment Method Description" type="text">
+                                    <textarea class="form-control" id="" formControlName="description"
+                                        placeholder="Shipment Method Description" type="text"></textarea>
                                 </div>
 
                             </div>
@@ -794,7 +794,7 @@
                                         <td>{{item.code}}</td>
                                         <td>{{item.duration}}</td>
                                         <td>{{item.description}}</td>
-                                        <td>
+                                        <td class="h5">
                                             <span style="margin-left: 25%;">
                                                 <span class="text-primary mr-3" style="cursor: pointer;"
                                                     (click)="GetPaymentTerm(item.paymentTermId)">
@@ -847,8 +847,8 @@
                                 </div>
                                 <div class="form-group col-sm-12">
                                     <label for="postal-code">DESCRIPTION</label>
-                                    <input class="form-control" id="" formControlName="description"
-                                        placeholder="Payment Term Description" type="text">
+                                    <textarea class="form-control" id="" formControlName="description"
+                                        placeholder="Payment Term Description" type="text"></textarea>
                                 </div>
 
                             </div>

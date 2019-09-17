@@ -47,5 +47,7 @@ namespace Inventory.EntityFrameworkCore.DbContext
         public DbSet<ShipmentMethod> ShipmentMethods { get; set; }
         public DbSet<PaymentTerm> PaymentTerms { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
+        public DbSet<RawMaterails> RawMaterails { get; set; }
+        public DbSet<UOM> UOMs { get; set; }
     }
 }

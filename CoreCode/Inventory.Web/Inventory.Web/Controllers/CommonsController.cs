@@ -31,6 +31,7 @@ namespace Inventory.Web.Controllers
         private readonly IShipmentTerm _shipmentTerm;
         private readonly IShipmentMethod _shipmentMethod;
         private readonly IPaymentTerm _ipaymentTerm;
+        private readonly IUOM _IUOM;
         public Boolean Status = false;
         public string Message = "";
         public object Data = null;
@@ -42,6 +43,7 @@ namespace Inventory.Web.Controllers
             ICountry country, IWarehouse warehouse,
             ITaxCode itaxCode, IShipmentTerm shipmentTerm,
             IShipmentMethod shipmentMethod, IPaymentTerm ipaymentTerm,
+            IUOM IUOM,
             SessionHanlderController SessionHanlderController
             )
         {
@@ -55,6 +57,7 @@ namespace Inventory.Web.Controllers
             _shipmentTerm = shipmentTerm;
             _shipmentMethod = shipmentMethod;
             _ipaymentTerm = ipaymentTerm;
+            _IUOM = IUOM;
 
             _SessionHanlderController = SessionHanlderController;
            
@@ -746,5 +749,17 @@ namespace Inventory.Web.Controllers
         }
 
         #endregion Payment Term APIs End
+
+        #region UOM APIs Start
+
+        [HttpGet]
+        public IActionResult GetUOMList()
+        {
+
+            var UOMList =  _IUOM.GetUOMList();
+            return Ok(GetAjaxResponse(true, string.Empty, UOMList));
+        }
+
+        #endregion UOM APIs End
     }
 }

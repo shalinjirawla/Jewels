@@ -72,5 +72,10 @@ namespace Inventory.Application.Interface.Common
             List<WarehouseVm> GetActiveWarehouseListAsync();
             Boolean UpdateWarehouseStatusAsync(long id, bool status, string UserId);
         }
+
+        public interface IUOM
+        {
+            List<UOMVm> GetUOMList();
+        }
     }
 }   

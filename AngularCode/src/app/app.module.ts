@@ -42,6 +42,7 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TenantsComponent } from './views/Tenants/tenants/tenants.component';
+import { RawMaterailsComponent } from './views/Raw Materails/raw-materails/raw-materails.component';
 @NgModule({
   imports: [
     BrowserModule,
@@ -69,6 +70,7 @@ import { TenantsComponent } from './views/Tenants/tenants/tenants.component';
     LoginComponent,
     RegisterComponent,
     TenantsComponent,
+    RawMaterailsComponent,
   ],
   exports:[HttpClientModule],
   providers: [{

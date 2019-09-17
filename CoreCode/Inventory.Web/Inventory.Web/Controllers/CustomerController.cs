@@ -31,7 +31,7 @@ namespace Inventory.Web.Controllers
               IApplicationUser applicationUser, SessionHanlderController SessionHanlderController
             )
         {
-            _icustomer = icustomer;
+            _icustomer = icustomer; 
             _icustomerType = icustomerType;
             _applicationUser = applicationUser;
             _SessionHanlderController = SessionHanlderController;

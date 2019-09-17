@@ -13,7 +13,8 @@ using static Inventory.Application.Interface.Common.IGenerealsetup;
 
 namespace Inventory.Application.Services.CommonsServices
 {
-    public class GeneralsetupServices : ICurrency, ITaxCode, ICreditTerms, IShipmentTerm, IShipmentMethod, IPaymentTerm, IWarehouse
+    public class GeneralsetupServices : ICurrency, ITaxCode, ICreditTerms, IShipmentTerm, IShipmentMethod, 
+            IPaymentTerm, IWarehouse, IUOM
     {
         private readonly ApplicationDbContext _DbContext;
         public GeneralsetupServices(ApplicationDbContext DbContext)
@@ -1347,7 +1348,33 @@ namespace Inventory.Application.Services.CommonsServices
             return Status;
         }
 
+
+
         #endregion Warehouse Services Start
+
+        #region UOM Services Start
+        public List<UOMVm> GetUOMList()
+        {
+            List<UOMVm> UOMList = new List<UOMVm>();
+            try
+            {
+                var data = _DbContext.UOMs.ToList();
+                foreach(var a in data)
+                {
+                    UOMVm uom = new UOMVm();
+                    uom.UOMId = a.UOMId;
+                    uom.UOMName = a.UOMName;
+                    UOMList.Add(uom);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return UOMList;
+        }
+        #endregion UOM Services Start
 
 
     }
