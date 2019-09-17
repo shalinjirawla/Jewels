@@ -12,7 +12,7 @@
                             Sales
                         </h3>
                         <button
-                            class="btn m-2 p-4  bg-white btn-outline-primary box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            class="btn m-2 p-4  bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
                             tabindex="0" (click)="CurrencyModal.show()">
                             <i class="fa fa-dollar fa-4x text-muted text-center clearfix"></i><br />
                             <label>Currency</label>
@@ -20,7 +20,7 @@
                         </button>
 
                         <button
-                            class="btn m-2 p-4 bg-white btn-outline-success box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            class="btn m-2 p-4 bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
                             tabindex="0" (click)="OpenCreditTermModal()">
                             <i class="fa fa-money fa-4x text-muted text-center"></i>
                             <label>Credit Term</label>
@@ -35,7 +35,7 @@
                         </button>
 
                         <button
-                            class="btn m-2 p-4 bg-white btn-outline-success box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            class="btn m-2 p-4 bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
                             tabindex="0" (click)="OpenShipmentTermModal()">
                             <i class="fa fa-truck fa-4x text-muted text-center"></i>
                             <label>Shipment Term</label>
@@ -50,14 +50,14 @@
                         </button>
 
                         <button
-                            class="btn m-2 p-4 bg-white btn-outline-success box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            class="btn m-2 p-4 bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
                             tabindex="0">
                             <i class="fa fa-credit-card-alt fa-4x text-muted text-center"></i>
                             <label>Additional Charge</label>
                             <p>5</p>
                         </button>
                         <button
-                            class="btn m-2 p-4 bg-white btn-outline-success box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            class="btn m-2 p-4 bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
                             tabindex="0">
                             <i class="fa fa-money fa-4x text-muted text-center"></i>
                             <label>Sales Order Type</label>
@@ -69,35 +69,35 @@
                             Basic
                         </h3>
                         <button
-                            class="btn m-2 p-4  bg-white btn-outline-primary box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            class="btn m-2 p-4  bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
                             tabindex="0">
                             <i class="fa fa-building-o fa-4x text-muted text-center clearfix"></i><br />
                             <label>Industry</label>
                             <p>5</p>
                         </button>
                         <button
-                            class="btn m-2 p-4  bg-white btn-outline-primary box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            class="btn m-2 p-4  bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
                             tabindex="0" (click)="OpenCountryModal()">
                             <i class="fa fa-flag fa-4x text-muted text-center clearfix"></i><br />
                             <label>Country</label>
                             <p>5</p>
                         </button>
                         <button
-                            class="btn m-2 p-4  bg-white btn-outline-primary box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            class="btn m-2 p-4  bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
                             tabindex="0" (click)="OpenLocationModal()">
                             <i class="fa fa-home fa-4x text-muted text-center clearfix"></i><br />
                             <label> Location </label>
                             <p>5</p>
                         </button>
                         <button
-                            class="btn m-2 p-4  bg-white btn-outline-primary box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            class="btn m-2 p-4  bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
                             tabindex="0">
                             <i class="fa fa-tag fa-4x text-muted text-center clearfix"></i><br />
                             <label>Batch</label>
                             <p>5</p>
                         </button>
                         <button
-                            class="btn m-2 p-4  bg-white btn-outline-primary box-shadow b-4x b-light btn-lg m-r m-t w-160"
+                            class="btn m-2 p-4  bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
                             tabindex="0" (click)="OpentaxcodeModal()">
                             <i class="fa fa-text-width fa-4x text-muted text-center clearfix"></i><br />
                             <label>Tax Code </label>
@@ -213,82 +213,92 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Credit Terms</h4>
-                <button type="button" class="close" (click)="CreditTermModal.hide()" aria-label="Close">
+                <button type="button" class="close" (click)="ResetCreditTerm()" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            <div class="modal-body" id="">
+                <tabset id="CreditTermtabset" (click)="CreditTermtabclick($event.target.id)">
+                    <tab id="CreditTermList">
+                        <ng-template tabHeading><i class="fa fa-list text-info"></i> Credit Term List </ng-template>
+                        <div class="table-responsive animated flash">
+                            <table class="custom-table-s table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Credit Terms Code</th>
+                                        <th>Duration</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of CreditTermList">
+                                        <td>{{item.code}}</td>
+                                        <td>{{item.duration}}</td>
 
-            <div class="divider-saveAndEdit" aria-hidden="false"></div>
-            <div class="row m-t-md">
-                <div class="col-sm-6" aria-hidden="false">
-                    <div class="block m-b-sm text-xl ">List of Currencies</div>
-                    <div class="wrap-scroll-currencies">
-                        <table class="custom-table-s table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Credit Terms Code</th>
-                                    <th>Duration</th>
-                                    <th class="text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let item of CreditTermList">
-                                    <td>{{item.code}}</td>
-                                    <td>{{item.duration}}</td>
+                                        <td>
+                                            <span class="text-primary mr-3" style="cursor: pointer;"
+                                                (click)="GetCreditTerms(item.creditTermId)">
+                                                <i class="fa fa-pencil"></i>
+                                            </span>
 
-                                    <td>
-                                        <span class="text-primary mr-3" style="cursor: pointer;"
-                                            (click)="GetCreditTerms(item.creditTermId)">
-                                            <i class="fa fa-pencil"></i>
-                                        </span>
-
-                                        <span class="text-danger " style="cursor: pointer;"
-                                            (click)="DeleteCreditTerms(item.creditTermId)">
-                                            <i class="fa fa-trash"></i>
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <form [formGroup]="CreditTermForm" class="formData-modal col-sm-6 ">
-                    <h2>{{CreditTermModalModelTitleString}}</h2>
-                    <input type="hidden" formControlName="CreditTermId">
-                    <div class="row">
-                        <div class="form-group col-sm-12">
-                            <label>CREDIT TERM CODE</label>
-                            <input class="form-control" id="Code" formControlName="Code" placeholder="CREDIT TERM CODE"
-                                type="text"
-                                [ngClass]="{ 'is-invalid': CreditTermSubmiited && fCreditTerms.Code.errors }">
-                            <div *ngIf="CreditTermSubmiited && fCreditTerms.Code.errors" class="invalid-feedback">
-                                <div *ngIf="fCreditTerms.Code.errors.required">Credit Term Code is
-                                    required</div>
-                            </div>
+                                            <span class="text-danger " style="cursor: pointer;"
+                                                (click)="DeleteCreditTerms(item.creditTermId)">
+                                                <i class="fa fa-trash"></i>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-12">
-                            <label>DURATION</label>
-                            <input type="number" class="form-control" id="Duration" formControlName="Duration"
-                                placeholder="DURATION"
-                                [ngClass]="{ 'is-invalid': CreditTermSubmiited && fCreditTerms.Duration.errors }">
-                            <div *ngIf="CreditTermSubmiited && fCreditTerms.Duration.errors" class="invalid-feedback">
-                                <div *ngIf="fCreditTerms.Duration.errors.required">Credit Term Code is required
+                    </tab>
+                    <tab id="CreditTermFor">
+                        <ng-template tabHeading><i class="fa fa-plus text-info"> Credit Term Form</i>
+                        </ng-template>
+                        <form [formGroup]="CreditTermForm" class="formData-modal col-sm-12 ">
+                            <input type="hidden" formControlName="CreditTermId">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label>CREDIT TERM CODE</label>
+                                    <input class="form-control" id="Code" formControlName="Code"
+                                        placeholder="CREDIT TERM CODE" type="text"
+                                        [ngClass]="{ 'is-invalid': CreditTermSubmiited && fCreditTerms.Code.errors }">
+                                    <div *ngIf="CreditTermSubmiited && fCreditTerms.Code.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="fCreditTerms.Code.errors.required">Credit Term Code is
+                                            required</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label>DURATION</label>
+                                    <input type="number" class="form-control" id="Duration" formControlName="Duration"
+                                        placeholder="DURATION"
+                                        [ngClass]="{ 'is-invalid': CreditTermSubmiited && fCreditTerms.Duration.errors }">
+                                    <div *ngIf="CreditTermSubmiited && fCreditTerms.Duration.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="fCreditTerms.Duration.errors.required">Credit Term Code is required
+                                        </div>
+                                    </div>
+                                </div>
 
-                    </div>
-                    <div class="row">
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label>DESCRIPTION</label>
+                                    <textarea class="form-control" id="Description" formControlName="Description"
+                                        placeholder="DURATION"></textarea>
+                                </div>
+                            </div>
+
+                        </form>
                         <div class="form-group col-sm-12">
-                            <label>DESCRIPTION</label>
-                            <textarea class="form-control" id="Description" formControlName="Description"
-                                placeholder="DURATION"></textarea>
+                            <button type="button" class="btn btn-primary pull-right"
+                                (click)="AddCreditTerms(CreditTermForm)">Save
+                                changes</button><br />
                         </div>
-                    </div>
-
-                </form>
+                    </tab>
+                </tabset>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" (click)="ResetCreditTerm()">Close</button>

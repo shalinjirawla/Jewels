@@ -21,9 +21,13 @@ export class LoginComponent implements OnInit {
 
   LoginForm: FormGroup;
   Responce: any;
+  myVar: any;
   FormSubmitted: boolean = false;
   constructor(private FormBuilder: FormBuilder, private ApplicationUserService: ApplicationUserService,
-    private router: Router) { }
+    private router: Router) {
+      setInterval(() => {
+        this.LogOut()
+    }, 3600000); }
   ngOnInit() {
     this.Onload();
     this.LogOut();
@@ -31,11 +35,12 @@ export class LoginComponent implements OnInit {
   public LogOut() {
     localStorage.clear();
     sessionStorage.clear();
+    this.router.navigateByUrl('/login');
   }
   public Onload() {
     this.LoginForm = this.FormBuilder.group({
-      UserName: ['hemant@ncoresoft.com', Validators.compose([Validators.required])],
-      Password: ['Hemant@123', Validators.compose([Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{6,}')])],
+      UserName: ['brijesh@ncoresoft.com', Validators.compose([Validators.required])],
+      Password: ['Ravi@4404', Validators.compose([Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{6,}')])],
       AccessToken: [''],
     });
   }
@@ -68,4 +73,8 @@ export class LoginComponent implements OnInit {
     });
   }
   get f() { return this.LoginForm.controls; }
+
+  
+ 
+
 }  

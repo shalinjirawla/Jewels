@@ -5,17 +5,17 @@ import { CanActivate, Router, RouterStateSnapshot, ActivatedRouteSnapshot } from
   providedIn: 'root'
 })
 export class AuthGuardService implements CanActivate {
-
+  
   constructor(private router: Router) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    let isLoggedIn = false;
-    setTimeout(function () {
-      localStorage.removeItem("AccessToken");
-      localStorage.removeItem("UserId");
-      localStorage.removeItem("TenantId");
-    }, 1000 * 60 * 60);
+    let isLoggedIn = false; 
 
+      // setTimeout(function () {
+      //   localStorage.removeItem("AccessToken");
+      //   localStorage.removeItem("UserId");
+      //   localStorage.removeItem("TenantId");
+      // }, 1000 * 60 * 60);
     // ... your login logic here 
     var AccessToken = localStorage.getItem("AccessToken");
     var UserId = localStorage.getItem("UserId");
