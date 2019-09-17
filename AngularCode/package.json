@@ -44,6 +44,7 @@
     "bootstrap": "^4.3.1",
     "chart.js": "^2.8.0",
     "core-js": "^2.6.9",
+    "datatables.net-bs4": "^1.10.19",
     "datatables.net-dt": "^1.10.19",
     "flag-icon-css": "^3.3.0",
     "font-awesome": "^4.7.0",

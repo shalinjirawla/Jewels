@@ -2,7 +2,7 @@ import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs'
 let AccessToken;
-AccessToken=localStorage.getItem('AccessToken');
+AccessToken = localStorage.getItem('AccessToken');
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +13,7 @@ export class CustomerService {
   private BaseURL: string = "https://localhost:44315";
 
   public AddCustomer(input: any): Observable<any> {
+    debugger
     let Result;
     let url_ = this.BaseURL + `/api/Customer/AddCustomer`;
     url_ = url_.replace(/[?&]$/, "");
@@ -27,11 +28,11 @@ export class CustomerService {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         "Accept": "application/json"
-      }).set('Authorization','Bearer '+AccessToken)
+      }).set('Authorization', 'Bearer ' + AccessToken)
     };
-      return this.HttpClient.request("post", url_, options_).pipe((response_: any) => {
-        return Result = response_;
-      });
+    return this.HttpClient.request("post", url_, options_).pipe((response_: any) => {
+      return Result = response_;
+    });
 
   }
 
@@ -45,7 +46,7 @@ export class CustomerService {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         "Accept": "application/json"
-      }).set('Authorization','Bearer '+AccessToken)
+      }).set('Authorization', 'Bearer ' + AccessToken)
     };
 
     return this.HttpClient.request("get", url_, options_).pipe((response_: any) => {
@@ -64,7 +65,7 @@ export class CustomerService {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         "Accept": "application/json"
-      }).set('Authorization','Bearer '+AccessToken)
+      }).set('Authorization', 'Bearer ' + AccessToken)
     };
 
     return this.HttpClient.request("get", url_, options_).pipe((response_: any) => {
@@ -83,7 +84,7 @@ export class CustomerService {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         "Accept": "application/json"
-      }).set('Authorization','Bearer '+AccessToken)
+      }).set('Authorization', 'Bearer ' + AccessToken)
     };
 
     return this.HttpClient.request("get", url_, options_).pipe((response_: any) => {
@@ -102,7 +103,7 @@ export class CustomerService {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         "Accept": "application/json"
-      }).set('Authorization','Bearer '+AccessToken)
+      }).set('Authorization', 'Bearer ' + AccessToken)
     };
 
     return this.HttpClient.request("get", url_, options_).pipe((response_: any) => {
@@ -120,7 +121,7 @@ export class CustomerService {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         "Accept": "application/json"
-      }).set('Authorization','Bearer '+AccessToken)
+      }).set('Authorization', 'Bearer ' + AccessToken)
     };
 
     return this.HttpClient.request("get", url_, options_).pipe((response_: any) => {
@@ -139,7 +140,7 @@ export class CustomerService {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         "Accept": "application/json"
-      }).set('Authorization','Bearer '+AccessToken)
+      }).set('Authorization', 'Bearer ' + AccessToken)
     };
 
     return this.HttpClient.request("get", url_, options_).pipe((response_: any) => {
@@ -157,7 +158,7 @@ export class CustomerService {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         "Accept": "application/json"
-      }).set('Authorization','Bearer '+AccessToken)
+      }).set('Authorization', 'Bearer ' + AccessToken)
     };
 
     return this.HttpClient.request("delete", url_, options_).pipe((response_: any) => {
@@ -175,7 +176,7 @@ export class CustomerService {
       headers: new HttpHeaders({
         "Content-Type": "application/json",
         "Accept": "application/json"
-      }).set('Authorization','Bearer '+AccessToken)
+      }).set('Authorization', 'Bearer ' + AccessToken)
     };
 
     return this.HttpClient.request("get", url_, options_).pipe((response_: any) => {

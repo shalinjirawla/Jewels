@@ -51,7 +51,6 @@ export class LoginComponent implements OnInit {
     }
     this.ApplicationUserService.LogInProcess(LoginForm.value).subscribe((responce: any) => {
       if (responce != null && responce.status) {
-        debugger
         this.Responce = responce.data;
         if (this.Responce != null && this.Responce != undefined) {
           localStorage.setItem('AccessToken', this.Responce.accessToken);

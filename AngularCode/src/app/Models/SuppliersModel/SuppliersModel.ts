@@ -7,7 +7,7 @@ export class Supplier{
     public Remarks:undefined|any;
     public DefaultCurrency:undefined|any;
     public DefaultPaymentTerms:undefined|any;
-    public DefaultTax:undefined|any;
+    public DefaultTaxCode:undefined|any;
     public ShipmentTerms:undefined|any;
     public Shipmentmethod:undefined|any;
 }

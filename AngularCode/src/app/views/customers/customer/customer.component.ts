@@ -160,7 +160,6 @@ export class CustomerComponent implements OnInit {
     debugger
   }
 
-
   AddCustomer(AddCustomerForm: FormControl) {
     this.submitted = true;
     if (this.AddCustomerForm.invalid) {
@@ -182,7 +181,7 @@ export class CustomerComponent implements OnInit {
     this.AddCustomervalue.ContactList = this.ContactList;
     this.customerservice.AddCustomer(this.AddCustomervalue).subscribe((responce: any) => {
       this.Result = responce;
-      if (responce.status) {
+      if (responce.body.status) {
         this.GetCustomerList();
         if (this.AddCustomerForm.value.customerId == 0) {
           Swal.fire(

@@ -36,6 +36,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Inventory.Application.Interface.RawMaterails;
 using static Inventory.Application.Interface.Common.IGenerealsetup;
+using Inventory.Application.Interface.Supplier;
+using Inventory.Application.Services.SupplierServices;
 
 namespace Inventory.Web
 {
@@ -155,6 +157,7 @@ namespace Inventory.Web
             services.AddScoped<IUOM, GeneralsetupServices>();
             services.AddScoped<ITenants, TenantsServices>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<ISupplier, SuppliersServices>();
             //Configure CORS for angular2 UI
             services.AddCors(options =>
             {

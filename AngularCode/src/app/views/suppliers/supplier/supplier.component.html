@@ -15,37 +15,35 @@
                             COMPANY NAME
                         </th>
                         <th>
-                            #
+                            CODE
                         </th>
-                        <th>
-                            PURCHASES
-                        </th>
+
                         <th colspan="2" class="text-center">
                             Action
                         </th>
                     </thead>
                     <tbody [hidden]="Supplieremplty">
-                        <tr *ngFor="let item of SuppliersList">
+                        <tr *ngFor="let item of SuppliersList" [hidden]="SupplierNoDataFound">
                             <td class="mr-2">
-                                {{item.brandName}}
+                                {{item.companyName}}
                             </td>
                             <td class="mr-2">
-                                {{item.description}}
+                                {{item.supplierCode}}
                             </td>
-
-
-                            <td class="text-right" (click)="BrandEdit(item.brandId)">
-
+                            <td class="text-right" (click)="EditSuppliers(item.supplierId)">
                                 <button class="btn  btn-lg"> <i class="fa fa-pencil text-success"> </i></button>
                             </td>
-                            <td class="mb-2" (click)="BrandDelete(item.brandId)">
+                            <td class="mb-2" (click)="DeleteSupplier(item.supplierId)">
                                 <button class="btn  btn-lg"><i class="fa fa-trash text-danger"></i> </button>
 
                             </td>
                         </tr>
+                        <tr [hidden]="!SupplierNoDataFound">
+                            <td colspan="3" class="text-success text-center">No Data Found...!</td>
+                        </tr>
                     </tbody>
                 </table>
-                <div class="mt-2 text-center" [hidden]="!Supplieremplty">
+                <div class="mt-2  mb-2 text-center" [hidden]="!Supplieremplty">
                     <div class="spinner-border text-danger" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
@@ -54,8 +52,8 @@
         </div>
     </div>
 </div>
-<div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-    aria-hidden="true">
+<div bsModal #largeModal="bs-modal" [config]="{backdrop: 'static',  keyboard: false}" class="modal fade" tabindex="-1"
+    role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -71,94 +69,91 @@
                             <ng-template tabHeading><i class="icon-user text-info"></i> Supplier Details</ng-template>
                             <div class="row">
                                 <div class="form-group col-sm-5">
-                                    <input type="hidden" formControlName="SupplierId">
+                                    <input type="hidden" formControlName="supplierId">
                                     <label for="city">COMPANY NAME</label>
-                                    <input class="form-control" id="COMPANY-NAME" formControlName="CompanyName"
-                                        [ngClass]="{ 'is-invalid': FormSubmittedSupplliers && f.CompanyName.errors }"
+                                    <input class="form-control" id="COMPANY-NAME" formControlName="companyName"
+                                        [ngClass]="{ 'is-invalid': FormSubmittedSupplliers && f.companyName.errors }"
                                         placeholder="COMPANY NAME" type="text">
-                                    <div *ngIf="FormSubmittedSupplliers && f.CompanyName.errors"
+                                    <div *ngIf="FormSubmittedSupplliers && f.companyName.errors"
                                         class="invalid-feedback">
-                                        <div *ngIf="f.CompanyName.errors.required">Company Name is required</div>
+                                        <div *ngIf="f.companyName.errors.required">Company Name is required</div>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-5">
                                     <label for="postal-code">SUPPLIER CODE</label>
-                                    <input class="form-control" id="CSUPPLIER-CODE" formControlName="SupplierCode"
+                                    <input class="form-control" id="CSUPPLIER-CODE" formControlName="supplierCode"
                                         placeholder="SUPPLIER CODE" type="text">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-sm-5">
                                     <label for="postal-code">WEBSITE</label>
-                                    <input class="form-control" id="WEBSITE" formControlName="Website"
+                                    <input class="form-control" id="WEBSITE" formControlName="website"
                                         placeholder="SWEBSITE" type="text">
                                 </div>
                                 <div class="form-group col-sm-5">
                                     <label for="postal-code">REMARKS</label>
-                                    <input class="form-control" id="REMARKS" formControlName="Remarks"
+                                    <input class="form-control" id="REMARKS" formControlName="remarks"
                                         placeholder="REMARKS" type="text">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-sm-5">
                                     <label for="postal-code">DEFAULT CURRENCY </label>
-                                    <select class="form-control" formControlName="DefaultCurrency">
+                                    <select class="form-control" formControlName="defaultCurrency">
                                         <option value="">--Select--</option>
                                         <option *ngFor="let type of DefaultCurrenyList" [value]="type.currencyId">
                                             {{type.code}}
                                         </option>
-
                                     </select>
                                 </div>
                                 <div class="form-group col-sm-5">
                                     <label for="postal-code">DEFAULT PAYMENT TERM</label>
-                                    <select class="form-control" formControlName="DefaultPaymentTerms">
+                                    <select class="form-control" formControlName="defaultPaymentTerms">
                                         <option value="">--Select--</option>
-                                        <option *ngFor="let type of CustomerTypeList" [value]="type.customerTypeId">
-                                            {{type.customerTypeName}}
+                                        <option *ngFor="let type of DefaultPaymentTermList"
+                                            [value]="type.paymentTermId">
+                                            {{type.code}}
                                         </option>
-
                                     </select>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-sm-5">
                                     <label for="postal-code">DEFAULT TAX </label>
-                                    <select class="form-control" formControlName="DefaultTax">
+                                    <select class="form-control" formControlName="defaultTaxCode">
                                         <option value="">--Select--</option>
                                         <option *ngFor="let type of DefaultTaxCodeList" [value]="type.taxId">
                                             {{type.code}}({{type.amount}}%)
                                         </option>
-
                                     </select>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-sm-5">
                                     <label for="postal-code">SHIPMENT TERMS </label>
-                                    <select class="form-control" formControlName="ShipmentTerms">
+                                    <select class="form-control" formControlName="shipmentterms">
                                         <option value="">--Select--</option>
-                                        <option *ngFor="let type of ShipmentTermsList" [value]="type.shipmentMethodId">
+                                        <option *ngFor="let type of ShipmentTermsList" [value]="type.shipmentTermId">
                                             {{type.code}}
                                         </option>
-
                                     </select>
                                 </div>
                                 <div class="form-group col-sm-5">
                                     <label for="postal-code">SHIPMENT METHOD</label>
-                                    <select class="form-control" formControlName="Shipmentmethod">
+                                    <select class="form-control" formControlName="shipmentmethod">
                                         <option value="">--Select--</option>
-                                        <option *ngFor="let type of ShipmentMethodList" [value]="type.customerTypeId">
+                                        <option *ngFor="let type of ShipmentMethodList" [value]="type.shipmentMethodId">
                                             {{type.code}}
                                         </option>
-
                                     </select>
                                 </div>
                             </div>
                         </form>
                     </tab>
                     <tab id="SuppliersAddress">
-                        <ng-template tabHeading><i class="fa fa-file text-info"></i> Addresses </ng-template>
+                        <ng-template tabHeading><i class="fa fa-file text-info"></i> Addresses <span
+                                [hidden]="!AddressLenghtcount" class="avatar avatar-sm bg-primary rounded-circle text-center">{{AddressList.address.length}} </span> </ng-template>
                         <div [hidden]="!AddressLenghtcount">
                             <div class="table-responsive animated flash">
                                 <table class="table " id="AddressList">
@@ -172,7 +167,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor="let type of AddressList.Address; let i = index">
+                                        <tr *ngFor="let type of AddressList.address; let i = index">
                                             <td *ngIf="type.addressType==1"> Billing</td>
                                             <td *ngIf="type.addressType==2"> Shipping</td>
                                             <td *ngIf="type.addressType==0">--Select--</td>
@@ -184,10 +179,11 @@
                                                     <span class="text-primary " (click)="EditAddress(i)">
                                                         <i class="fa fa-pencil"></i>
                                                     </span>
-                                                    
-                                                    <span [ngClass]="{'text-primary': type.defaultAddress}" class="ml-2"
-                                                        (click)="SetDeafult(type.defaultAddress,i)">
-                                                        <i class="fa fa-check"></i>
+                                                    <span class="ml-2" (click)="SetDeafult(type.defaultAddress,i)">
+                                                        <i class="fa fa-check" [hidden]="type.defaultAddress"></i>
+                                                        <i class="fa fa-check text-primary"
+                                                            [hidden]="!type.defaultAddress" tooltip="Default Address"
+                                                            placement="top"></i>
                                                     </span>
                                                     <span [hidden]="type.defaultAddress" class="text-danger ml-2"
                                                         (click)="DeleteAddress(i)">
@@ -240,8 +236,7 @@
                                         </label>
                                         <select class="form-control"
                                             [ngClass]="{ 'is-invalid': Addresssubmitted && add.countryId.errors }"
-                                            formControlName="countryId"
-                                            id="customer_Coutry">
+                                            formControlName="countryId" id="customer_Coutry">
                                             <option value="">--Select--</option>
                                             <option *ngFor="let item of CountryList" [value]="item.countryId">
                                                 {{item.countryName}}</option>
@@ -296,7 +291,7 @@
                                         <input class="custom-control-input"
                                             (change)="CheckAddress($event.target.checked)" id="copyaddress"
                                             type="checkbox" [value]="CopyAddress">
-                                       
+
                                         <label class="custom-control-label offset-1 " for="copyaddress">
                                             {{copyAddress}}
                                         </label>
@@ -316,7 +311,8 @@
                         </div>
                     </tab>
                     <tab id="SuppliersContact">
-                        <ng-template tabHeading><i class="fa fa-phone text-info"></i> Contacts
+                        <ng-template tabHeading><i class="fa fa-phone text-info"></i> Contacts <span
+                                [hidden]="!ContactLenghtcount" class="avatar avatar-sm bg-primary rounded-circle text-center">{{ContactList.contact.length}}</span>
                         </ng-template>
                         <div [hidden]="!ContactLenghtcount">
                             <div class="table-responsive animated flash">
@@ -331,7 +327,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor="let Contact of ContactList.Contact; let i = index">
+                                        <tr *ngFor="let Contact of ContactList.contact; let i = index">
                                             <td>{{Contact.firstName}}</td>
                                             <td>{{Contact.designation}}</td>
                                             <td>{{Contact.mobile}}</td>
@@ -341,14 +337,14 @@
                                                     <span class="text-primary " (click)="EditContact(i)">
                                                         <i class="fa fa-pencil"></i>
                                                     </span>
-                                                    <span *ngIf="Contact.defaultContact" class="text-primary ml-2">
-                                                        <i class="fa fa-check"></i>
-                                                    </span>
-                                                    <span *ngIf="!Contact.defaultContact" class="ml-2"
+                                                    <span 
+                                                        class="ml-2"
                                                         (click)="SetDeafultContact(Contact.defaultContact,i)">
-                                                        <i class="fa fa-check"></i>
+                                                        <i class="fa fa-check" [hidden]="Contact.defaultContact"></i>
+                                                        <i class="fa fa-check text-primary" [hidden]="!Contact.defaultContact" tooltip="Default Contact" placement="top"></i>
                                                     </span>
-                                                    <span class="text-danger ml-2" (click)="DeleteContact(i)">
+                                                    <span class="text-danger ml-2" [hidden]="Contact.defaultContact"
+                                                        (click)="DeleteContact(i)">
                                                         <i class="fa fa-trash"></i></span> </span>
                                             </td>
                                         </tr>
@@ -495,8 +491,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" (click)="ResetForm()">Close</button>
-                <button type="button" class="btn btn-primary"
-                    (click)="saveSuppliers(AddSuppliersForm)">Save Change</button>
+                <button type="button" class="btn btn-primary" (click)="saveSuppliers(AddSuppliersForm)">Save
+                    Change</button>
             </div>
         </div>
     </div>

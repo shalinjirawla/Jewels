@@ -15,17 +15,17 @@ namespace Inventory.Application.ViewModel.SupplierVm
         public Nullable<long> DefaultCurrency { get; set; }
         public Nullable<long> DefaultPaymentTerms { get; set; }
         public Nullable<long> DefaultTaxCode { get; set; }
-        public Nullable<long> Shipmenterms { get; set; }
-        public Nullable<long> Shipmenmethod { get; set; }
+        public Nullable<long> Shipmentterms { get; set; }
+        public Nullable<long> Shipmentmethod { get; set; }
         public SuppliersAddressList AddressList { get; set; }
         public SuplliersContactList ContactList { get; set; }
     }
     public class SuplliersContactList
     {
-        public List<SupplierContactVm> ContactList { get; set; }
+        public List<SupplierContactVm> Contact { get; set; } = null;
     }
     public class SuppliersAddressList
     {
-        public List<SupplierAddressVm>  AddressList { get; set; }
+        public List<SupplierAddressVm> Address { get; set; } = null;
     }
 }
