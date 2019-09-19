@@ -155,6 +155,7 @@ namespace Inventory.Web
             services.AddScoped<IGenerealsetup.IWarehouse, GeneralsetupServices>();
             services.AddScoped<IRawMaterails, RawMaterailsService>();
             services.AddScoped<IUOM, GeneralsetupServices>();
+            services.AddScoped<IMetric_Units, GeneralsetupServices>();
             services.AddScoped<ITenants, TenantsServices>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ISupplier, SuppliersServices>();

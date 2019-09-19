@@ -32,6 +32,7 @@ namespace Inventory.Web.Controllers
         private readonly IShipmentMethod _shipmentMethod;
         private readonly IPaymentTerm _ipaymentTerm;
         private readonly IUOM _IUOM;
+        private readonly IMetric_Units _imetric_Units;
         public Boolean Status = false;
         public string Message = "";
         public object Data = null;
@@ -43,7 +44,7 @@ namespace Inventory.Web.Controllers
             ICountry country, IWarehouse warehouse,
             ITaxCode itaxCode, IShipmentTerm shipmentTerm,
             IShipmentMethod shipmentMethod, IPaymentTerm ipaymentTerm,
-            IUOM IUOM,
+            IUOM IUOM, IMetric_Units imetric_Units,
             SessionHanlderController SessionHanlderController
             )
         {
@@ -58,6 +59,7 @@ namespace Inventory.Web.Controllers
             _shipmentMethod = shipmentMethod;
             _ipaymentTerm = ipaymentTerm;
             _IUOM = IUOM;
+            _imetric_Units = imetric_Units;
 
             _SessionHanlderController = SessionHanlderController;
            
@@ -761,5 +763,25 @@ namespace Inventory.Web.Controllers
         }
 
         #endregion UOM APIs End
+
+        #region Metric_Units APIs Start
+
+        [HttpGet]
+        public IActionResult GetKgMetricUnitList()
+        {
+
+            var Metric_UnitsList = _imetric_Units.GetKgMetricUnitList();
+            return Ok(GetAjaxResponse(true, string.Empty, Metric_UnitsList));
+        }
+
+        [HttpGet]
+        public IActionResult GetFtMetricUnitList()
+        {
+
+            var Metric_UnitsList = _imetric_Units.GetFtMetricUnitList();
+            return Ok(GetAjaxResponse(true, string.Empty, Metric_UnitsList));
+        }
+
+        #endregion Metric_Units APIs End
     }
 }

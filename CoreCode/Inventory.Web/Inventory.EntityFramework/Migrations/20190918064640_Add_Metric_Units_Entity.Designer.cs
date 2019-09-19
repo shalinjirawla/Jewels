@@ -4,14 +4,16 @@ using Inventory.EntityFrameworkCore.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Inventory.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190918064640_Add_Metric_Units_Entity")]
+    partial class Add_Metric_Units_Entity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -733,41 +735,6 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.ToTable("Tenants");
                 });
 
-            modelBuilder.Entity("Inventory.Core.Models.UploadImage.UploadImage", b =>
-                {
-                    b.Property<long>("UploadImageId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime?>("CreationTime");
-
-                    b.Property<string>("CreatorUserId");
-
-                    b.Property<bool>("IsActive");
-
-                    b.Property<DateTime?>("LastModificationTime");
-
-                    b.Property<string>("LastModifierUserId");
-
-                    b.Property<long?>("ProductId");
-
-                    b.Property<long?>("RawMaterailId");
-
-                    b.Property<long?>("TenantsId");
-
-                    b.Property<string>("UploadImageString");
-
-                    b.HasKey("UploadImageId");
-
-                    b.HasIndex("CreatorUserId");
-
-                    b.HasIndex("LastModifierUserId");
-
-                    b.HasIndex("TenantsId");
-
-                    b.ToTable("UploadImages");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -1252,21 +1219,6 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasOne("Inventory.Core.Models.Commons.ShipmentTerm", "ShipmentTerm")
                         .WithMany()
                         .HasForeignKey("Shipmenterms");
-
-                    b.HasOne("Inventory.Core.Models.Tenants.Tenants", "Tenants")
-                        .WithMany()
-                        .HasForeignKey("TenantsId");
-                });
-
-            modelBuilder.Entity("Inventory.Core.Models.UploadImage.UploadImage", b =>
-                {
-                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("CreatorUserId");
-
-                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
-                        .WithMany()
-                        .HasForeignKey("LastModifierUserId");
 
                     b.HasOne("Inventory.Core.Models.Tenants.Tenants", "Tenants")
                         .WithMany()

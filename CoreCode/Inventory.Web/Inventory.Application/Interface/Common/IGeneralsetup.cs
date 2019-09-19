@@ -77,5 +77,11 @@ namespace Inventory.Application.Interface.Common
         {
             List<UOMVm> GetUOMList();
         }
+
+        public interface IMetric_Units
+        {
+            List<Metric_UnitsVm> GetKgMetricUnitList();
+            List<Metric_UnitsVm> GetFtMetricUnitList();
+        }
     }
 }   

@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Inventory.Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
     public class RawMaterailsController : ControllerBase
@@ -38,11 +38,11 @@ namespace Inventory.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddRawMaterails(RawMaterailsVm model)
+        public IActionResult AddRawMaterails(SaveRawMaterailsVm model)
         {
             GetUserId = _SessionHanlderController.GetUserId(HttpContext);
             GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
-             Status =  _irawMaterails.SaveRawMaterails(model, GetUserId, GetTenantId);
+            Status = _irawMaterails.SaveRawMaterails(model, GetUserId, GetTenantId);
             if (Status)
                 Message = "Raw Materails Successfully Saved..";
             else

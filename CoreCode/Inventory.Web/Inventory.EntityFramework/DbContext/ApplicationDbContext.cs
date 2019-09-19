@@ -6,6 +6,7 @@ using Inventory.Core.Models.Customer;
 using Inventory.Core.Models.Products;
 using Inventory.Core.Models.Supplier;
 using Inventory.Core.Models.Tenants;
+using Inventory.Core.Models.UploadImage;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -47,7 +48,9 @@ namespace Inventory.EntityFrameworkCore.DbContext
         public DbSet<ShipmentMethod> ShipmentMethods { get; set; }
         public DbSet<PaymentTerm> PaymentTerms { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
-        public DbSet<RawMaterails> RawMaterails { get; set; }
+        public DbSet<Metric_Units> Metric_Units { get; set; }
+        public DbSet<UploadImage> UploadImages { get; set; }
+        //public DbSet<RawMaterails> RawMaterails { get; set; }
         public DbSet<UOM> UOMs { get; set; }
     }
 }

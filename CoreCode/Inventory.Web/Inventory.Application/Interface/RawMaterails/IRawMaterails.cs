@@ -7,6 +7,6 @@ namespace Inventory.Application.Interface.RawMaterails
 {
     public interface IRawMaterails
     {
-        Boolean SaveRawMaterails(RawMaterailsVm model, string GetUserId, long GetTenantId);
+        Boolean SaveRawMaterails(SaveRawMaterailsVm model, string GetUserId, long GetTenantId);
     }
 }

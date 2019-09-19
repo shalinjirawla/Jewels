@@ -14,7 +14,7 @@ using static Inventory.Application.Interface.Common.IGenerealsetup;
 namespace Inventory.Application.Services.CommonsServices
 {
     public class GeneralsetupServices : ICurrency, ITaxCode, ICreditTerms, IShipmentTerm, IShipmentMethod, 
-            IPaymentTerm, IWarehouse, IUOM
+            IPaymentTerm, IWarehouse, IUOM, IMetric_Units
     {
         private readonly ApplicationDbContext _DbContext;
         public GeneralsetupServices(ApplicationDbContext DbContext)
@@ -1374,8 +1374,58 @@ namespace Inventory.Application.Services.CommonsServices
             }
             return UOMList;
         }
+
+
         #endregion UOM Services Start
 
+        #region UOM Services Start
 
+        public List<Metric_UnitsVm> GetKgMetricUnitList()
+        {
+            List<Metric_UnitsVm> MetricUnitList = new List<Metric_UnitsVm>();
+            try
+            {
+                var data = _DbContext.Metric_Units.Where(x => x.Metric_UnitsType == 0).ToList();
+                foreach(var a in data)
+                {
+                    Metric_UnitsVm metric_Units = new Metric_UnitsVm();
+                    metric_Units.Metric_UnitsId = a.Metric_UnitsId;
+                    metric_Units.Metric_UnitsName = a.Metric_UnitsName;
+                    metric_Units.Metric_UnitsType = a.Metric_UnitsType;
+                    MetricUnitList.Add(metric_Units);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return MetricUnitList;
+        }
+
+        public List<Metric_UnitsVm> GetFtMetricUnitList()
+        {
+            List<Metric_UnitsVm> MetricUnitList = new List<Metric_UnitsVm>();
+            try
+            {
+                var data = _DbContext.Metric_Units.Where(x => x.Metric_UnitsType == 1).ToList();
+                foreach (var a in data)
+                {
+                    Metric_UnitsVm metric_Units = new Metric_UnitsVm();
+                    metric_Units.Metric_UnitsId = a.Metric_UnitsId;
+                    metric_Units.Metric_UnitsName = a.Metric_UnitsName;
+                    metric_Units.Metric_UnitsType = a.Metric_UnitsType;
+                    MetricUnitList.Add(metric_Units);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return MetricUnitList;
+        }
+
+        #endregion UOM Services Start
     }
 }
