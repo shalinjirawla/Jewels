@@ -39,8 +39,8 @@ export class LoginComponent implements OnInit {
   }
   public Onload() {
     this.LoginForm = this.FormBuilder.group({
-      UserName: ['brijesh@ncoresoft.com', Validators.compose([Validators.required])],
-      Password: ['Ravi@4404', Validators.compose([Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{6,}')])],
+      UserName: ['hemant@ncoresoft.com', Validators.compose([Validators.required])],
+      Password: ['Hemant@123', Validators.compose([Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{6,}')])],
       AccessToken: [''],
     });
   }

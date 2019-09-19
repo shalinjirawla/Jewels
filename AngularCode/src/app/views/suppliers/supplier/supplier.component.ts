@@ -78,11 +78,22 @@ export class SupplierComponent implements OnInit {
     private PaymentTermService: PaymentTermService,
     private SupplierServicesService: SupplierServicesService,
   ) { }
-
+  key: string = 'Companyname'; //set default
+  reverse: boolean = false;
+  sort(key){
+    this.key = key;
+    this.reverse = !this.reverse;
+  }
+  p: number = 1;
+  listofCount:number=5;
   ngOnInit() {
   
     this.OnloadSupplliers();
     this.GetSuppliersList();
+  }
+  public ListOfData(Count:number)
+  {
+    this.listofCount=Count;
   }
   public OnloadSupplliers() {
     this.AddSuppliersForm = this.FormBuilder.group({
@@ -220,7 +231,6 @@ export class SupplierComponent implements OnInit {
       document.getElementById("SuppliersContact-link").click();
       return;
     }
-    debugger
     this.AddSuppliersvalue.SuppliersDetail = AddSuppliersForm.value;
     this.AddSuppliersvalue.SuppliersDetail.defaultCurrency = Number(this.AddSuppliersvalue.SuppliersDetail.defaultCurrency);
     this.AddSuppliersvalue.SuppliersDetail.defaultPaymentTerms = Number(this.AddSuppliersvalue.SuppliersDetail.defaultPaymentTerms);
@@ -233,10 +243,7 @@ export class SupplierComponent implements OnInit {
 
     this.SupplierServicesService.AddUpdate(this.AddSuppliersvalue).subscribe((responce: any) => {
      
-      this.AddressList.address=[];
-      this.ContactList.contact=[];
-      this.AddressLenghtcount=false;
-      this.ContactLenghtcount=false;
+      this.ResetForm();
       this.ModelTitleString="Add New Supplier";
        if (responce.status) {
         Swal.fire({

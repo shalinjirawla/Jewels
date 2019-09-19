@@ -6,10 +6,10 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { SuppliersRoutingModule } from './suppliers-routing.module';
-
-import { DataTablesModule } from 'angular-datatables';
 import { SupplierComponent } from './supplier/supplier.component';
-
+import { Ng2SearchPipeModule } from 'ng2-search-filter'; 
+import { Ng2OrderModule } from 'ng2-order-pipe';
+import {NgxPaginationModule} from 'ngx-pagination';
 @NgModule({
   imports: [
     CommonModule,
@@ -25,7 +25,9 @@ import { SupplierComponent } from './supplier/supplier.component';
     // ProgressbarModule.forRoot(),
     TooltipModule.forRoot(),
     ReactiveFormsModule,
-    DataTablesModule
+    Ng2SearchPipeModule,
+    Ng2OrderModule,
+    NgxPaginationModule,
   ],
   declarations: [
   SupplierComponent]

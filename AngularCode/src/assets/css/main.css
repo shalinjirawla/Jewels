@@ -513,3 +513,33 @@ input.input100 {
 }
 
 
+thead>tr>th {
+  cursor: pointer;
+}
+/* Styles for wrapping the search box */
+
+.main {
+  width: 100%;
+  
+}
+
+/* Bootstrap 4 text input with search icon */
+
+.has-search .form-control {
+  padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+  position: absolute;
+  z-index: 2;
+  display: block;
+  width: 2.375rem;
+  height: 2.375rem;
+  line-height: 2.375rem;
+  text-align: center;
+  pointer-events: none;
+  color: #aaa;
+}
+.pointer{
+  cursor: pointer;
+}

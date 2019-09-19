@@ -8,6 +8,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { MastersRoutingModule } from './masters-routing.module';
 import { DataTablesModule } from 'angular-datatables';
 import { GeneralSetupComponent } from './general-setup/general-setup.component';
+import { TestComponent } from './test/test.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -26,6 +27,7 @@ import { GeneralSetupComponent } from './general-setup/general-setup.component';
     DataTablesModule
   ],
   declarations: [
-  GeneralSetupComponent,]
+  GeneralSetupComponent,
+  TestComponent,]
 })
 export class MastersModule { }

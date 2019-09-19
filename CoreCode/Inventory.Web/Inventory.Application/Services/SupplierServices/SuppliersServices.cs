@@ -39,11 +39,11 @@ namespace Inventory.Application.Services.SupplierServices
                             supplier.SupplierCode = Model.SupplierCode;
                             supplier.Website = Model.Website;
                             supplier.Remarks = Model.Remarks;
-                            supplier.DefaultCurrency = Model.DefaultCurrency;
-                            supplier.DefaultPaymentTerms = Model.DefaultPaymentTerms;
-                            supplier.DefaultTaxCode = Model.DefaultTaxCode;
-                            supplier.Shipmenmethod = Model.Shipmentmethod;
-                            supplier.Shipmenterms = Model.Shipmentterms;
+                            supplier.DefaultCurrency =Model.DefaultCurrency!=0 ? Model.DefaultCurrency :null;
+                            supplier.DefaultPaymentTerms = Model.DefaultPaymentTerms!=0 ? Model.DefaultPaymentTerms : null;
+                            supplier.DefaultTaxCode = Model.DefaultTaxCode!=0?Model.DefaultTaxCode:null;
+                            supplier.Shipmenmethod = Model.Shipmentmethod!=0?Model.Shipmentmethod:null;
+                            supplier.Shipmenterms = Model.Shipmentterms!=0 ? Model.Shipmentterms:null;
                             supplier.CreatorUserId = UserId;
                             supplier.CreationTime = DateTime.Now;
                             supplier.LastModifierUserId = UserId;

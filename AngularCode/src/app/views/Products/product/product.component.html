@@ -2,70 +2,69 @@
     <div class="card">
         <div class="card-header card-header-danger">
             <button type="button" class="btn btn-primary float-right btn-sm" id="AddProductbtn" data-toggle="modal"
-                (click)="largeModal.show()">
+                (click)="ShowModel()">
                 Add Product
             </button>
             <h4 class="card-title mt-0">Product List</h4>
         </div>
         <div class="card-body bg-white">
-            <div class="table-responsive animated flash">
-                <table class="table " id="DisplayProductView">
-                    <thead class="">
-                        <th>
-                            Name
+            <div class="animated flash">
+                <div class="form-group row">
+                    <div class="col-sm-1">
+                        <select name="" id="" class="form-control" (change)="ListOfData($event.target.value)">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-11">
+                        <div class="form-group has-search">
+                            <span class="fa fa-search form-control-feedback"></span>
+                            <input type="text" class="form-control" placeholder="Search" name="search"
+                                [(ngModel)]="filter">
+                        </div>
+                    </div>
+
+                </div>
+                <table class="table  table-striped" id="DisplayCategoriesView">
+                    <thead>
+                        <th (click)="sort('Companyname')" class="pointer"> COMPANY NAME
+                            <span class="fa fa-sort" *ngIf="key =='Companyname'"></span>
                         </th>
                         <th>
-                            Gender
+                            CODE
                         </th>
 
-                        <th>
-                            Email Id
-                        </th>
-                        <th>
-                            Mobile No.
-                        </th>
-
-                        <th colspan="3" class="text-center">
+                        <th colspan="2" class="text-center">
                             Action
                         </th>
                     </thead>
-                    <tbody class="d-none LoderoutProduct">
-                        <tr *ngFor="let item of EmployeeModelLists" class="ProductListID">
+                    <tbody [hidden]="Supplieremplty">
+                        <tr *ngFor="let item of SuppliersList | orderBy: key : reverse | filter:filter |paginate: { itemsPerPage: listofCount, currentPage: p };"
+                            [hidden]="SupplierNoDataFound">
                             <td class="mr-2">
-                                {{item.first_Name}} {{item.last_Name}}
-                            </td>
-                            <td class="mr-2">
-                                {{item.gender}}
+                                {{item.companyName}}
                             </td>
                             <td class="mr-2">
-                                {{item.departmentName}}
+                                {{item.supplierCode}}
                             </td>
-                            <td class="mr-2">
-                                {{item.emailId}}
+                            <td class="text-right" (click)="EditSuppliers(item.supplierId)">
+                                <button class="btn  btn-lg"> <i class="fa fa-pencil text-success"> </i></button>
                             </td>
-                            <td class="mr-2">
-                                {{item.mobileNo}}
-                            </td>
-                            <td class="mr-2">
-                                {{item.hobbiesLists}}
-                            </td>
-                            <td class="text-center" (click)="EmployeeEdit(item.employeeId)">
-                                <i class="material-icons text-warning"> edit</i>
-                            </td>
-                            <td class="text-center">
-                                <i class="material-icons text-success">insert_drive_file</i>
-                            </td>
-                            <td class="text-center" (click)="DeleteEmpoloyee(item.employeeId)">
-                                <i class="material-icons text-danger">
-                                    delete_outline
-                                </i>
+                            <td class="mb-2" (click)="DeleteSupplier(item.supplierId)">
+                                <button class="btn  btn-lg"><i class="fa fa-trash text-danger"></i> </button>
+
                             </td>
                         </tr>
+                        <tr [hidden]="!SupplierNoDataFound">
+                            <td colspan="3" class="text-success text-center">No Data Found...!</td>
+                        </tr>
                     </tbody>
+                    <pagination-controls [hidden]="Supplieremplty" (pageChange)="p = $event"></pagination-controls>
+
                 </table>
-
-
-                <div class="mt-2 text-center mb-2 LodersetEmployee">
+                <div class="mt-2  mb-2 text-center" [hidden]="!Supplieremplty">
                     <div class="spinner-border text-danger" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
@@ -86,34 +85,176 @@
                 </button>
             </div>
             <div class="modal-body">
-
                 <tabset>
                     <tab>
-                        <ng-template tabHeading><i class="fa fa-file text-info"></i> Addresses </ng-template>
+                        <ng-template tabHeading><i class="fa fa-product-hunt text-info"></i> PRODUCT </ng-template>
                         <form [formGroup]="ProductForm">
+                            <input type="hidden" formControlName="ProductId">
                             <div class="row">
                                 <div class="form-group col-sm-6">
-                                    <label for="city">CUSTOMER NAME</label>
-                                    <input class="form-control" id="CUSTOMER-NAME" formControlName="CustomerName"
-                                        placeholder="CUSTOMER NAME" type="text">
+                                    <label for="city">NAME</label>
+                                    <input class="form-control" id="NAME" formControlName="Name" placeholder="NAME"
+                                        type="text">
                                 </div>
-                                <div class="form-group col-sm-4">
-                                    <label for="postal-code">CUSTOMER CODE</label>
-                                    <input class="form-control" id="CUSTOMER-CODE" formControlName="CustomerCode"
-                                        placeholder="CUSTOMER CODE" type="text">
+                                <div class="form-group col-sm-6">
+                                    <label for="postal-code">SKU <i class="fa fa-info-circle text-info"
+                                            tooltip="Stock Keeping Unit or Item Code" placement="right"></i></label>
+                                    <input class="form-control" id="CUSTOMER-CODE" formControlName="Sku"
+                                        placeholder="SKU" type="text">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label for="city">CATEGORIES <i class="fa fa-info-circle text-info" tooltip="Specify one or more categories for this product. This allows you
+                                             to filter and track your sales order by different categories."
+                                            placement="right"></i></label>
+                                    <select class="form-control" formControlName="CategorieId" id="ccyear">
+                                        <option value="">--Select--</option>
+                                        <option *ngFor="let type of CategoriesList" [value]="type.categoriesId">
+                                            {{type.categoriesName}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="postal-code">BRAND</label>
+                                    <select class="form-control" formControlName="BrandId">
+                                        <option value="">--Select--</option>
+                                        <option *ngFor="let type of BrandList" [value]="type.brandId">
+                                            {{type.brandName}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-2">OPTIONS</div>
+                                <div class="form-group col-sm-10">
+                                    <div class="row">
+                                        <div class="custom-control custom-checkbox offset-0">
+                                            <input class="custom-control-input" type="checkbox"
+                                                formControlName="BatchItem"
+                                                (change)="ChangeBatchORSerialNo($event.target.id,$event.target.checked)"
+                                                id="BatchItem">
+                                            <label class="custom-control-label " for="BatchItem">BATCH
+                                                ITEM <i class="fa fa-info-circle text-info" tooltip="Check this 
+                                            option if this product
+                                             is produced by batches
+                                             (e.g. medicine), transactions such as stocks
+                                              received and deliveries will be done in batches."
+                                                    placement="top"></i></label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox offset-1">
+                                            <input class="custom-control-input" type="checkbox"
+                                                formControlName="Stockitem" id="stockitem">
+                                            <label class="custom-control-label " for="stockitem">STOCK ITEM <i
+                                                    class="fa fa-info-circle text-info" tooltip="Check this option if
+                                                 you’re keeping track of this product’s inventory movement."
+                                                    placement="bottom"></i></label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox offset-1">
+                                            <input class="custom-control-input" type="checkbox"
+                                                formControlName="Taxable" id=taxable>
+                                            <label class="custom-control-label" for="taxable">TAXABLE <i
+                                                    class="fa fa-info-circle text-info"
+                                                    tooltip="Check this option if tax is applicable for this product."
+                                                    placement="right"></i></label>
+                                        </div>
+                                        <div class="custom-control custom-checkbox offset-1">
+                                            <input class="custom-control-input" type="checkbox"
+                                                (change)="ChangeBatchORSerialNo($event.target.id,$event.target.checked)"
+                                                formControlName="SerialNumber" id=serialno>
+                                            <label class="custom-control-label" for="serialno">SERIAL NUMBER
+                                                <i class="fa fa-info-circle text-info"
+                                                    tooltip="Check this option if this product has serial numbers.
+                                                         Transactions such as stock receipt and deliveries will be done with serial numbers."
+                                                    placement="left"></i></label>
+                                        </div>
+                                    </div>
+                                    <div class="row"> <label class="mt-1"><i class="fa fa-info-circle text-warning"></i>
+                                            Once product is created, Batch & Serial Number option cannot be
+                                            changed</label></div>
+                                </div>
+                            </div>
+                            <div class="row " [ngClass]="{ 'disabledbutton':IsBatchOrSerialSelect}">
+                                <div class="form-group col-sm-3">RAW MATERIAL</div>
+                                <div class="form-group col-sm-9">
+                                    <div class="row">
+                                        <div class="custom-control custom-checkbox offset-1">
+                                            <input class="custom-control-input" type="checkbox"
+                                                formControlName="IsRawMaterail" id="IsRawMaterail"
+                                                (change)="HasRawMaterial($event.target.checked)">
+                                            <label class="custom-control-label" for="IsRawMaterail">Does this product
+                                                have raw material? <i class="fa fa-info-circle text-info"
+                                                    tooltip="You still be able to add raw materials later"
+                                                    placement="right"></i></label>
+
+                                        </div>
+                                    </div>
+                                    <div class="row" [hidden]="!IsRawMaterailSelect" formArrayName="RawMaterial_points">
+                                        <table class="table table-b">
+                                            <thead>
+                                                <tr>
+                                                    <th width="60%">RAW MATERIALS</th>
+                                                    <th>UOM</th>
+                                                    <th>QTY</th>
+                                                    <th>Remove</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let item of RawMaterialPoints.controls; let pointIndex=index"
+                                                    [formGroupName]="pointIndex">
+                                                    <td>
+                                                        <select class="form-control" formControlName="RawMaterialId">
+                                                            <option value="">Please Select item</option>
+                                                            <option value="0">0</option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input type="hidden" formControlName="UMO"> 11</td>
+                                                    <td>
+                                                        <input type="text" class="form-control" formControlName="QTY">
+                                                    </td>
+                                                    <td><i class="fa fa-trash h5 mt-2 pointer text-danger"
+                                                            (click)="DeleteRawMaterial(pointIndex)"></i></td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>
+                                                        <button class="btn btn-link" (click)="AddRawMaterial()">Add More
+                                                            Raw Material</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-3">PRODUCT VARIANTS</div>
+                                <div class="form-group col-sm-9">
+                                    <div class="row">
+                                        <div class="custom-control custom-checkbox offset-1">
+                                            <input class="custom-control-input" type="checkbox"
+                                                formControlName="IsProductVariants" id="IsProductVariants"
+                                                (change)="HasProductVariants($event.target.checked)">
+                                            <label class="custom-control-label" for="IsProductVariants">Does this
+                                                product have variants? <i class="fa fa-info-circle text-info"
+                                                    tooltip="You will not be able to add Variants later if you do not select this option when creating new product"
+                                                    placement="right"></i></label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>
                     </tab>
-                    <tab>
-                        <ng-template tabHeading><i class="fa fa-file text-info"></i> Addresses </ng-template>
 
-                    </tab>
-                    <tab>
-                        <ng-template tabHeading><i class="fa fa-phone text-info"></i> Contacts
+                    <tab id="ProductVariant">
+                        <ng-template tabHeading><i class="fa fa-vimeo-square text-info"></i> PRODUCT VARIANTS
                         </ng-template>
-
-
+                        <form [formGroup]="ProductVariantForm">
+                                <div class="md-form form-sm">
+                                        <input mdbInput type="text" id="form1" class="form-control form-control-sm">
+                                        <label for="form1" class="">Example label</label>
+                                      </div>
+                        </form>
                     </tab>
                 </tabset>
 

@@ -11,6 +11,9 @@ import { DataTablesModule } from 'angular-datatables';
 import { RawMaterialsComponent } from './raw-materials/raw-materials.component';
 import {BrandComponent} from './brand/brand.component';
 import {ProductsRoutingModule} from './products-routing.module';
+import { Ng2SearchPipeModule } from 'ng2-search-filter'; 
+import { Ng2OrderModule } from 'ng2-order-pipe';
+import {NgxPaginationModule} from 'ngx-pagination';
 @NgModule({
   imports: [
     CommonModule,
@@ -25,13 +28,17 @@ import {ProductsRoutingModule} from './products-routing.module';
     // ProgressbarModule.forRoot(),
     TooltipModule.forRoot(),
     ReactiveFormsModule,
-    DataTablesModule
+    DataTablesModule,
+    Ng2SearchPipeModule,
+    Ng2OrderModule,
+    NgxPaginationModule,
   ],
   declarations: [
     ProductComponent,
     CategoriesComponent,
     BrandComponent,
     RawMaterialsComponent,
-  ]
+  ],
+  
 })
 export class ProductsModule { }

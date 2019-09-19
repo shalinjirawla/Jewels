@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import {GeneralSetupComponent} from './general-setup/general-setup.component';
+import {TestComponent} from './test/test.component';
 const routes: Routes = [
   {
     path: '',
@@ -19,7 +20,13 @@ const routes: Routes = [
           title: 'General Setup'
         }
       },
-      
+      {
+        path: 'test',
+        component: TestComponent,
+        data: {
+          title: 'test',
+        }
+      },
     ]
   }
 ];

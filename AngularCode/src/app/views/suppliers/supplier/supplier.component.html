@@ -8,11 +8,29 @@
             <h4 class="card-title mt-0">Suppliers List</h4>
         </div>
         <div class="card-body bg-white">
-            <div class="table-responsive animated flash">
+            <div class="animated flash">
+                <div class="form-group row">
+                    <div class="col-sm-1">
+                        <select name="" id="" class="form-control" (change)="ListOfData($event.target.value)">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-11">
+                        <div class="form-group has-search">
+                            <span class="fa fa-search form-control-feedback"></span>
+                            <input type="text" class="form-control" placeholder="Search" name="search"
+                                [(ngModel)]="filter">
+                        </div>
+                    </div>
+
+                </div>
                 <table class="table " id="DisplayCategoriesView">
-                    <thead class="">
-                        <th>
-                            COMPANY NAME
+                    <thead>
+                        <th (click)="sort('Companyname')" class="pointer"> COMPANY NAME
+                            <span class="fa fa-sort" *ngIf="key =='Companyname'"></span>
                         </th>
                         <th>
                             CODE
@@ -23,7 +41,8 @@
                         </th>
                     </thead>
                     <tbody [hidden]="Supplieremplty">
-                        <tr *ngFor="let item of SuppliersList" [hidden]="SupplierNoDataFound">
+                        <tr *ngFor="let item of SuppliersList | orderBy: key : reverse | filter:filter |paginate: { itemsPerPage: listofCount, currentPage: p };"
+                            [hidden]="SupplierNoDataFound">
                             <td class="mr-2">
                                 {{item.companyName}}
                             </td>
@@ -42,6 +61,8 @@
                             <td colspan="3" class="text-success text-center">No Data Found...!</td>
                         </tr>
                     </tbody>
+                    <pagination-controls [hidden]="Supplieremplty" (pageChange)="p = $event"></pagination-controls>
+
                 </table>
                 <div class="mt-2  mb-2 text-center" [hidden]="!Supplieremplty">
                     <div class="spinner-border text-danger" role="status">
@@ -153,7 +174,9 @@
                     </tab>
                     <tab id="SuppliersAddress">
                         <ng-template tabHeading><i class="fa fa-file text-info"></i> Addresses <span
-                                [hidden]="!AddressLenghtcount" class="avatar avatar-sm bg-primary rounded-circle text-center">{{AddressList.address.length}} </span> </ng-template>
+                                [hidden]="!AddressLenghtcount"
+                                class="avatar avatar-sm bg-primary rounded-circle text-center">{{AddressList.address.length}}
+                            </span> </ng-template>
                         <div [hidden]="!AddressLenghtcount">
                             <div class="table-responsive animated flash">
                                 <table class="table " id="AddressList">
@@ -312,7 +335,8 @@
                     </tab>
                     <tab id="SuppliersContact">
                         <ng-template tabHeading><i class="fa fa-phone text-info"></i> Contacts <span
-                                [hidden]="!ContactLenghtcount" class="avatar avatar-sm bg-primary rounded-circle text-center">{{ContactList.contact.length}}</span>
+                                [hidden]="!ContactLenghtcount"
+                                class="avatar avatar-sm bg-primary rounded-circle text-center">{{ContactList.contact.length}}</span>
                         </ng-template>
                         <div [hidden]="!ContactLenghtcount">
                             <div class="table-responsive animated flash">
@@ -337,11 +361,12 @@
                                                     <span class="text-primary " (click)="EditContact(i)">
                                                         <i class="fa fa-pencil"></i>
                                                     </span>
-                                                    <span 
-                                                        class="ml-2"
+                                                    <span class="ml-2"
                                                         (click)="SetDeafultContact(Contact.defaultContact,i)">
                                                         <i class="fa fa-check" [hidden]="Contact.defaultContact"></i>
-                                                        <i class="fa fa-check text-primary" [hidden]="!Contact.defaultContact" tooltip="Default Contact" placement="top"></i>
+                                                        <i class="fa fa-check text-primary"
+                                                            [hidden]="!Contact.defaultContact" tooltip="Default Contact"
+                                                            placement="top"></i>
                                                     </span>
                                                     <span class="text-danger ml-2" [hidden]="Contact.defaultContact"
                                                         (click)="DeleteContact(i)">
