@@ -222,6 +222,11 @@ export const navItems: NavData[] = [
         name: 'General Setup',
         url: '/masters/general-setup',
         icon: 'icon-star'
+      },
+      {
+        name: 'Test',
+        url: '/masters/test',
+        icon: 'icon-star'
       }
     ]
   },

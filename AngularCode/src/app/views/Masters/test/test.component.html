@@ -1,0 +1,22 @@
+<h1>Edit Product</h1>
+
+<form [formGroup]="productForm">
+
+  <label>
+    Title: <input formControlName="title" />
+  </label>
+  <h2>Selling Points</h2>
+
+  <div formArrayName="selling_points">
+    <div *ngFor="let item of sellingPoints.controls; let pointIndex=index" [formGroupName]="pointIndex">
+    <label>
+      Selling Point: <input formControlName="point" />
+    </label>
+    <button type="button" (click)="deleteSellingPoint(pointIndex)">Delete Selling Point</button>
+    </div>
+    <button type="button" (click)="addSellingPoint()">Add Selling Point</button>
+  </div>
+
+</form>
+<button (click)="Save(productForm)"> Save   </button>
+
