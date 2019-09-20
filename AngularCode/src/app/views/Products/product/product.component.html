@@ -250,10 +250,108 @@
                         <ng-template tabHeading><i class="fa fa-vimeo-square text-info"></i> PRODUCT VARIANTS
                         </ng-template>
                         <form [formGroup]="ProductVariantForm">
-                                <div class="md-form form-sm">
-                                        <input mdbInput type="text" id="form1" class="form-control form-control-sm">
-                                        <label for="form1" class="">Example label</label>
-                                      </div>
+                            <div class="row">
+                                <div class="form-group col-sm-4">
+                                    <div class="form-group">
+                                        <label>VARIANTS OPTIONS</label>
+                                        <input type="text" class="form-control" formControlName="VariantOptions"
+                                            placeholder="e.g. Color, Size">
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-8">
+                                    <div class="form-group">
+                                        <label>VARIANTS OPTIONS VALUE</label>
+                                        <input type="text" class="form-control" formControlName="VariantOptionLabel"
+                                            (blur)="ChangeVariantOptionValue($event.target.value)"
+                                            placeholder="e.g. Red, Green, Blue, S, M, L">
+                                        <div *ngIf="VariantoptionValueLabellist.length>0" class="row">
+                                            <div
+                                                *ngFor="let item of VariantoptionValueLabellist;let VariantIndex=index">
+                                                <span class="badge badge-pill badge-info mt-2 p-2 ml-2">
+                                                    <span class="text-white">{{item.label}}</span> &nbsp;<i
+                                                        class="fa fa-close pointer"
+                                                        (click)="DeleteVariantOptionValueVariantLabel(VariantIndex)"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="VariantoptionValueLabellist.length>0"
+                                formArrayName="VariantOptionValue_points">
+                                <table class="table table-b">
+                                    <thead>
+                                        <tr>
+                                            <th width="20%">VARIANTS</th>
+                                            <th>SKU </th>
+                                            <th>REORDER QUANTITY</th>
+                                            <th>PURCHASE PRICE</th>
+                                            <th>SELLING PRICE</th>
+                                            <th>ACTION</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let item of VariantOptionValue.controls; let pointIndex=index"
+                                            [formGroupName]="pointIndex">
+                                            <td>
+                                                <select class="form-control" formControlName="Variants" disabled>
+                                                    <option *ngFor="let item of VariantoptionValueLabellist;"
+                                                        [value]="item.id">{{item.label}}</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" formControlName="sku">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control"
+                                                    formControlName="ReorderQuantity">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" formControlName="PurchasePrice">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" formControlName="SellingPrice">
+                                            </td>
+                                            <td><button class="btn btn-info text-white">More</button></td>
+                                            <td><i class="fa fa-trash h5 mt-2 pointer text-danger"
+                                                    (click)="DeleteVariantOptionValueVariantLabel(pointIndex)"></i></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="7">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"
+                                                            id="inputGroupFileAddon01">Upload</span>
+                                                    </div>
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input"
+                                                            id="inputGroupFile01" (change)="VariantOptionSelectImage($event.target.value)"
+                                                            aria-describedby="inputGroupFileAddon01">
+                                                        <label class="custom-file-label" for="inputGroupFile01">Choose
+                                                            file</label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="7">
+                                                <div class="row pl-3">
+                                                    <h4 class="text-info">FULL INFO</h4>
+                                                    <h4 class="text-secondary"> | NO VARIANT LOADED</h4>
+
+                                                </div>
+                                                <div class="row pl-3">
+                                                    <span><i class="fa fa-info-circle text-info h3 pt-1"></i>
+                                                        &nbsp; You can click button 'More' to load a variant's info
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </form>
                     </tab>
                 </tabset>
@@ -267,3 +365,24 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<div bsModal #VariantImagesModel="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Variant Option Images</h4>
+                <button type="button" class="close" (click)="VariantImagesModel.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="VariantImagesModel.hide()">Close</button>
+                <button type="button" class="btn btn-primary" (click)="AddProduct(AddCustomerForm)">Save
+                    changes</button>
+            </div>
+        </div>
+    </div>
+</div>

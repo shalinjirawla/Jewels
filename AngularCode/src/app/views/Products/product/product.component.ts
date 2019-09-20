@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { FormGroup, FormBuilder, FormControl, Validators,FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators, FormArray } from '@angular/forms';
 import { ProductBrandService } from '../../../Services/Products-Services/product-brand.service';
 import { ProductCategoriesService } from '../../../Services/Products-Services/product-categories.service';
-import {HasProductRawMaterial,ProductModel} from '../../../Models/ProductModels/ProductsModel';
+import { HasProductRawMaterial, ProductModel } from '../../../Models/ProductModels/ProductsModel';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
@@ -11,22 +12,25 @@ import {HasProductRawMaterial,ProductModel} from '../../../Models/ProductModels/
 })
 export class ProductComponent implements OnInit {
   @ViewChild('largeModal', { static: false }) public largeModal: ModalDirective;
+  @ViewChild('VariantImagesModel', { static: false }) public VariantImagesModel: ModalDirective;
   constructor(private FormBuilder: FormBuilder,
     private ProductBrandService: ProductBrandService,
     private ProductCategoriesService: ProductCategoriesService
   ) { }
-  
+
   //Title For Model Start..
   ModelTitleString: string = "Add New Product";
   //Title For Model End...
   //Form List for Product Start..
   ProductForm: FormGroup;
-  ProductVariantForm:FormGroup;
+  ProductVariantForm: FormGroup;
   CategoriesList: any[];
+  VariantoptionValueLabellist: any = [];
+  VariantoptionValueLabellistEmplty: boolean = true;
   BrandList: any[];
-  IsBatchOrSerialSelect:boolean=false;
-  IsRawMaterailSelect:boolean=false;
-  isProductVarintsSelect:boolean=false;
+  IsBatchOrSerialSelect: boolean = false;
+  IsRawMaterailSelect: boolean = false;
+  isProductVarintsSelect: boolean = false;
   //Form List for Product End//
   games: any
   key: string = 'name';
@@ -39,10 +43,8 @@ export class ProductComponent implements OnInit {
   ngOnInit() {
     this.OnLoad();
     this.GetDropDownList();
-   
   }
-  public ShowModel()
-  {
+  public ShowModel() {
     $('#ProductVariant-link').parent().hide();
     this.largeModal.show();
   }
@@ -52,10 +54,9 @@ export class ProductComponent implements OnInit {
         this.CategoriesList = responce.data;
       }
     });
-    this.ProductBrandService.GetProductBrandList().subscribe((responce:any)=>{
-      if(responce.status)
-      {
-        this.BrandList=responce.data;
+    this.ProductBrandService.GetProductBrandList().subscribe((responce: any) => {
+      if (responce.status) {
+        this.BrandList = responce.data;
       }
     });
   }
@@ -66,82 +67,126 @@ export class ProductComponent implements OnInit {
       Sku: [''],
       CategorieId: [''],
       BrandId: [''],
-      BatchItem:[false],
-      Stockitem:[false],
-      Taxable:[false],
-      SerialNumber:[false],
-      IsRawMaterail:[false],
+      BatchItem: [false],
+      Stockitem: [false],
+      Taxable: [false],
+      SerialNumber: [false],
+      IsRawMaterail: [false],
       RawMaterial_points: this.FormBuilder.array([this.FormBuilder.group({
-        RawMaterialId:'',
-        UMO:'',
-        QTY:''
+        RawMaterialId: '',
+        UMO: '',
+        QTY: ''
       })]),
-      IsProductVariants:[''],
+      IsProductVariants: [''],
     });
-    this.ProductVariantForm=this.FormBuilder.group({
-        VariantOption:['',Validators.required],
-        VariantOptionValue:this.FormBuilder.array([this.FormBuilder.group({
-          label:'',
-        })]),
+    this.ProductVariantForm = this.FormBuilder.group({
+      VariantOptions: ['', Validators.required],
+      VariantOptionLabel: [''],
+      VariantOptionValue_points: this.FormBuilder.array([this.FormBuilder.group({
+        Variants: [''],
+        sku:[''],
+        ReorderQuantity:[''],
+        PurchasePrice:[''],
+        SellingPrice:[''],
+        Action:[''],
+      })]),
+
     });
   }
- public AddRawMaterial() {
-    this.RawMaterialPoints.push(this.FormBuilder.group({RawMaterialId:'',UMO:'',QTY:''}));
+  public AddRawMaterial() {
+    this.RawMaterialPoints.push(this.FormBuilder.group({ RawMaterialId: '', UMO: '', QTY: '' }));
   }
 
- public DeleteRawMaterial(index) {
+  public DeleteRawMaterial(index) {
     this.RawMaterialPoints.removeAt(index);
   }
   get RawMaterialPoints() {
     return this.ProductForm.get('RawMaterial_points') as FormArray;
   }
-  get ProductVariant()
+  public DeleteVariantOptionValueVariantLabel(index) {
+    this.VariantOptionValue.removeAt(index);
+    this.VariantoptionValueLabellist.splice(index, 1);
+  }
+  get VariantOptionValue() {
+    return this.ProductVariantForm.get('VariantOptionValue_points') as FormArray;
+  }
+  public AddProductVariant()
   {
-    return this.ProductVariantForm.get('VariantOptionValue') as FormArray;
+    this.VariantOptionValue.push(this.FormBuilder.group({  Variants: ['',Validators.required],
+    sku:[''],
+    ReorderQuantity:[''],
+    PurchasePrice:[''],
+    SellingPrice:[''],
+    Action:[''], }));
   }
-  public AddProductVariant() {
-   // this.VariantOptionValue.push(this.FormBuilder.group({label:'',}));
-  }
+  
+  public ChangeVariantOptionValue(Text: string) {
+    if(Text!=null && Text!=undefined && Text!=''){
 
- public DeleteProductVariant(index) {
-    //this.VariantOptionValue.removeAt(index);
-  }
-  public ChangeBatchORSerialNo(Id:any,Status:boolean)
-  {
-    if(Id=='BatchItem')
-    {
-        if(this.ProductForm.controls.SerialNumber.value){
-          this.ProductForm.patchValue({
-            SerialNumber:false,
-          });
-          this.IsBatchOrSerialSelect=false;
-        }
-    }else {
-      if(Status){
-        this.ProductForm.patchValue({
-          BatchItem:false,
-          IsRawMaterail:false,
-        });
-        this.IsBatchOrSerialSelect=true;
-        this.IsRawMaterailSelect=false;
-      }else{
-        this.IsBatchOrSerialSelect=false;
-      }
-        
+   
+    let obj = { label: Text,id:this.VariantoptionValueLabellist.length+1 }
+    let Id=this.VariantoptionValueLabellist.length+1;
+    this.VariantoptionValueLabellist.push(obj);
+    this.ProductVariantForm.patchValue({
+      VariantOptionLabel:'',
+    })  
+    let arrobj=this.ProductVariantForm.get('VariantOptionValue_points') as FormArray;
+    if(Id>1){
+      this.AddProductVariant();
     }
+  if(arrobj.controls.length==0){this.AddProductVariant()}
+  arrobj.controls[Id-1].patchValue({
+    Variants:Id,
+  });
+}else{
+  Swal.fire({
+    type:'error',
+    title:"Please Enter Variant Option Values..",
+  })
+}
+  }  
+  
+  public ChangeBatchORSerialNo(Id: any, Status: boolean) {
+  if (Id == 'BatchItem') {
+    if (this.ProductForm.controls.SerialNumber.value) {
+      this.ProductForm.patchValue({
+        SerialNumber: false,
+      });
+      this.IsBatchOrSerialSelect = false;
+    }
+  } else {
+    if (Status) {
+      this.ProductForm.patchValue({
+        BatchItem: false,
+        IsRawMaterail: false,
+      });
+      this.IsBatchOrSerialSelect = true;
+      this.IsRawMaterailSelect = false;
+    } else {
+      this.IsBatchOrSerialSelect = false;
+    }
+  
+   }
+}
+ 
+  public HasRawMaterial(Status: boolean) {
+  if (Status) {
+    this.IsRawMaterailSelect = true;
+  } else { this.IsRawMaterailSelect = false; }
+}
+  public HasProductVariants(Status: boolean) {
+  if (Status) {
+    this.isProductVarintsSelect = true;
+    $('#ProductVariant-link').parent().show();
+  } else {
+    this.isProductVarintsSelect = false;
+    $('#ProductVariant-link').parent().hide();
   }
-  public HasRawMaterial(Status:boolean){
-    if(Status)
-    {
-      this.IsRawMaterailSelect=true;
-    }else{this.IsRawMaterailSelect=false;}
-  }
-  public HasProductVariants(Status:boolean){
-    if(Status){
-      this.isProductVarintsSelect=true;
-      $('#ProductVariant-link').parent().show();
-      debugger
-    }else{this.isProductVarintsSelect=false;
-       $('#ProductVariant-link').parent().hide();}
-  }
+}
+
+public VariantOptionSelectImage(selectedimages)
+{
+  
+}
+
 }

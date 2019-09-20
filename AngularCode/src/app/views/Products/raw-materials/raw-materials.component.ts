@@ -216,7 +216,7 @@ export class RawMaterialsComponent implements OnInit {
       for (var attrname in obj4) { obj3[attrname] = obj4[attrname]; }
       return obj3;
     }
-    final.pictureList = this.PictureList;
+    final["pictureList"] = this.PictureList;
     debugger
     this.RawMaterailsService.SaveRawMaterails(final).subscribe((responce: any) => {
       if (responce.status) {
