@@ -51,6 +51,67 @@ namespace Inventory.Web.Controllers
 
         }
 
+        [HttpGet]
+        public IActionResult GetRawMaterailsList()
+        {
+            var Data = _irawMaterails.GetRawMaterailsList();
+            Status = true;
+            return Ok(GetAjaxResponse(Status, Message, Data));
+
+        }
+
+        [HttpGet]
+        public IActionResult GetRawMaterails(long RMId)
+        {
+            if (RMId != 0 && RMId >= 0)
+            {
+                Data = _irawMaterails.GetRawMaterails(RMId);
+                Status = true;
+            }
+            else
+            {
+                Status = false;
+                Message = "No Data Found!...";
+            }
+            return Ok(GetAjaxResponse(Status, Message, Data));
+
+        }
+
+        [HttpPost]
+        public IActionResult UpdateRawMaterails(long RMId, SaveRawMaterailsVm model)
+        {
+            GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+            GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
+            if (RMId != 0 && RMId > 0)
+            {
+                var Data = _irawMaterails.UpdateRawMaterails(RMId, model, GetUserId, GetTenantId);
+                Status = true;
+                Message = "Raw Materails Successfully Update..";
+            }
+            else
+            {
+                Status = false;
+                Message = "Recore Not Found!... ";
+            }
+            return Ok(GetAjaxResponse(Status, Message, Data));
+
+        }
+        [HttpDelete]
+        public IActionResult DeleteRawMaterails(long RMId)
+        {
+            if (RMId != 0 && RMId >= 0)
+            {
+                Status = _irawMaterails.DeleteRawMaterails(RMId);
+                Message = "Raw Materails Successfully Deleted...";
+            }
+            else
+            {
+                Status = false;
+                Message = "No Data Found!...";
+            }
+            return Ok(GetAjaxResponse(Status, Message, Data));
+
+        }
 
     }
 }

@@ -641,6 +641,121 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.ToTable("ProductCategories");
                 });
 
+            modelBuilder.Entity("Inventory.Core.Models.RawMaterails", b =>
+                {
+                    b.Property<long>("RMId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AlternativeRMName");
+
+                    b.Property<long?>("BrandId");
+
+                    b.Property<DateTime?>("CreationTime");
+
+                    b.Property<string>("CreatorUserId");
+
+                    b.Property<string>("Description");
+
+                    b.Property<decimal?>("ICostPrice");
+
+                    b.Property<decimal?>("ID_CBM");
+
+                    b.Property<decimal?>("ID_Height");
+
+                    b.Property<decimal?>("ID_Width");
+
+                    b.Property<decimal?>("ID_length");
+
+                    b.Property<long?>("ID_metric_Units");
+
+                    b.Property<decimal?>("ILandedCost");
+
+                    b.Property<decimal?>("IStockOnHand");
+
+                    b.Property<decimal?>("Inner_Weight");
+
+                    b.Property<long?>("Inner_Weight_metric_Units");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<string>("Itemcode");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<string>("LastModifierUserId");
+
+                    b.Property<long?>("Minimumu_Order_Quantity");
+
+                    b.Property<decimal?>("OD_CBM");
+
+                    b.Property<decimal?>("OD_Height");
+
+                    b.Property<decimal?>("OD_Width");
+
+                    b.Property<decimal?>("OD_length");
+
+                    b.Property<long?>("OD_metric_Units");
+
+                    b.Property<decimal?>("Outer_Weight");
+
+                    b.Property<long?>("Outer_Weight_metric_Units");
+
+                    b.Property<long?>("ProductCategorieId");
+
+                    b.Property<decimal?>("Purchase_Price");
+
+                    b.Property<string>("RMName");
+
+                    b.Property<long?>("Reorder_Quantity");
+
+                    b.Property<decimal?>("Selling_Price");
+
+                    b.Property<bool>("StockItem");
+
+                    b.Property<long?>("SupplierId");
+
+                    b.Property<long?>("TaxCodeId");
+
+                    b.Property<bool>("Taxable");
+
+                    b.Property<long?>("TenantsId");
+
+                    b.Property<long?>("UOMId");
+
+                    b.Property<long?>("WarehouseId");
+
+                    b.HasKey("RMId");
+
+                    b.HasIndex("BrandId");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("ID_metric_Units");
+
+                    b.HasIndex("Inner_Weight_metric_Units");
+
+                    b.HasIndex("LastModifierUserId");
+
+                    b.HasIndex("OD_metric_Units");
+
+                    b.HasIndex("Outer_Weight_metric_Units");
+
+                    b.HasIndex("ProductCategorieId");
+
+                    b.HasIndex("SupplierId");
+
+                    b.HasIndex("TaxCodeId");
+
+                    b.HasIndex("TenantsId");
+
+                    b.HasIndex("UOMId");
+
+                    b.HasIndex("WarehouseId");
+
+                    b.ToTable("RawMaterails");
+                });
+
             modelBuilder.Entity("Inventory.Core.Models.Supplier.Supplier", b =>
                 {
                     b.Property<long>("SupplierId")
@@ -743,6 +858,8 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<string>("CreatorUserId");
 
+                    b.Property<bool>("DefaultImage");
+
                     b.Property<bool>("IsActive");
 
                     b.Property<DateTime?>("LastModificationTime");
@@ -762,6 +879,8 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasIndex("CreatorUserId");
 
                     b.HasIndex("LastModifierUserId");
+
+                    b.HasIndex("RawMaterailId");
 
                     b.HasIndex("TenantsId");
 
@@ -1223,6 +1342,61 @@ namespace Inventory.EntityFrameworkCore.Migrations
                         .HasForeignKey("TenantsId");
                 });
 
+            modelBuilder.Entity("Inventory.Core.Models.RawMaterails", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.Products.ProductBrand", "ProductBrand")
+                        .WithMany()
+                        .HasForeignKey("BrandId");
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.Metric_Units", "metric_Units4")
+                        .WithMany()
+                        .HasForeignKey("ID_metric_Units");
+
+                    b.HasOne("Inventory.Core.Models.Commons.Metric_Units", "metric_Units2")
+                        .WithMany()
+                        .HasForeignKey("Inner_Weight_metric_Units");
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.Metric_Units", "metric_Units3")
+                        .WithMany()
+                        .HasForeignKey("OD_metric_Units");
+
+                    b.HasOne("Inventory.Core.Models.Commons.Metric_Units", "metric_Units1")
+                        .WithMany()
+                        .HasForeignKey("Outer_Weight_metric_Units");
+
+                    b.HasOne("Inventory.Core.Models.Products.ProductCategories", "productCategories")
+                        .WithMany()
+                        .HasForeignKey("ProductCategorieId");
+
+                    b.HasOne("Inventory.Core.Models.Supplier.Supplier", "supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.TaxCode", "taxCode")
+                        .WithMany()
+                        .HasForeignKey("TaxCodeId");
+
+                    b.HasOne("Inventory.Core.Models.Tenants.Tenants", "Tenants")
+                        .WithMany()
+                        .HasForeignKey("TenantsId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.UOM", "UOM")
+                        .WithMany()
+                        .HasForeignKey("UOMId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.Warehouse", "warehouse")
+                        .WithMany()
+                        .HasForeignKey("WarehouseId");
+                });
+
             modelBuilder.Entity("Inventory.Core.Models.Supplier.Supplier", b =>
                 {
                     b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
@@ -1267,6 +1441,10 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
                         .WithMany()
                         .HasForeignKey("LastModifierUserId");
+
+                    b.HasOne("Inventory.Core.Models.RawMaterails", "RawMaterails")
+                        .WithMany()
+                        .HasForeignKey("RawMaterailId");
 
                     b.HasOne("Inventory.Core.Models.Tenants.Tenants", "Tenants")
                         .WithMany()

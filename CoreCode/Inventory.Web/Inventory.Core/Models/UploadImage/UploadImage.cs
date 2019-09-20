@@ -13,6 +13,7 @@ namespace Inventory.Core.Models.UploadImage
         public long UploadImageId { get; set; }
         public string UploadImageString { get; set; }
         public Boolean DefaultImage { get; set; }
+        [ForeignKey("RawMaterails")]
         public Nullable<long> RawMaterailId { get; set; }
         public Nullable<long> ProductId { get; set; }
 
@@ -30,6 +31,7 @@ namespace Inventory.Core.Models.UploadImage
         public Tenants.Tenants Tenants { get; set; }
         public ApplicationUser.ApplicationUser User { get; set; }
         public ApplicationUser.ApplicationUser UserId { get; set; }
+        public RawMaterails RawMaterails { get; set; }
 
 
     }

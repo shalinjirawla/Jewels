@@ -1,61 +1,89 @@
 <div class="col-md-12">
     <div class="card">
         <div class="card-header card-header-danger">
-            <button type="button" class="btn btn-primary float-right btn-sm" id="AddRawMaterialtbtn" data-toggle="modal"
+            <button type="button" class="btn btn-primary float-right btn-sm" id="" data-toggle="modal"
                 (click)="openmodal()">
                 Add Raw Materail
             </button>
             <h4 class="card-title mt-0">Raw Materails List</h4>
         </div>
         <div class="card-body bg-white">
-            <div class="table-responsive animated flash">
-                <table class="table " id="DisplayCategoriesView">
-                    <thead class="">
-                        <th>
-                            Categorie Name
-                        </th>
-                        <th>
-                            Display Order
-                        </th>
+            <div class="animated flash">
+                <div class="form-group row">
+                    <div class="col-sm-1">
+                        <select name="" id="" class="form-control" (change)="ListOfData($event.target.value)">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-11">
+                        <div class="form-group has-search">
+                            <span class="fa fa-search form-control-feedback"></span>
+                            <input type="text" class="form-control" placeholder="Search" name="search"
+                                [(ngModel)]="Searchfilter">
+                        </div>
+                    </div>
 
-                        <th>
-                            Code
+                </div>
+                <table class="table " id="DisplayCategoriesView">
+                    <thead>
+                        <th width="10%"></th>
+                        <th (click)="sort('Item')" class="pointer"> ITEM
+                            <span class="fa fa-sort" *ngIf="key =='Item'"></span>
                         </th>
                         <th>
-                            Description
+                            CODE
+                        </th>
+                        <th>
+                            IN STOCK QTY
+                        </th>
+                        <th>
+                            PURCHASE PRICE
                         </th>
 
                         <th colspan="2" class="text-center">
                             Action
                         </th>
                     </thead>
-                    <tbody [hidden]="!RawMaterialList">
-                        <tr *ngFor="let item of CategoriesList" class="CategoriesListID">
-                            <td class="mr-2">
-                                {{item.categoriesName}}
+                    <tbody [hidden]="RawMaterailsempty">
+                        <tr *ngFor="let item of RawMaterailsList | orderBy: key : reverse | filter:Searchfilter | paginate: { itemsPerPage: listofCount, currentPage: p };"
+                            [hidden]="SupplierNoDataFound">
+                            <td>
+                                <div *ngFor="let data of item.pictureList.picture">
+                                    <img [src]="data.pictuterString"
+                                        accept="image/png, image/jpeg" height="75px" width="75px">
+                                </div>
                             </td>
                             <td class="mr-2">
-                                {{item.displayOrder}}
+                                {{item.rmName}}
                             </td>
                             <td class="mr-2">
-                                {{item.code}}
+                                {{item.itemcode}}
                             </td>
                             <td class="mr-2">
-                                {{item.description}}
+                                {{item.iStockOnHand}}
                             </td>
-
-                            <td class="text-right" (click)="CategorieEdit(item.categoriesId)">
-
+                            <td class="mr-2">
+                                {{item.purchase_Price}}
+                            </td>
+                            <td class="text-right" (click)="GetRawMaterail(item.rmId)">
                                 <button class="btn  btn-lg"> <i class="fa fa-pencil text-success"> </i></button>
                             </td>
-                            <td class="mb-2" (click)="CategorieDelete(item.categoriesId)">
+                            <td class="mb-2" (click)="DeleteRawMaterails(item.rmId)">
                                 <button class="btn  btn-lg"><i class="fa fa-trash text-danger"></i> </button>
 
                             </td>
                         </tr>
+                        <tr [hidden]="!RawMaterailsempty">
+                            <td colspan="3" class="text-success text-center">No Data Found...!</td>
+                        </tr>
                     </tbody>
+                    <pagination-controls [hidden]="RawMaterailsempty" (pageChange)="p = $event"></pagination-controls>
+
                 </table>
-                <div class="mt-2 text-center mb-2" [hidden]="RawMaterialList">
+                <div class="mt-2  mb-2 text-center" [hidden]="!RawMaterailsempty">
                     <div class="spinner-border text-danger" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
@@ -64,6 +92,7 @@
         </div>
     </div>
 </div>
+
 
 <div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
@@ -78,7 +107,7 @@
             <div class="modal-body">
                 <tabset>
                     <tab id="RawMaterialFormtab">
-                        <ng-template tabHeading><i class="fa fa-plus text-info"></i> Raw Materail Form </ng-template>
+                        <ng-template tabHeading><i class="fa fa-plus text-info"></i> Details </ng-template>
                         <form [formGroup]="RawMaterialForm">
                             <input type="hidden" formControlName="rmId">
                             <div class="row">
@@ -93,7 +122,8 @@
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <label>SKU</label>
-                                    <i class="fa fa-info-circle text-info" tooltip="tooltip." placement="right"></i>
+                                    <i class="fa fa-info-circle text-info" tooltip="Stock Keeping Unit or Item Code."
+                                        placement="right"></i>
                                     <input class="form-control" id="ItemCode" formControlName="itemcode"
                                         placeholder="ITEM CODE" type="text">
                                 </div>
@@ -109,8 +139,9 @@
 
                                 <div class="form-group col-sm-6">
                                     <label>DEFAULT SUPPLIER</label>
-                                    <i class="fa fa-info-circle text-info mt-1 ml-1" tooltip="tooltip."
-                                    placement="right"></i>
+                                    <i class="fa fa-info-circle text-info mt-1 ml-1"
+                                        tooltip="By selecting default supplier, any purchase order issued that includes this product will be automatically populated with this supplier."
+                                        placement="right"></i>
                                     <select class="form-control" formControlName="supplierId" id="supplierId">
                                         <option value=0>--Select--</option>
                                         <option *ngFor="let supplier of SupplierLsi" [value]="supplier.warehouseId">
@@ -122,7 +153,9 @@
                             <div class="row">
                                 <div class="form-group col-sm-6">
                                     <label>CATEGORIES</label>
-                                    <i class="fa fa-info-circle text-info" tooltip="tooltip." placement="right"></i>
+                                    <i class="fa fa-info-circle text-info" tooltip="Specify one or more categories for this product. This allows you
+                                    to filter and track your sales order by different categories."
+                                        placement="right"></i>
                                     <select class="form-control" formControlName="productCategorieId" id="CategorieId">
                                         <option value=0>--Select--</option>
                                         <option *ngFor="let cat of ProductCategorieList" [value]="cat.categoriesId">
@@ -146,8 +179,9 @@
                             <div class="row">
                                 <div class="form-group col-sm-6">
                                     <label>DEFAULT TAX CODE</label>
-                                    <i class="fa fa-info-circle text-info mt-1 ml-1" tooltip="tooltip."
-                                    placement="right"></i>
+                                    <i class="fa fa-info-circle text-info mt-1 ml-1"
+                                        tooltip="When making sales for this product, default tax will always be selected to save your time."
+                                        placement="right"></i>
                                     <select class="form-control" formControlName="taxCodeId" id="CategorieId">
                                         <option value=0>--Select--</option>
                                         <option *ngFor="let cat of TaxCodeList" [value]="cat.taxId">
@@ -157,8 +191,9 @@
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <label>DEFAULT WAREHOUSE</label>
-                                    <i class="fa fa-info-circle text-info mt-1 ml-1" tooltip="tooltip."
-                                    placement="right"></i>
+                                    <i class="fa fa-info-circle text-info mt-1 ml-1"
+                                        tooltip="By selecting a default location, the warehouse location of this product will be automatically selected when an receive note is done to receive the stocks into your warehouse."
+                                        placement="right"></i>
                                     <select class="form-control" formControlName="warehouseId" id="warehouseId">
                                         <option value=0>--Select--</option>
                                         <option *ngFor="let warehouse of WarehouseList" [value]="warehouse.warehouseId">
@@ -171,14 +206,18 @@
                             <div class="row">
                                 <div class="form-group col-sm-6">
                                     <label>PURCHASE PRICE</label>
-                                    <i class="fa fa-info-circle text-info" tooltip="tooltip." placement="right"></i>
+                                    <i class="fa fa-info-circle text-info"
+                                        tooltip="Specify the default purchase price of this product, purchase price can be replaced when creating purchase order."
+                                        placement="right"></i>
                                     <input class="form-control" id="purchase_Price" (keydown)="avoidkeyPress($event)"
                                         (keypress)="allownumberwithdot($event)" formControlName="purchase_Price"
                                         placeholder="0.00" type="text">
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <label>SELLING PRICE</label>
-                                    <i class="fa fa-info-circle text-info" tooltip="tooltip." placement="right"></i>
+                                    <i class="fa fa-info-circle text-info"
+                                        tooltip="Specify the default selling price of this product, selling price can be replaced when creating quotation or sales order."
+                                        placement="right"></i>
                                     <input class="form-control" id="selling_Price" (keydown)="avoidkeyPress($event)"
                                         (keypress)="allownumberwithdot($event)" formControlName="selling_Price"
                                         placeholder="0.00" type="text">
@@ -190,22 +229,24 @@
 
                     </tab>
                     <tab id="RawMaterialForm2tab">
-                        <ng-template tabHeading><i class="fa fa-plus text-info"> Raw Materail Form</i>
+                        <ng-template tabHeading><i class="fa fa-plus text-info"> </i> Stock
                         </ng-template>
                         <form [formGroup]="RawMaterialForm2">
                             <div class="row">
                                 <div class="form-group col-sm-6">
                                     <label>INITIAL STOCK ON HAND</label>
-                                    <i class="fa fa-info-circle text-info mt-1 ml-1" tooltip="tooltip."
-                                    placement="right"></i>
+                                    <i class="fa fa-info-circle text-info mt-1 ml-1"
+                                        tooltip="Stocks will be adjusted based on default location."
+                                        placement="right"></i>
                                     <input class="form-control" id="iStockOnHand" (keydown)="avoidkeyPress($event)"
                                         (keypress)="allownumberwithdot($event)" formControlName="iStockOnHand"
                                         placeholder="Initial Stock On Hand" type="text">
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <label>INITIAL COST PRICE</label>
-                                    <i class="fa fa-info-circle text-info mt-1 ml-1" tooltip="tooltip."
-                                    placement="right"></i>
+                                    <i class="fa fa-info-circle text-info mt-1 ml-1"
+                                        tooltip="The cost price of each individual item of your starting inventory."
+                                        placement="right"></i>
                                     <input class="form-control" id="iCostPrice" (keydown)="avoidkeyPress($event)"
                                         (keypress)="allownumberwithdot($event)" formControlName="iCostPrice"
                                         placeholder="Initial Cost Price" type="text">
@@ -214,15 +255,18 @@
                             <div class="row">
                                 <div class="form-group col-sm-6">
                                     <label>INITIAL LANDED COST</label>
-                                    <i class="fa fa-info-circle text-info mt-1 ml-1" tooltip="tooltip."
-                                    placement="right"></i>
+                                    <i class="fa fa-info-circle text-info mt-1 ml-1"
+                                        tooltip="The total cost of 1 base unit of the product that includes shipment, customs & any administrative fees that you might want to add."
+                                        placement="right"></i>
                                     <input class="form-control" id="iLandedCost" (keydown)="avoidkeyPress($event)"
                                         (keypress)="allownumberwithdot($event)" formControlName="iLandedCost"
                                         placeholder="0.00" type="text">
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <label>REORDER QUANTITY</label>
-                                    <i class="fa fa-info-circle text-info" tooltip="tooltip." placement="right"></i>
+                                    <i class="fa fa-info-circle text-info"
+                                        tooltip="Track reorder on dashboard or under report (inventory report > stock reorder)."
+                                        placement="right"></i>
                                     <input class="form-control" id="reorder_Quantity" (keydown)="avoidkeyPress($event)"
                                         (keypress)="allownumberwithdot($event)" formControlName="reorder_Quantity"
                                         placeholder="0" type="text">
@@ -250,14 +294,16 @@
                                         <input type="checkbox" class="custom-control-input" id="StockItem"
                                             formControlName="stockItem">
                                         <label class="custom-control-label" for="StockItem">STOCK ITEM</label>
-                                        <i class="fa fa-info-circle text-info mt-1 ml-1" tooltip="tooltip."
+                                        <i class="fa fa-info-circle text-info mt-1 ml-1" tooltip="Check this option if
+                                        you’re keeping track of this product’s inventory movement."
                                             placement="right"></i>
                                     </div>
                                     <div class="custom-control custom-checkbox custom-control-inline">
                                         <input type="checkbox" class="custom-control-input" id="Taxable"
                                             formControlName="taxable">
                                         <label class="custom-control-label" for="Taxable">TAXABLE</label>
-                                        <i class="fa fa-info-circle text-info mt-1 ml-1" tooltip="tooltip."
+                                        <i class="fa fa-info-circle text-info mt-1 ml-1"
+                                            tooltip="Check this option if tax is applicable for this product.."
                                             placement="right"></i>
                                     </div>
                                 </div>
@@ -267,14 +313,15 @@
                         </form>
                     </tab>
                     <tab id="RawMaterialForm3tab">
-                        <ng-template tabHeading><i class="fa fa-plus text-info"> Unit of Measure Form</i>
+                        <ng-template tabHeading><i class="fa fa-plus text-info"></i> Unit of Measure
                         </ng-template>
                         <form [formGroup]="UnitofMeasure">
                             <div class="row">
                                 <div class="form-group col-sm-6">
                                     <label>BASE UOM</label>
-                                    <i class="fa fa-info-circle text-info mt-1 ml-1" tooltip="tooltip."
-                                    placement="right"></i>
+                                    <i class="fa fa-info-circle text-info mt-1 ml-1"
+                                        tooltip='Specify the smallest product unit that will be sold in. If this field is left blank, the system will take base UOM as "Unit(s)".'
+                                        placement="right"></i>
                                     <select class="form-control" formControlName="uomId" id="uomId">
                                         <option value=0>--Select--</option>
                                         <option *ngFor="let UOMList of UOMList" [value]="UOMList.uomId">
@@ -311,23 +358,24 @@
                                         <div class="col-sm-3">
                                             <input class="form-control" id="oD_Width" formControlName="oD_Width"
                                                 (keydown)="avoidkeyPress($event)"
-                                                (keypress)="allownumberwithdot($event)" type="text" placeholder="Width">
+                                                (keypress)="allownumberwithdot($event)"
+                                                (change)="OuterCBM(UnitofMeasure)" type="text" placeholder="Width">
                                         </div>
                                         <div class="col-sm-3">
                                             <input class="form-control" id="oD_Height" formControlName="oD_Height"
                                                 (keydown)="avoidkeyPress($event)"
-                                                (keypress)="allownumberwithdot($event)" type="text"
-                                                placeholder="Height">
+                                                (keypress)="allownumberwithdot($event)"
+                                                (change)="OuterCBM(UnitofMeasure)" type="text" placeholder="Height">
                                         </div>
                                         <div class="col-sm-3">
                                             <input class="form-control" id="oD_length" formControlName="oD_length"
                                                 (keydown)="avoidkeyPress($event)"
-                                                (keypress)="allownumberwithdot($event)" type="text"
-                                                placeholder="Length">
+                                                (keypress)="allownumberwithdot($event)"
+                                                (change)="OuterCBM(UnitofMeasure)" type="text" placeholder="Length">
                                         </div>
                                         <div class="1">
-                                            <select class="form-control" formControlName="oD_metric_Units"
-                                                id="oD_metric_Units">
+                                            <select class="form-control" (change)="outerUOM($event.target.value)"
+                                                formControlName="oD_metric_Units" id="oD_metric_Units">
                                                 <option value=0>--Select--</option>
                                                 <option *ngFor="let item of FtMetricUnitList"
                                                     [value]="item.metric_UnitsId">
@@ -370,23 +418,24 @@
                                         <div class="col-sm-3">
                                             <input class="form-control" id="iD_Width" formControlName="iD_Width"
                                                 (keydown)="avoidkeyPress($event)"
-                                                (keypress)="allownumberwithdot($event)" type="text" placeholder="Width">
+                                                (keypress)="allownumberwithdot($event)"
+                                                (change)="InnerCBM(UnitofMeasure)" type="text" placeholder="Width">
                                         </div>
                                         <div class="col-sm-3">
                                             <input class="form-control" id="iD_Height" formControlName="iD_Height"
                                                 (keydown)="avoidkeyPress($event)"
-                                                (keypress)="allownumberwithdot($event)" type="text"
-                                                placeholder="Height">
+                                                (keypress)="allownumberwithdot($event)"
+                                                (change)="InnerCBM(UnitofMeasure)" type="text" placeholder="Height">
                                         </div>
                                         <div class="col-sm-3">
                                             <input class="form-control" id="iD_length" formControlName="iD_length"
                                                 (keydown)="avoidkeyPress($event)"
-                                                (keypress)="allownumberwithdot($event)" type="text"
-                                                placeholder="Length">
+                                                (keypress)="allownumberwithdot($event)"
+                                                (change)="InnerCBM(UnitofMeasure)" type="text" placeholder="Length">
                                         </div>
                                         <div class="1">
-                                            <select class="form-control" formControlName="iD_metric_Units"
-                                                id="iD_metric_Units">
+                                            <select class="form-control" (change)="InnerUOM($event.target.value)"
+                                                formControlName="iD_metric_Units" id="iD_metric_Units">
                                                 <option value=0>--Select--</option>
                                                 <option *ngFor="let item of FtMetricUnitList"
                                                     [value]="item.metric_UnitsId">
@@ -405,7 +454,7 @@
                         </form>
                     </tab>
                     <tab id="RawMaterialForm4tab">
-                        <ng-template tabHeading><i class="fa fa-plus text-info"> Upload Pic Form</i>
+                        <ng-template tabHeading><i class="fa fa-plus text-info"></i> Upload Picture
                         </ng-template>
                         <form [formGroup]="UploadPhotoForm">
                             <div class="row">

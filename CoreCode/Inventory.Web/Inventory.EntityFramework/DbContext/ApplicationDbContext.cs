@@ -50,7 +50,7 @@ namespace Inventory.EntityFrameworkCore.DbContext
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<Metric_Units> Metric_Units { get; set; }
         public DbSet<UploadImage> UploadImages { get; set; }
-        //public DbSet<RawMaterails> RawMaterails { get; set; }
+        public DbSet<RawMaterails> RawMaterails { get; set; }
         public DbSet<UOM> UOMs { get; set; }
     }
 }
