@@ -145,7 +145,7 @@ export class RawMaterialsComponent implements OnInit {
     this.RawMaterailsService.GetLocationList().subscribe((responce: any) => {
       if (responce.status) {
         this.WarehouseList = responce.data;
-      }
+      }   
     })
 
     this.RawMaterailsService.GetUOMList().subscribe((responce: any) => {
@@ -468,10 +468,11 @@ export class RawMaterialsComponent implements OnInit {
         oucbm = (ouWidth * ouHeight * ouLength).toString();
       }
       else if (matric == "in") {
-        oucbm = (ouWidth * ouHeight * ouLength / 31023.37).toString();
+        oucbm = (ouWidth * ouHeight * ouLength / 31023.3779).toString();
       }
       else if (matric == "ft") {
-        oucbm = (ouWidth * ouHeight * ouLength / 35.315).toString();
+        let a  = ((ouWidth*0.3048) * (ouHeight*0.3048) * (ouLength*0.3048)).toString();
+        oucbm = parseFloat(a).toFixed(7);
       }
       this.UnitofMeasure.patchValue({
         oD_CBM: oucbm,
@@ -522,10 +523,11 @@ export class RawMaterialsComponent implements OnInit {
         incbm = (inWidth * inHeight * inLength).toString();
       }
       else if (matric == "in") {
-        incbm = (inWidth * inHeight * inLength / 31023.37).toString();
+        incbm = (inWidth * inHeight * inLength / 31023.3779).toString();
       }
       else if (matric == "ft") {
-        incbm = (inWidth * inHeight * inLength / 35.315).toString();
+        let a  = ((inWidth*0.3048) * (inHeight*0.3048) * (inLength*0.3048)).toString();
+        incbm = parseFloat(a).toFixed(7);
       }
       this.UnitofMeasure.patchValue({
         iD_CBM: incbm,

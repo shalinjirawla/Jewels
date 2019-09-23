@@ -25,9 +25,10 @@ export class LoginComponent implements OnInit {
   FormSubmitted: boolean = false;
   constructor(private FormBuilder: FormBuilder, private ApplicationUserService: ApplicationUserService,
     private router: Router) {
-      setInterval(() => {
-        this.LogOut()
-    }, 3600000); }
+    setInterval(() => {
+      this.LogOut()
+    }, 3600000);
+  }
   ngOnInit() {
     this.Onload();
     this.LogOut();
@@ -56,11 +57,13 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('AccessToken', this.Responce.accessToken);
           localStorage.setItem('UserId', this.Responce.userId);
           localStorage.setItem('TenantId', this.Responce.tenantId);
+          let a = new Date().valueOf();
+          localStorage.setItem('logintime', a.toString())
           this.router.navigateByUrl('/dashboard');
         } else {
           Swal.fire({
-            type:'error',
-            title:responce.message,
+            type: 'error',
+            title: responce.message,
           });
         }
       } else {
@@ -74,7 +77,7 @@ export class LoginComponent implements OnInit {
   }
   get f() { return this.LoginForm.controls; }
 
-  
- 
+
+
 
 }  
