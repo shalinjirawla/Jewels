@@ -31,6 +31,8 @@ export class ProductComponent implements OnInit {
   IsBatchOrSerialSelect: boolean = false;
   IsRawMaterailSelect: boolean = false;
   isProductVarintsSelect: boolean = false;
+  ProductNoDataFound: boolean = true;
+  VariantOptionType: boolean = false;
   //Form List for Product End//
   games: any
   key: string = 'name';
@@ -83,12 +85,13 @@ export class ProductComponent implements OnInit {
       VariantOptions: ['', Validators.required],
       VariantOptionLabel: [''],
       VariantOptionValue_points: this.FormBuilder.array([this.FormBuilder.group({
+        VariantType:['1'],
         Variants: [''],
-        sku:[''],
-        ReorderQuantity:[''],
-        PurchasePrice:[''],
-        SellingPrice:[''],
-        Action:[''],
+        sku: [''],
+        ReorderQuantity: [''],
+        PurchasePrice: [''],
+        SellingPrice: [''],
+        Action: [''],
       })]),
 
     });
@@ -110,83 +113,88 @@ export class ProductComponent implements OnInit {
   get VariantOptionValue() {
     return this.ProductVariantForm.get('VariantOptionValue_points') as FormArray;
   }
-  public AddProductVariant()
-  {
-    this.VariantOptionValue.push(this.FormBuilder.group({  Variants: ['',Validators.required],
-    sku:[''],
-    ReorderQuantity:[''],
-    PurchasePrice:[''],
-    SellingPrice:[''],
-    Action:[''], }));
+  public AddProductVariant(VariantOptionType:any) {
+    this.VariantOptionValue.push(this.FormBuilder.group({
+      VariantType:[VariantOptionType],
+      Variants: ['', Validators.required],
+      sku: [''],
+      ReorderQuantity: [''],
+      PurchasePrice: [''],
+      SellingPrice: [''],
+      Action: [''],
+    }));
   }
-  
+
   public ChangeVariantOptionValue(Text: string) {
-    if(Text!=null && Text!=undefined && Text!=''){
+    if (Text != null && Text != undefined && Text != '') {
 
-   
-    let obj = { label: Text,id:this.VariantoptionValueLabellist.length+1 }
-    let Id=this.VariantoptionValueLabellist.length+1;
-    this.VariantoptionValueLabellist.push(obj);
-    this.ProductVariantForm.patchValue({
-      VariantOptionLabel:'',
-    })  
-    let arrobj=this.ProductVariantForm.get('VariantOptionValue_points') as FormArray;
-    if(Id>1){
-      this.AddProductVariant();
-    }
-  if(arrobj.controls.length==0){this.AddProductVariant()}
-  arrobj.controls[Id-1].patchValue({
-    Variants:Id,
-  });
-}else{
-  Swal.fire({
-    type:'error',
-    title:"Please Enter Variant Option Values..",
-  })
-}
-  }  
-  
-  public ChangeBatchORSerialNo(Id: any, Status: boolean) {
-  if (Id == 'BatchItem') {
-    if (this.ProductForm.controls.SerialNumber.value) {
-      this.ProductForm.patchValue({
-        SerialNumber: false,
+
+      let obj = { label: Text, id: this.VariantoptionValueLabellist.length + 1,VariantType:this.VariantOptionType}
+      let Id = this.VariantoptionValueLabellist.length + 1;
+      this.VariantoptionValueLabellist.push(obj);
+      this.ProductVariantForm.patchValue({
+        VariantOptionLabel: '',
+      })
+      let arrobj = this.ProductVariantForm.get('VariantOptionValue_points') as FormArray;
+      if (Id > 1) {
+        this.AddProductVariant(this.VariantOptionType);
+      }
+      if (arrobj.controls.length == 0) { this.AddProductVariant(this.VariantOptionType) }
+      arrobj.controls[Id - 1].patchValue({
+        Variants: Id,
+        VariantType:this.VariantOptionType,
       });
-      this.IsBatchOrSerialSelect = false;
-    }
-  } else {
-    if (Status) {
-      this.ProductForm.patchValue({
-        BatchItem: false,
-        IsRawMaterail: false,
-      });
-      this.IsBatchOrSerialSelect = true;
-      this.IsRawMaterailSelect = false;
     } else {
-      this.IsBatchOrSerialSelect = false;
+      Swal.fire({
+        type: 'error',
+        title: "Please Enter Variant Option Values..",
+      })
     }
-  
-   }
-}
- 
-  public HasRawMaterial(Status: boolean) {
-  if (Status) {
-    this.IsRawMaterailSelect = true;
-  } else { this.IsRawMaterailSelect = false; }
-}
-  public HasProductVariants(Status: boolean) {
-  if (Status) {
-    this.isProductVarintsSelect = true;
-    $('#ProductVariant-link').parent().show();
-  } else {
-    this.isProductVarintsSelect = false;
-    $('#ProductVariant-link').parent().hide();
   }
-}
 
-public VariantOptionSelectImage(selectedimages)
-{
-  
-}
+  public ChangeBatchORSerialNo(Id: any, Status: boolean) {
+    if (Id == 'BatchItem') {
+      if (this.ProductForm.controls.SerialNumber.value) {
+        this.ProductForm.patchValue({
+          SerialNumber: false,
+        });
+        this.IsBatchOrSerialSelect = false;
+      }
+    } else {
+      if (Status) {
+        this.ProductForm.patchValue({
+          BatchItem: false,
+          IsRawMaterail: false,
+        });
+        this.IsBatchOrSerialSelect = true;
+        this.IsRawMaterailSelect = false;
+      } else {
+        this.IsBatchOrSerialSelect = false;
+      }
 
+    }
+  }
+
+  public HasRawMaterial(Status: boolean) {
+    if (Status) {
+      this.IsRawMaterailSelect = true;
+    } else { this.IsRawMaterailSelect = false; }
+  }
+  public HasProductVariants(Status: boolean) {
+    if (Status) {
+      this.isProductVarintsSelect = true;
+      $('#ProductVariant-link').parent().show();
+    } else {
+      this.isProductVarintsSelect = false;
+      $('#ProductVariant-link').parent().hide();
+    }
+  }
+  public VariantOptionChange(value: boolean) {
+    if (value=="0") {
+      this.VariantOptionType = false;
+    } else { this.VariantOptionType =true; }
+  }
+  public VariantOptionSelectImage(selectedimages) {
+
+  }
 }

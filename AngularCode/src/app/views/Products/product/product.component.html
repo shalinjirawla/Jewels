@@ -42,7 +42,7 @@
                     </thead>
                     <tbody [hidden]="Supplieremplty">
                         <tr *ngFor="let item of SuppliersList | orderBy: key : reverse | filter:filter |paginate: { itemsPerPage: listofCount, currentPage: p };"
-                            [hidden]="SupplierNoDataFound">
+                            [hidden]="ProductNoDataFound">
                             <td class="mr-2">
                                 {{item.companyName}}
                             </td>
@@ -57,13 +57,12 @@
 
                             </td>
                         </tr>
-                        <tr [hidden]="!SupplierNoDataFound">
+                        <tr [hidden]="!ProductNoDataFound">
                             <td colspan="3" class="text-success text-center">No Data Found...!</td>
                         </tr>
                     </tbody>
-                    <pagination-controls [hidden]="Supplieremplty" (pageChange)="p = $event"></pagination-controls>
-
                 </table>
+                <pagination-controls [hidden]="ProductNoDataFound" (pageChange)="p = $event"></pagination-controls>
                 <div class="mt-2  mb-2 text-center" [hidden]="!Supplieremplty">
                     <div class="spinner-border text-danger" role="status">
                         <span class="sr-only">Loading...</span>
@@ -254,8 +253,19 @@
                                 <div class="form-group col-sm-4">
                                     <div class="form-group">
                                         <label>VARIANTS OPTIONS</label>
-                                        <input type="text" class="form-control" formControlName="VariantOptions"
-                                            placeholder="e.g. Color, Size">
+                                        <div class="input-group">
+                                            <div class="input-group-append">
+                                                <select name="" id="" class="form-control"
+                                                    (change)="VariantOptionChange($event.target.value)">
+                                                    <option value="0">Size</option>
+                                                    <option value="1">Colors</option>
+                                                </select>
+                                            </div>
+                                            <input *ngIf="VariantOptionType==0" type="text" class="form-control"
+                                                formControlName="VariantOptions" placeholder="e.g. Size">
+                                            <input type="text" *ngIf="VariantOptionType==1" class="form-control"
+                                                formControlName="VariantOptions" placeholder="e.g. Color">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-8">
@@ -282,7 +292,8 @@
                                 <table class="table table-b">
                                     <thead>
                                         <tr>
-                                            <th width="20%">VARIANTS</th>
+                                            <th></th>
+                                            <th width="15%">VARIANTS</th>
                                             <th>SKU </th>
                                             <th>REORDER QUANTITY</th>
                                             <th>PURCHASE PRICE</th>
@@ -294,6 +305,15 @@
                                     <tbody>
                                         <tr *ngFor="let item of VariantOptionValue.controls; let pointIndex=index"
                                             [formGroupName]="pointIndex">
+                                                <input type="hidden"  formControlName="VariantType">
+                                            <td  width="12.5%" >
+                                                <div class="custom-file" *ngIf="item.controls.VariantType.value">
+                                                    <input type="file" class="custom-file-input"  id="inputGroupFile01"
+                                                        (change)="VariantOptionSelectImage($event.target.value)"
+                                                        aria-describedby="inputGroupFileAddon01">
+                                                    <label class="custom-file-label" for="inputGroupFile01"></label>
+                                                </div>
+                                            </td>
                                             <td>
                                                 <select class="form-control" formControlName="Variants" disabled>
                                                     <option *ngFor="let item of VariantoptionValueLabellist;"
@@ -318,23 +338,7 @@
                                                     (click)="DeleteVariantOptionValueVariantLabel(pointIndex)"></i></td>
                                         </tr>
 
-                                        <tr>
-                                            <td colspan="7">
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text"
-                                                            id="inputGroupFileAddon01">Upload</span>
-                                                    </div>
-                                                    <div class="custom-file">
-                                                        <input type="file" class="custom-file-input"
-                                                            id="inputGroupFile01" (change)="VariantOptionSelectImage($event.target.value)"
-                                                            aria-describedby="inputGroupFileAddon01">
-                                                        <label class="custom-file-label" for="inputGroupFile01">Choose
-                                                            file</label>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                        </tr>
+
                                         <tr>
                                             <td colspan="7">
                                                 <div class="row pl-3">

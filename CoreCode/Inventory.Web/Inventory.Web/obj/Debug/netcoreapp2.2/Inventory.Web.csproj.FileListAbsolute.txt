@@ -1,1 +1,0 @@
-D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Web\obj\Debug\netcoreapp2.2\Inventory.Web.csprojAssemblyReference.cache

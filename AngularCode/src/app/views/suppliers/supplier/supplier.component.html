@@ -61,9 +61,8 @@
                             <td colspan="3" class="text-success text-center">No Data Found...!</td>
                         </tr>
                     </tbody>
-                    <pagination-controls [hidden]="Supplieremplty" (pageChange)="p = $event"></pagination-controls>
-
-                </table>
+                </table>   
+                <pagination-controls [hidden]="Supplieremplty" (pageChange)="p = $event"></pagination-controls>
                 <div class="mt-2  mb-2 text-center" [hidden]="!Supplieremplty">
                     <div class="spinner-border text-danger" role="status">
                         <span class="sr-only">Loading...</span>
