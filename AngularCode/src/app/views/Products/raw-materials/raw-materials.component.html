@@ -51,10 +51,8 @@
                         <tr *ngFor="let item of RawMaterailsList | orderBy: key : reverse | filter:Searchfilter | paginate: { itemsPerPage: listofCount, currentPage: p };"
                             [hidden]="SupplierNoDataFound">
                             <td>
-                                <div *ngFor="let data of item.pictureList.picture">
-                                    <img [src]="data.pictuterString"
-                                        accept="image/png, image/jpeg" height="75px" width="75px">
-                                </div>
+                                <img *ngFor="let data of item.pictureList.picture" [src]="data.pictuterString"
+                                    height="75px" width="75px">
                             </td>
                             <td class="mr-2">
                                 {{item.rmName}}
@@ -80,9 +78,8 @@
                             <td colspan="3" class="text-success text-center">No Data Found...!</td>
                         </tr>
                     </tbody>
-                    <pagination-controls [hidden]="RawMaterailsempty" (pageChange)="p = $event"></pagination-controls>
-
                 </table>
+                <pagination-controls [hidden]="RawMaterailsempty" (pageChange)="p = $event"></pagination-controls>
                 <div class="mt-2  mb-2 text-center" [hidden]="!RawMaterailsempty">
                     <div class="spinner-border text-danger" role="status">
                         <span class="sr-only">Loading...</span>
@@ -107,7 +104,7 @@
             <div class="modal-body">
                 <tabset>
                     <tab id="RawMaterialFormtab">
-                        <ng-template tabHeading><i class="fa fa-plus text-info"></i> Details </ng-template>
+                        <ng-template tabHeading> Details </ng-template>
                         <form [formGroup]="RawMaterialForm">
                             <input type="hidden" formControlName="rmId">
                             <div class="row">
@@ -229,7 +226,7 @@
 
                     </tab>
                     <tab id="RawMaterialForm2tab">
-                        <ng-template tabHeading><i class="fa fa-plus text-info"> </i> Stock
+                        <ng-template tabHeading> Stock
                         </ng-template>
                         <form [formGroup]="RawMaterialForm2">
                             <div class="row">
@@ -313,7 +310,7 @@
                         </form>
                     </tab>
                     <tab id="RawMaterialForm3tab">
-                        <ng-template tabHeading><i class="fa fa-plus text-info"></i> Unit of Measure
+                        <ng-template tabHeading> Unit of Measure
                         </ng-template>
                         <form [formGroup]="UnitofMeasure">
                             <div class="row">
@@ -454,21 +451,21 @@
                         </form>
                     </tab>
                     <tab id="RawMaterialForm4tab">
-                        <ng-template tabHeading><i class="fa fa-plus text-info"></i> Upload Picture
+                        <ng-template tabHeading> Upload Picture
                         </ng-template>
                         <form [formGroup]="UploadPhotoForm">
                             <div class="row">
                                 <div class="form-group col-sm-4">
                                     <label>UPLOAD PICTURE</label>
                                     <input class=" mb-2" id="" (change)="handleFileSelect($event)"
-                                        formControlName="pictuterString" placeholder="0" type="file">
+                                        formControlName="pictuterString" placeholder="0" type="file" accept="image/png, image/jpeg, image/gif">
                                 </div>
                                 <div class="col-sm-2"></div>
                                 <div class="col-sm-6">
                                     <label>DEFAULT PICTUER</label>
                                     <div *ngFor="let item of PictureList.picture">
                                         <img *ngIf="item.defaultPicture" [src]="item.pictuterString"
-                                            accept="image/png, image/jpeg" height="150px" width="150px">
+                                             height="150px" width="150px">
                                     </div>
                                 </div>
                             </div>

@@ -22,11 +22,12 @@ export class RawMaterailsService {
 
   public GetLocationList(): Observable<any> {
     let url = this.BaseURLCommanConctroll + `GetActiveWarehouseList`;
-    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+    return this.HttpClient.get(url, httpOption)
+    .pipe((responce: any) => {
       return this.Responce = responce;
-    });
+    })
+    
   }
-
   public GetUOMList(): Observable<any> {
     let url = this.BaseURLCommanConctroll + `GetUOMList`;
     return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
