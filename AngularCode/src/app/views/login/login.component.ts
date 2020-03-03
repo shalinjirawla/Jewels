@@ -5,6 +5,7 @@ import Swal from 'sweetalert2'
 import { from } from 'rxjs';
 import { element } from 'protractor';
 import { Router } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 const Toast = Swal.mixin({
   toast: true,
   position: 'top-end',
@@ -22,6 +23,7 @@ export class LoginComponent implements OnInit {
   LoginForm: FormGroup;
   Responce: any;
   myVar: any;
+  logining:boolean=false;
   FormSubmitted: boolean = false;
   constructor(private FormBuilder: FormBuilder, private ApplicationUserService: ApplicationUserService,
     private router: Router) {
@@ -45,12 +47,16 @@ export class LoginComponent implements OnInit {
       AccessToken: [''],
     });
   }
-  public LoginProcess(LoginForm: FormControl) {
+  public LoginProcess(LoginForm: any) {
     this.FormSubmitted = true;
     if (this.LoginForm.invalid) {
       return;
     }
-    this.ApplicationUserService.LogInProcess(LoginForm.value).subscribe((responce: any) => {
+    const self=this;
+    self.logining=true; 
+    this.ApplicationUserService.LogInProcess(LoginForm.value)
+    .pipe(finalize(()=>{self.logining=false}))
+    .subscribe((responce: any) => {
       if (responce != null && responce.status) {
         this.Responce = responce.data;
         if (this.Responce != null && this.Responce != undefined) {

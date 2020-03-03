@@ -48,7 +48,7 @@
     </div>
 </div>
 
-<div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<div bsModal #largeModal="bs-modal" class="modal fade"  [config]="{ backdrop: 'static' }" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -75,7 +75,7 @@
                 </form>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" (click)="ResetForm()">Close</button>
-                    <button type="button" class="btn btn-primary"
+                    <button type="button" class="btn btn-primary" [disabled]="saving"
                         (click)="AddCustomerType(AddCustomerTypeForm)">{{savebtntitle}}</button>
                 </div>
             </div><!-- /.modal-content -->

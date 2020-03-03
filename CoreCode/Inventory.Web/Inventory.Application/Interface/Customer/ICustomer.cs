@@ -13,5 +13,6 @@ namespace Inventory.Application.Interface
         List<CustomerVm> GetCustomerListAsyn();
         AddCustomerVm GetCustomerByIdAsyc(int Id);
         int DeleteCustomerAsyc(int Id);
+        CustomerAddress GetCustomerAddress(int CustomerId);
     }
 }

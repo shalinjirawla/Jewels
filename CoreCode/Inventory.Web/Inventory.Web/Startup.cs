@@ -38,6 +38,9 @@ using Inventory.Application.Interface.RawMaterails;
 using static Inventory.Application.Interface.Common.IGenerealsetup;
 using Inventory.Application.Interface.Supplier;
 using Inventory.Application.Services.SupplierServices;
+using Inventory.Application.Services.SalesOrderServices;
+using Inventory.Application.Interface.SalesOrder;
+
 
 namespace Inventory.Web
 {
@@ -138,27 +141,31 @@ namespace Inventory.Web
                 };
 
             });
-            
             services.AddScoped<ICustomer, CustomerService>();
             services.AddScoped<IDiscountType, DiscountTypeService>();
             services.AddScoped<IProductCategories, ProductCategoriesServices>();
             services.AddScoped<ICountry, CountryServices>();
             services.AddScoped<IProductBrand, ProductBrandServices>();
-            services.AddScoped<IGenerealsetup.ICurrency, GeneralsetupServices>();
-            services.AddScoped<IGenerealsetup.ITaxCode, GeneralsetupServices>();
-            services.AddScoped<IGenerealsetup.ICreditTerms, GeneralsetupServices>();
-            services.AddScoped<IGenerealsetup.IShipmentTerm, GeneralsetupServices>();
-            services.AddScoped<IGenerealsetup.IShipmentMethod, GeneralsetupServices>();
-            services.AddScoped<IGenerealsetup.IPaymentTerm, GeneralsetupServices>();
+            services.AddScoped<ICurrency, GeneralsetupServices>();
+            services.AddScoped<ITaxCode, GeneralsetupServices>();
+            services.AddScoped<ICreditTerms, GeneralsetupServices>();
+            services.AddScoped<IShipmentTerm, GeneralsetupServices>();
+            services.AddScoped<IShipmentMethod, GeneralsetupServices>();
+            services.AddScoped<IPaymentTerm, GeneralsetupServices>();
             services.AddScoped<IcustomerType, CustomerTypeServices>();
             services.AddScoped<IApplicationUser, ApplicationUserServices>();
-            services.AddScoped<IGenerealsetup.IWarehouse, GeneralsetupServices>();
+            services.AddScoped<IWarehouse, GeneralsetupServices>();
             services.AddScoped<IRawMaterails, RawMaterailsService>();
             services.AddScoped<IUOM, GeneralsetupServices>();
             services.AddScoped<IMetric_Units, GeneralsetupServices>();
             services.AddScoped<ITenants, TenantsServices>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ISupplier, SuppliersServices>();
+            services.AddScoped<IProduct, ProductServices>();
+            services.AddScoped<IProductService, ProductServiceServices>();
+            services.AddScoped<ISalesOrderType, GeneralsetupServices>();
+            services.AddScoped<IAdditionalCharge, GeneralsetupServices>();
+            services.AddScoped<ISalesOrder, SalesOrderServices>();
             //Configure CORS for angular2 UI
             services.AddCors(options =>
             {

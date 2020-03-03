@@ -29,31 +29,32 @@
                 </div>
                 <table class="table  table-striped" id="DisplayCategoriesView">
                     <thead>
-                        <th (click)="sort('Companyname')" class="pointer"> COMPANY NAME
+                        <th (click)="sort('Companyname')" class="pointer"> PRODUCT NAME
                             <span class="fa fa-sort" *ngIf="key =='Companyname'"></span>
                         </th>
                         <th>
-                            CODE
+                                INSTOCK
                         </th>
 
                         <th colspan="2" class="text-center">
-                            Action
+                            ACTION
                         </th>
                     </thead>
-                    <tbody [hidden]="Supplieremplty">
-                        <tr *ngFor="let item of SuppliersList | orderBy: key : reverse | filter:filter |paginate: { itemsPerPage: listofCount, currentPage: p };"
+                    <tbody [hidden]="Productlaod">
+                        <tr *ngFor="let item of ProductList | orderBy: key : reverse | filter:filter |paginate: { itemsPerPage: listofCount, currentPage: p };"
                             [hidden]="ProductNoDataFound">
                             <td class="mr-2">
-                                {{item.companyName}}
+                                {{item.name}}
                             </td>
                             <td class="mr-2">
-                                {{item.supplierCode}}
+                                <span *ngIf="!item.stockitem" class="label label-danger">No</span>
+                                <span *ngIf="item.stockitem" class="label label-success">Yes</span>
                             </td>
-                            <td class="text-right" (click)="EditSuppliers(item.supplierId)">
-                                <button class="btn  btn-lg"> <i class="fa fa-pencil text-success"> </i></button>
+                            <td class="text-right" >
+                                <button class="btn btn-lg" type="button" (click)="EditProduct(item.productId)"> <i class="fa fa-pencil text-success"> </i></button>
                             </td>
-                            <td class="mb-2" (click)="DeleteSupplier(item.supplierId)">
-                                <button class="btn  btn-lg"><i class="fa fa-trash text-danger"></i> </button>
+                            <td class="mb-2" >
+                                <button class="btn btn-lg"  type="button" (click)="DeleteProduct(item.productId)"><i class="fa fa-trash text-danger"></i> </button>
 
                             </td>
                         </tr>
@@ -63,7 +64,7 @@
                     </tbody>
                 </table>
                 <pagination-controls [hidden]="ProductNoDataFound" (pageChange)="p = $event"></pagination-controls>
-                <div class="mt-2  mb-2 text-center" [hidden]="!Supplieremplty">
+                <div class="mt-2  mb-2 text-center" [hidden]="!Productlaod">
                     <div class="spinner-border text-danger" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
@@ -73,19 +74,19 @@
     </div>
 </div>
 
-<div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-    aria-hidden="true">
+<div bsModal #largeModal="bs-modal" [config]="{ backdrop: 'static' }"  class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+   >
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">{{ModelTitleString}}</h4>
-                <button type="button" class="close" (click)="largeModal.hide()" aria-label="Close">
+                <button type="button" class="close" (click)="closeModel()" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <tabset>
-                    <tab>
+                    <tab id="Product">
                         <ng-template tabHeading><i class="fa fa-product-hunt text-info"></i> PRODUCT </ng-template>
                         <form [formGroup]="ProductForm">
                             <input type="hidden" formControlName="ProductId">
@@ -93,7 +94,10 @@
                                 <div class="form-group col-sm-6">
                                     <label for="city">NAME</label>
                                     <input class="form-control" id="NAME" formControlName="Name" placeholder="NAME"
-                                        type="text">
+                                        type="text" [ngClass]="{ 'is-invalid': FormSubmitted && f.Name.errors }">
+                                    <div *ngIf="FormSubmitted && f.Name.errors" class="invalid-feedback">
+                                        <div *ngIf="f.Name.errors.required">NAME is required</div>
+                                    </div>
                                 </div>
                                 <div class="form-group col-sm-6">
                                     <label for="postal-code">SKU <i class="fa fa-info-circle text-info"
@@ -151,8 +155,8 @@
                                         </div>
                                         <div class="custom-control custom-checkbox offset-1">
                                             <input class="custom-control-input" type="checkbox"
-                                                formControlName="Taxable" id=taxable>
-                                            <label class="custom-control-label" for="taxable">TAXABLE <i
+                                                formControlName="Taxble" id=Taxble>
+                                            <label class="custom-control-label" for="Taxble">TAXABLE <i
                                                     class="fa fa-info-circle text-info"
                                                     tooltip="Check this option if tax is applicable for this product."
                                                     placement="right"></i></label>
@@ -188,7 +192,7 @@
 
                                         </div>
                                     </div>
-                                    <div class="row" [hidden]="!IsRawMaterailSelect" formArrayName="RawMaterial_points">
+                                    <div class="row"  [hidden]="!IsRawMaterailSelect" formArrayName="RawMaterial_points">
                                         <table class="table table-b">
                                             <thead>
                                                 <tr>
@@ -204,23 +208,24 @@
                                                     <td>
                                                         <select class="form-control" formControlName="RawMaterialId">
                                                             <option value="">Please Select item</option>
-                                                            <option value="0">0</option>
+                                                            <option [value]="raw.rmId"
+                                                                *ngFor="let raw of RawMaterailsList">{{raw.rmName}}</option>
                                                         </select>
                                                     </td>
-                                                    <td><input type="hidden" formControlName="UMO"> 11</td>
+                                                    <td><input type="hidden" [value]="1" formControlName="UMO">[1]</td>
                                                     <td>
-                                                        <input type="text" class="form-control" formControlName="QTY">
+                                                        <input type="number" class="form-control" formControlName="QTY">
                                                     </td>
                                                     <td><i class="fa fa-trash h5 mt-2 pointer text-danger"
                                                             (click)="DeleteRawMaterial(pointIndex)"></i></td>
                                                 </tr>
 
-                                                <tr>
+                                                <!-- <tr>
                                                     <td>
                                                         <button class="btn btn-link" (click)="AddRawMaterial()">Add More
                                                             Raw Material</button>
                                                     </td>
-                                                </tr>
+                                                </tr> -->
                                             </tbody>
                                         </table>
                                     </div>
@@ -255,22 +260,25 @@
                                         <label>VARIANTS OPTIONS</label>
                                         <div class="input-group">
                                             <div class="input-group-append">
-                                                <select name="" id="" class="form-control"
+                                                <select name="VariantOptionsType" formControlName="VariantOptionsType"
+                                                    id="VariantOptionsType" class="form-control"
                                                     (change)="VariantOptionChange($event.target.value)">
-                                                    <option value="0">Size</option>
-                                                    <option value="1">Colors</option>
+                                                    <option [value]="varint.VarinatOptionId" *ngFor="let varint of VarinatOptions">{{varint.VarinatOptionLabel}}</option>
+                                                   
                                                 </select>
                                             </div>
-                                            <input *ngIf="VariantOptionType==0" type="text" class="form-control"
-                                                formControlName="VariantOptions" placeholder="e.g. Size">
-                                            <input type="text" *ngIf="VariantOptionType==1" class="form-control"
-                                                formControlName="VariantOptions" placeholder="e.g. Color">
+                                            <input  type="text" class="form-control"
+                                                formControlName="VariantOptions" placeholder="e.g. Size, Color">
+                                            <!-- <input type="text" *ngIf="!VariantOptionType" class="form-control"
+                                                formControlName="VariantOptions" placeholder="e.g. Color"> -->
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group col-sm-8">
                                     <div class="form-group">
                                         <label>VARIANTS OPTIONS VALUE</label>
+                                        <input type="hidden" name="ProductId" id="ProductId" formControlName="ProductId">  
+                                        <input type="hidden" name="ProductVariantId" id="ProductVariantId" formControlName="ProductVariantId">
                                         <input type="text" class="form-control" formControlName="VariantOptionLabel"
                                             (blur)="ChangeVariantOptionValue($event.target.value)"
                                             placeholder="e.g. Red, Green, Blue, S, M, L">
@@ -305,45 +313,54 @@
                                     <tbody>
                                         <tr *ngFor="let item of VariantOptionValue.controls; let pointIndex=index"
                                             [formGroupName]="pointIndex">
-                                                <input type="hidden"  formControlName="VariantType">
-                                            <td  width="12.5%" >
-                                                <div class="custom-file" *ngIf="item.controls.VariantType.value">
-                                                    <input type="file" class="custom-file-input"  id="inputGroupFile01"
-                                                        (change)="VariantOptionSelectImage($event.target.value)"
-                                                        aria-describedby="inputGroupFileAddon01">
-                                                    <label class="custom-file-label" for="inputGroupFile01"></label>
-                                                </div>
+                                            <!-- <input type="hidden" [value]="item.label" formControlName="VariantType"> -->
+                                            <td width="12.5%">
+                                                
                                             </td>
                                             <td>
                                                 <select class="form-control" formControlName="Variants" disabled>
                                                     <option *ngFor="let item of VariantoptionValueLabellist;"
                                                         [value]="item.id">{{item.label}}</option>
                                                 </select>
+                                                
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" formControlName="sku">
+                                                <input type="text" class="form-control" formControlName="Sku">
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control"
+                                                <input type="number" class="form-control"
                                                     formControlName="ReorderQuantity">
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" formControlName="PurchasePrice">
+                                                <input type="number" class="form-control"
+                                                    formControlName="PurchasePrice">
                                             </td>
                                             <td>
-                                                <input type="text" class="form-control" formControlName="SellingPrice">
+                                                <input type="number" class="form-control"
+                                                    formControlName="SellingPrice">
                                             </td>
-                                            <td><button class="btn btn-info text-white">More</button></td>
+                                            <td>
+                                                <button type="button" *ngIf="!item.value.Action"
+                                                    (click)="MoreInfoVariant(pointIndex)"
+                                                    class="btn btn-info text-white">More</button>
+                                                <button type="button" *ngIf="item.value.Action"
+                                                    class="btn btn-info text-white"
+                                                    [disabled]="item.value.Action">Loaded</button>
+                                            </td>
                                             <td><i class="fa fa-trash h5 mt-2 pointer text-danger"
                                                     (click)="DeleteVariantOptionValueVariantLabel(pointIndex)"></i></td>
+                                            <td colspan="7">
+
+                                            </td>
                                         </tr>
-
-
                                         <tr>
                                             <td colspan="7">
                                                 <div class="row pl-3">
                                                     <h4 class="text-info">FULL INFO</h4>
-                                                    <h4 class="text-secondary"> | NO VARIANT LOADED</h4>
+                                                    <h4 *ngIf="!ProductIsVariantLoaded" class="text-secondary"> | NO
+                                                        VARIANT LOADED</h4>
+                                                    <h4 *ngIf="ProductIsVariantLoaded" class="text-secondary ml-1"> |
+                                                        {{ProductForm.value.Name}}</h4>
 
                                                 </div>
                                                 <div class="row pl-3">
@@ -355,6 +372,95 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <div class="container"
+                                    *ngFor="let item of VariantOptionValue.controls; let MoreAction=index"
+                                    [formGroupName]="MoreAction">
+                                    <div [hidden]="!item.value.Action">
+                                        <!-- <input type="hidden" formControlName="VariantType"> -->
+                                        <div class="form-row">
+                                            <div class="form-group col-sm-6 col-lg-4">
+                                                <label for="file">IMAGES</label>
+                                                <input id="variantfileupload" type="file"  (change)="handleFileSelect($event,MoreAction)"
+                                                 accept="image/png, image/jpeg, image/gif">
+                                            </div>
+                                            <div class="form-group col-sm-6 col-lg-4" *ngIf="item.value && item.value.Image && item.value.Image!=null">
+                                               <img width="150" height="150"   [src]="item.value.Image">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="mini">MINIMUM ORDER QUANTITY</label>
+                                                <input class="form-control" formControlName="VariMinmOrderQuantity"
+                                                    id="variantminimumorderquantity" type="number">
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="desc">DESCRIPTION</label>
+                                                <textarea name="" formControlName="VariantDesc" class="form-control"
+                                                    id="variantdescription"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="postal-code">DEFAULT SUPPLIERS
+                                                </label>
+                                                <select class="form-control" formControlName="DefaultSupplierId">
+                                                    <!-- formControlName="BrandId" -->
+                                                    <option value="">--Select--</option>
+                                                    <option *ngFor="let supplier of DefaultSupplierList"
+                                                        [value]="supplier.supplierId">
+                                                        {{supplier.companyName}}[{{supplier.supplierCode}}]
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="postal-code">DEFAULT TAX</label>
+                                                <select class="form-control" formControlName="DefaultTaxId">
+                                                    <option value="">--Select--</option>
+                                                    <option *ngFor="let tax of DefaultTax" [value]="tax.taxId">
+                                                        {{tax.code}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
+                                                <label for="postal-code">DEFAULT WAREHOUSE LOCATION </label>
+                                                <select class="form-control" formControlName="DefaultWarehouseId">
+                                                    <!-- formControlName="BrandId" -->
+                                                    <option value="">--Select--</option>
+                                                    <option *ngFor="let warehouse of WareHouseLocationList"
+                                                        [value]="warehouse.warehouseId">
+                                                        {{warehouse.warehouseName}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-md-6">
+                                                <label for="postal-code">UNITS OF MEASUREMENT </label>
+                                                <input class="form-control" formControlName="UnitsOfMeasurement"
+                                                    id="UnitsOfMeasurement" type="number">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-4">
+                                                <label for="postal-code">INITIAL STOCK ON HAND
+                                                </label>
+                                                <input class="form-control" formControlName="InitialStockHand"
+                                                    id="InitialStockHand" type="number">
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="postal-code">INITIAL COST PRICE </label>
+                                                <input class="form-control" formControlName="InitialStockPrice"
+                                                    id="InitialStockPrice" type="number">
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="postal-code">INITIAL LANDED COST</label>
+                                                <input class="form-control" formControlName="InitialHandCost"
+                                                    id="InitialHandCost" type="number">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
                         </form>
                     </tab>
@@ -362,8 +468,8 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="largeModal.hide()">Close</button>
-                <button type="button" class="btn btn-primary" (click)="AddProduct(AddCustomerForm)">Save
+                <button type="button" class="btn btn-secondary" (click)="closeModel()">Close</button>
+                <button type="button" class="btn btn-primary" [disabled]="saving" (click)="AddProduct(ProductForm,ProductVariantForm)">Save
                     changes</button>
             </div>
         </div><!-- /.modal-content -->
@@ -384,7 +490,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" (click)="VariantImagesModel.hide()">Close</button>
-                <button type="button" class="btn btn-primary" (click)="AddProduct(AddCustomerForm)">Save
+                <button type="button" class="btn btn-primary" (click)="AddProduct(AddCustomerForm,ProductVariantForm)">Save
                     changes</button>
             </div>
         </div>

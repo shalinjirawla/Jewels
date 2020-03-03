@@ -16,7 +16,7 @@
                             tabindex="0" (click)="CurrencyModal.show()">
                             <i class="fa fa-dollar fa-4x text-muted text-center clearfix"></i><br />
                             <label>Currency</label>
-                            <p>5</p>
+                            <p>{{CurrencyList.length}}</p>
                         </button>
 
                         <button
@@ -24,14 +24,14 @@
                             tabindex="0" (click)="OpenCreditTermModal()">
                             <i class="fa fa-money fa-4x text-muted text-center"></i>
                             <label>Credit Term</label>
-                            <p>5</p>
+                            <p>{{CreditTermList.length}}</p>
                         </button>
                         <button
                             class="btn m-2 p-4  bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
                             tabindex="0" (click)="OpenPaymentTermModal()">
                             <i class="fa fa-money fa-4x text-muted text-center clearfix"></i>
                             <label>Payment Term</label>
-                            <p>5</p>
+                            <p>{{PaymentTermList.length}}</p>
                         </button>
 
                         <button
@@ -39,29 +39,29 @@
                             tabindex="0" (click)="OpenShipmentTermModal()">
                             <i class="fa fa-truck fa-4x text-muted text-center"></i>
                             <label>Shipment Term</label>
-                            <p>5</p>
+                            <p>{{ShipmentTermList.length}}</p>
                         </button>
                         <button
                             class="btn m-2 p-4  bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
                             tabindex="0" (click)="OpenShipmentMethodModal()">
                             <i class="fa fa-hand-o-right fa-4x text-muted text-center clearfix"></i>
                             <label>Shipment Method</label>
-                            <label>5</label>
+                            <p>{{ShipmentMethodList.length}}</p>
                         </button>
 
                         <button
                             class="btn m-2 p-4 bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
-                            tabindex="0">
+                            tabindex="0" (click)="OpenAdditionalChargeModal()">
                             <i class="fa fa-credit-card-alt fa-4x text-muted text-center"></i>
                             <label>Additional Charge</label>
-                            <p>5</p>
+                            <p>{{AdditionalChargeList.length}}</p>
                         </button>
                         <button
                             class="btn m-2 p-4 bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
-                            tabindex="0">
+                            tabindex="0" (click)="OpenSalesOrderTypeModal()">
                             <i class="fa fa-money fa-4x text-muted text-center"></i>
                             <label>Sales Order Type</label>
-                            <p>5</p>
+                            <p>{{SalesOrderTypeList.length}}</p>
                         </button>
                     </div>
                     <div class="m-3">
@@ -80,14 +80,14 @@
                             tabindex="0" (click)="OpenCountryModal()">
                             <i class="fa fa-flag fa-4x text-muted text-center clearfix"></i><br />
                             <label>Country</label>
-                            <p>5</p>
+                            <p>{{CoutryList.length}}</p>
                         </button>
                         <button
                             class="btn m-2 p-4  bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
                             tabindex="0" (click)="OpenLocationModal()">
                             <i class="fa fa-home fa-4x text-muted text-center clearfix"></i><br />
                             <label> Location </label>
-                            <p>5</p>
+                            <p>{{LocationList.length}}</p>
                         </button>
                         <button
                             class="btn m-2 p-4  bg-white btn-outline-info box-shadow b-4x b-light btn-lg m-r m-t w-160"
@@ -101,7 +101,7 @@
                             tabindex="0" (click)="OpentaxcodeModal()">
                             <i class="fa fa-text-width fa-4x text-muted text-center clearfix"></i><br />
                             <label>Tax Code </label>
-                            <p>5</p>
+                            <p>{{TaxcodeList.length}}</p>
                         </button>
                     </div>
                 </div>
@@ -111,8 +111,8 @@
 </div>
 
 
-<div bsModal #CurrencyModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-    aria-hidden="true">
+<div bsModal #CurrencyModal="bs-modal" class="modal fade" [config]="{ backdrop: 'static' }" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -207,8 +207,8 @@
         </div>
     </div>
 </div>
-<div bsModal #CreditTermModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-    aria-hidden="true">
+<div bsModal #CreditTermModal="bs-modal" class="modal fade" [config]="{ backdrop: 'static' }" tabindex="-1"
+    role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -235,7 +235,7 @@
                                         <td>{{item.code}}</td>
                                         <td>{{item.duration}}</td>
 
-                                        <td class="h5"> 
+                                        <td class="h5">
                                             <span class="text-primary mr-3" style="cursor: pointer;"
                                                 (click)="GetCreditTerms(item.creditTermId)">
                                                 <i class="fa fa-pencil"></i>
@@ -307,8 +307,8 @@
     </div>
 </div>
 
-<div bsModal #CountryModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-    aria-hidden="true">
+<div bsModal #CountryModal="bs-modal" class="modal fade" tabindex="-1" [config]="{ backdrop: 'static' }" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -397,8 +397,8 @@
     </div>
 </div>
 
-<div bsModal #LocationModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-    aria-hidden="true">
+<div bsModal #LocationModal="bs-modal" class="modal fade" tabindex="-1" [config]="{ backdrop: 'static' }" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -498,8 +498,8 @@
     </div>
 </div>
 
-<div bsModal #TaxcodeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-    aria-hidden="true">
+<div bsModal #TaxcodeModal="bs-modal" class="modal fade" tabindex="-1" [config]="{ backdrop: 'static' }" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -590,8 +590,8 @@
     </div>
 </div>
 
-<div bsModal #ShipmentTermModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-    aria-hidden="true">
+<div bsModal #ShipmentTermModal="bs-modal" class="modal fade" tabindex="-1" [config]="{ backdrop: 'static' }"
+    role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -678,8 +678,8 @@
     </div>
 </div>
 
-<div bsModal #ShipmentMethodModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
-    aria-labelledby="myModalLabel" aria-hidden="true">
+<div bsModal #ShipmentMethodModal="bs-modal" class="modal fade" tabindex="-1" [config]="{ backdrop: 'static' }"
+    role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -706,7 +706,7 @@
                                         <td>{{item.code}}</td>
                                         <td>{{item.description}}</td>
                                         <td class="h5">
-                                            <span style="margin-left: 25%;">
+                                            <span>
                                                 <span class="text-primary mr-3" style="cursor: pointer;"
                                                     (click)="GetShipmentMethod(item.shipmentMethodId)">
                                                     <i class="fa fa-pencil"></i>
@@ -765,8 +765,8 @@
 </div>
 <figure></figure>
 
-<div bsModal #PaymentTermModel="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-    aria-hidden="true">
+<div bsModal #PaymentTermModel="bs-modal" class="modal fade" tabindex="-1" [config]="{ backdrop: 'static' }"
+    role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -858,7 +858,7 @@
                                 (click)="AddPaymentTerms(PaymentTermForm)">Save
                                 changes</button><br />
                         </div>
-                        
+
                     </tab>
                 </tabset>
             </div>
@@ -868,4 +868,253 @@
         </div>
     </div>
 </div>
-<figure></figure>
+
+<div bsModal #SalesOrderTypeModel="bs-modal" class="modal fade" tabindex="-1" [config]="{ backdrop: 'static' }"
+    role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Sales Order Type</h4>
+                <button type="button" class="close" (click)="SalesOrderTypeReset()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="">
+                <tabset (click)="SalesOrderTypetabclick($event.target.id)">
+                    <tab id="SalesOrderTypeList">
+                        <ng-template tabHeading><i class="fa fa-list text-info"></i> Sales Order Type List
+                        </ng-template>
+                        <div class="table-responsive animated flash">
+                            <table class="table " id="">
+                                <thead>
+                                    <tr>
+                                        <th>Type Name</th>
+                                        <th>Description</th>
+                                        <th>Status</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of SalesOrderTypeList">
+                                        <td>{{item.typeName}}</td>
+                                        <td>{{item.description}}</td>
+                                        <td>
+                                            <label class="switch switch-3d switch-success">
+                                                <input type="checkbox" class="switch-input" [checked]="item.isActive"
+                                                    (change)="SalesOrderTypeChange($event.target.checked,item.salesOrderTypeId)">
+                                                <span class="switch-slider"></span>
+                                            </label></td>
+                                        <td class="h5">
+                                            <span style="margin-left: 25%;">
+                                                <span class="text-primary mr-3" style="cursor: pointer;"
+                                                    (click)="GetSalesOrderType(item.salesOrderTypeId)">
+                                                    <i class="fa fa-pencil"></i>
+                                                </span>
+
+                                                <span class="text-danger " style="cursor: pointer;"
+                                                    (click)="DeleteSalesOrderType(item.salesOrderTypeId)">
+                                                    <i class="fa fa-trash"></i>
+                                                </span>
+                                            </span>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </tab>
+                    <tab id="SalesOrderTypeFor">
+                        <ng-template tabHeading><i class="fa fa-plus text-info"> Sales Order Type Form</i>
+                        </ng-template>
+                        <form [formGroup]="SalesOrderTypeForm" class="formData-modal col-sm-12">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <input type="hidden" formControlName="SalesOrderTypeId">
+                                    <label for="city">TYPE NAME</label>
+                                    <input class="form-control" formControlName="TypeName"
+                                        (keypress)="allowalpha($event)"
+                                        [ngClass]="{ 'is-invalid': SalesOrderTypesubmit && SalesOrderTypeform.TypeName.errors }"
+                                        placeholder="TYPE NAME" type="text">
+                                    <div *ngIf="SalesOrderTypesubmit && SalesOrderTypeform.TypeName.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="SalesOrderTypeform.TypeName.errors.required">Type Name is
+                                            required
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-12">
+                                    <label for="postal-code">DESCRIPTION</label>
+                                    <textarea class="form-control" id="" formControlName="Description"
+                                        placeholder="Description" type="text"></textarea>
+                                </div>
+
+                            </div>
+                        </form>
+                        <div class="form-group col-sm-12">
+                            <button type="button" [disabled]="saving" class="btn btn-primary pull-right"
+                                (click)="AddSalesOrderType(SalesOrderTypeForm)">Save
+                                changes</button><br />
+                        </div>
+
+                    </tab>
+                </tabset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" [disabled]="saving"
+                    (click)="SalesOrderTypeReset()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div bsModal #AdditionalChargeModel="bs-modal" class="modal fade" tabindex="-1" [config]="{ backdrop: 'static' }"
+    role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Additional Charge</h4>
+                <button type="button" class="close" (click)="AdditionalChargeReset()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="">
+                <tabset (click)="AdditionalChargetabclick($event.target.id)">
+                    <tab id="AdditionalChargeList">
+                        <ng-template tabHeading><i class="fa fa-list text-info"></i>Additional Charge List
+                        </ng-template>
+                        <div class="table-responsive animated flash">
+                            <table class="table " id="">
+                                <thead>
+                                    <tr>
+                                        <th>NAME</th>
+                                        <th>UNIT PRICE</th>
+                                        <th>STATUS</th>
+                                        <th class="text-center">ACTION</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of AdditionalChargeList">
+                                        <td>{{item.name}}</td>
+                                        <td><i *ngIf="item.unitPriceType=='Fixed'">$</i> <i  *ngIf="item.unitPriceType!='Fixed'">%</i>  {{item.unitPrice}}</td>
+                                        <td>
+                                            <label class="switch switch-3d switch-success">
+                                                <input type="checkbox" class="switch-input" [checked]="item.isActive"
+                                                    (change)="AdditionalChargeChange($event.target.checked,item.additionalChargeId)">
+                                                <span class="switch-slider"></span>
+                                            </label></td>
+                                        <td class="h5">
+                                            <span style="margin-left: 25%;">
+                                                <span class="text-primary mr-3" style="cursor: pointer;"
+                                                    (click)="GetAdditionalCharge(item.additionalChargeId)">
+                                                    <i class="fa fa-pencil"></i>
+                                                </span>
+
+                                                <span class="text-danger " style="cursor: pointer;"
+                                                    (click)="DeleteAdditionalCharge(item.additionalChargeId)">
+                                                    <i class="fa fa-trash"></i>
+                                                </span>
+                                            </span>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </tab>
+                    <tab id="AdditionalChargeFor">
+                        <ng-template tabHeading><i class="fa fa-plus text-info"> Additional Charge Form</i>
+                        </ng-template>
+                        <form [formGroup]="AdditionalChargeForm" class="formData-modal col-sm-12">
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <input type="hidden" formControlName="AdditionalChargeId">
+                                    <label for="city">NAME</label>
+                                    <input class="form-control" formControlName="Name" (keypress)="allowalpha($event)"
+                                        [ngClass]="{ 'is-invalid': AdditionalChargesubmit && AdditionalChargeForm.controls.Name.errors }"
+                                        placeholder="NAME" type="text">
+                                    <div *ngIf="AdditionalChargesubmit && AdditionalChargeForm.controls.Name.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="AdditionalChargeForm.controls.Name.errors.required">Name is
+                                            required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label for="city">UNIT PRICE</label>
+                                    <div class="form-group">
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input id="Fixed" type="radio" class="custom-control-input" value="Fixed"
+                                                name="UnitPriceType" formControlName="UnitPriceType">
+                                            <label class="custom-control-label" for="Fixed">Fixed</label>
+                                        </div>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input id="Percentage" type="radio" class="custom-control-input"
+                                                value="Percentage" name="UnitPriceType" formControlName="UnitPriceType">
+                                            <label class="custom-control-label" for="Percentage">Percentage</label>
+                                        </div>
+                                        <div class="input-group mb-3 mt-2"
+                                            *ngIf="AdditionalChargeForm.value.UnitPriceType=='Fixed'">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                            </div>
+                                            <input class="form-control" formControlName="UnitPrice"
+                                                (keypress)="allownumberwithdot($event)"
+                                                [ngClass]="{ 'is-invalid': AdditionalChargesubmit && AdditionalChargeForm.controls.UnitPrice.errors }"
+                                                placeholder="Fixed" type="text">
+                                            <div *ngIf="AdditionalChargesubmit && AdditionalChargeForm.controls.UnitPrice.errors"
+                                                class="invalid-feedback">
+                                                <div *ngIf="AdditionalChargeForm.controls.UnitPrice.errors.required">
+                                                    Fixed is
+                                                    required
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="input-group mb-3 mt-2"
+                                            *ngIf="AdditionalChargeForm.value.UnitPriceType!='Fixed'">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                            <input class="form-control" formControlName="UnitPrice"
+                                                (keypress)="allownumberwithdot($event)"
+                                                [ngClass]="{ 'is-invalid': AdditionalChargesubmit && AdditionalChargeForm.controls.UnitPrice.errors }"
+                                                placeholder="Percentage" type="text">
+                                            <div *ngIf="AdditionalChargesubmit && AdditionalChargeForm.controls.UnitPrice.errors"
+                                                class="invalid-feedback">
+                                                <div *ngIf="AdditionalChargeForm.controls.UnitPrice.errors.required">
+                                                    Percentage
+                                                    is
+                                                    required
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label for="postal-code">DESCRIPTION</label>
+                                    <textarea class="form-control" id="" formControlName="Description"
+                                        placeholder="Description" type="text"></textarea>
+                                </div>
+
+                            </div>
+                        </form>
+                        <div class="form-group col-sm-12">
+                            <button type="button" [disabled]="saving" class="btn btn-primary pull-right"
+                                (click)="AddAdditionalCharge(AdditionalChargeForm)">Save
+                                changes</button><br />
+                        </div>
+
+                    </tab>
+                </tabset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" [disabled]="saving"
+                    (click)="AdditionalChargeReset()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

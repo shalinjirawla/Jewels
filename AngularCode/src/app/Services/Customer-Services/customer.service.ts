@@ -13,7 +13,6 @@ export class CustomerService {
   private BaseURL: string = "https://localhost:44315";
 
   public AddCustomer(input: any): Observable<any> {
-    debugger
     let Result;
     let url_ = this.BaseURL + `/api/Customer/AddCustomer`;
     url_ = url_.replace(/[?&]$/, "");
@@ -183,5 +182,21 @@ export class CustomerService {
       return Result = response_;
     });
   }
+  public GetCustomerAddress(customerId:number): Observable<any> {
+    let Result;
+    let url_ = this.BaseURL + `/api/Customer/GetCustomerAddress?Id=` + customerId;
+    url_ = url_.replace(/[?&]$/, "");
 
+    let options_: any = {
+      observe: "response",
+      headers: new HttpHeaders({
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      }).set('Authorization', 'Bearer ' + AccessToken)
+    };
+
+    return this.HttpClient.request("get", url_, options_).pipe((response_: any) => {
+      return Result = response_;
+    });
+  }
 }

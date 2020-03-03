@@ -20,7 +20,6 @@ export class SupplierServicesService {
 
   public AddUpdate(input: any): Observable<any> {
     let url = this.BaseURL + `AddUpdateSuppliers`;
-    debugger
     input.SuppliersDetail.addressList=input.AddressList;
     input.SuppliersDetail.contactList=input.ContactList;
     var data = JSON.stringify(input.SuppliersDetail);
@@ -45,6 +44,12 @@ export class SupplierServicesService {
   public DeleteSuppliers(SuppliersId: any): Observable<any> {
     let url = this.BaseURL + `DeleteSuppliers?SuppliersId=${SuppliersId}`;
     return this.HttpClient.delete(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+  public GetDafaultSuppliers(): Observable<any> {
+    let url = this.BaseURL + `GetDafaultSuppliers`;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
       return this.Responce = responce;
     });
   }

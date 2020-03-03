@@ -75,7 +75,7 @@ namespace Inventory.Application.Services
 
                             _DbContext.Customers.Add(customer);
                             _DbContext.SaveChanges();
-
+                            CustomerId = customer.CustomerId;
                             if (Model.AddressList != null)
                             {
 
@@ -91,6 +91,7 @@ namespace Inventory.Application.Services
                                     {
                                         CountryId = Adderss.CountryId;
                                     }
+                                    Adderss.TenantId = TenantId;
                                     Adderss.State = list.State;
                                     Adderss.City = list.City;
                                     Adderss.PostalCode = list.PostalCode;
@@ -117,7 +118,7 @@ namespace Inventory.Application.Services
                                     Contacts.CountryId = CountryId;
                                     Contacts.Fax = list.Fax;
                                     Contacts.Office = list.Office;
-
+                                    Contacts.TenantId = TenantId;
                                     _DbContext.Contacts.Add(Contacts);
                                     _DbContext.SaveChanges();
 
@@ -168,6 +169,7 @@ namespace Inventory.Application.Services
 
                                 _DbContext.Update(alreadycustomer);
                                 _DbContext.SaveChanges();
+                                CustomerId = alreadycustomer.CustomerId;
                                 if (Model.AddressList != null)
                                 {
                                     var deleteaddresslist = _DbContext.Addersses.Where(x => x.CustomerId == alreadycustomer.CustomerId).ToList();
@@ -187,7 +189,7 @@ namespace Inventory.Application.Services
                                         Adderss.State = list.State;
                                         Adderss.City = list.City;
                                         Adderss.PostalCode = list.PostalCode;
-
+                                        Adderss.TenantId = TenantId;
                                         _DbContext.Addersses.Add(Adderss);
                                         _DbContext.SaveChanges();
                                     }
@@ -213,6 +215,7 @@ namespace Inventory.Application.Services
                                             Contacts.Mobile = list.Mobile;
                                             Contacts.Fax = list.Fax;
                                             Contacts.Office = list.Office;
+                                            Contacts.TenantId = TenantId;
                                             _DbContext.Contacts.Add(Contacts);
                                             _DbContext.SaveChanges();
 
@@ -362,6 +365,61 @@ namespace Inventory.Application.Services
             }
 
             return cId;
+        }
+
+        public CustomerAddress GetCustomerAddress(int CustomerId)
+        {
+            CustomerAddress result = new CustomerAddress();
+            try
+            {
+                var customeraddress = _DbContext.Addersses.Where(x => x.CustomerId == CustomerId).ToList();
+                if(customeraddress!=null && customeraddress.Count()>0)
+                {
+                    List<CustomerAddressVm> list = new List<CustomerAddressVm>();
+                    foreach (var item in customeraddress)
+                    {
+                        if (item.AddressType == "1")
+                        {
+                            CustomerAddressVm biilindAddress = new CustomerAddressVm()
+                            {
+                                Address = item.Address,
+                                addressId = item.AddressId.ToString(),
+                                AddressType = item.AddressType,
+                                City = item.City,
+                                CountryId = item.CountryId.ToString(),
+                                DefaultAddress = item.DefaultAddress,
+                                PostalCode = item.PostalCode,
+                                State = item.State,
+                            };
+                            result.BillingAddress = biilindAddress;
+                        }
+                        else
+                        {
+                            CustomerAddressVm shippingAddress = new CustomerAddressVm()
+                            {
+                                Address = item.Address,
+                                addressId = item.AddressId.ToString(),
+                                AddressType = item.AddressType,
+                                City = item.City,
+                                CountryId = item.CountryId.ToString(),
+                                DefaultAddress = item.DefaultAddress,
+                                PostalCode = item.PostalCode,
+                                State = item.State,
+                            };
+                            result.ShippingAddress = shippingAddress;
+                        }
+                      
+                    }
+                    result.CustomerId = CustomerId;
+                   
+                }
+            }
+            catch (Exception e) 
+            {
+                throw;
+            }
+          
+            return result;
         }
     }
 }

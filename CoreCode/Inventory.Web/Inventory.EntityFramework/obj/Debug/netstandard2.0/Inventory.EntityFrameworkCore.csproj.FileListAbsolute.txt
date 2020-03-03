@@ -16,3 +16,17 @@ D:\Ravi\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.EntityFramework
 D:\Ravi\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.EntityFramework\obj\Debug\netstandard2.0\Inventory.EntityFrameworkCore.csproj.CopyComplete
 D:\Ravi\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.EntityFramework\obj\Debug\netstandard2.0\Inventory.EntityFrameworkCore.dll
 D:\Ravi\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.EntityFramework\obj\Debug\netstandard2.0\Inventory.EntityFrameworkCore.pdb
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.EntityFramework\bin\Debug\netstandard2.0\Inventory.EntityFrameworkCore.deps.json
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.EntityFramework\bin\Debug\netstandard2.0\Inventory.EntityFrameworkCore.dll
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.EntityFramework\bin\Debug\netstandard2.0\Inventory.EntityFrameworkCore.pdb
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.EntityFramework\bin\Debug\netstandard2.0\Inventory.Core.dll
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.EntityFramework\bin\Debug\netstandard2.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.EntityFramework\bin\Debug\netstandard2.0\Inventory.Core.pdb
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.EntityFramework\bin\Debug\netstandard2.0\Microsoft.EntityFrameworkCore.SqlServer.xml
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.EntityFramework\obj\Debug\netstandard2.0\Inventory.EntityFrameworkCore.csprojAssemblyReference.cache
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.EntityFramework\obj\Debug\netstandard2.0\Inventory.EntityFrameworkCore.csproj.CoreCompileInputs.cache
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.EntityFramework\obj\Debug\netstandard2.0\Inventory.EntityFrameworkCore.AssemblyInfoInputs.cache
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.EntityFramework\obj\Debug\netstandard2.0\Inventory.EntityFrameworkCore.AssemblyInfo.cs
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.EntityFramework\obj\Debug\netstandard2.0\Inventory.EntityFrameworkCore.csproj.CopyComplete
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.EntityFramework\obj\Debug\netstandard2.0\Inventory.EntityFrameworkCore.dll
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.EntityFramework\obj\Debug\netstandard2.0\Inventory.EntityFrameworkCore.pdb

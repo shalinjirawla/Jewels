@@ -1,10 +1,11 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { CurrencyService, CreditTermsService, CountryService, WarehouseService, TaxCodeService, ShipmentMethodService, ShipmentTermService, PaymentTermService } from '../../../Services/Masters-Services/general-setup.service';
+import { CurrencyService, CreditTermsService,AdditionalChargeService, SalesOrderTypeService, CountryService, WarehouseService, TaxCodeService, ShipmentMethodService, ShipmentTermService, PaymentTermService } from '../../../Services/Masters-Services/general-setup.service';
 import Swal from 'sweetalert2'
 import { from, VirtualTimeScheduler } from 'rxjs';
 import { threadId } from 'worker_threads';
+import { finalize } from 'rxjs/operators';
 const Toast = Swal.mixin({
   toast: true,
   position: 'top-end',
@@ -19,13 +20,14 @@ const Toast = Swal.mixin({
 })
 export class GeneralSetupComponent implements OnInit {
 
+  saving: boolean = false;
   // Currency Model start
   @ViewChild('CurrencyModal', { static: false }) public CurrencyModal: ModalDirective;
   CurrencyModelTitleString: string = "Add Currency";
   CurrencySubmiited: boolean = false;
   CurrencyForm: FormGroup;
   CurrencyResponce: any;
-  CurrencyList: any[];
+  CurrencyList: any[] = [];
   CurrencybtnText = "Save Change";
   // Currency Model end
 
@@ -35,7 +37,7 @@ export class GeneralSetupComponent implements OnInit {
   CreditTermSubmiited: boolean = false;
   CreditTermForm: FormGroup;
   CreditTermResponce: any;
-  CreditTermList: any[];
+  CreditTermList: any[] = [];
   CreditTermbtnText = "Save Change";
   // Credit Term end
 
@@ -45,7 +47,7 @@ export class GeneralSetupComponent implements OnInit {
   Countrysubmit: boolean = false;
   CountryForm: FormGroup;
   tabflag: boolean = false;
-  CoutryList: any;
+  CoutryList: any[] = [];
   //Country End
 
   //Location Start
@@ -53,7 +55,7 @@ export class GeneralSetupComponent implements OnInit {
   LocationTitle: string = "Location"
   Locationsubmit: boolean = false;
   LocationForm: FormGroup;
-  LocationList: any;
+  LocationList: any[] = [];
   //Location End
 
   //TaxCode Start
@@ -61,7 +63,7 @@ export class GeneralSetupComponent implements OnInit {
   TaxcodeTitle: string = "Tax Code"
   Taxcodesubmit: boolean = false;
   TaxcodeForm: FormGroup;
-  TaxcodeList: any;
+  TaxcodeList: any[] = [];
   //TaxCode End
 
   //ShipmentTerm Start
@@ -69,7 +71,7 @@ export class GeneralSetupComponent implements OnInit {
   ShipmentTermTitle: string = "Shipment Term"
   ShipmentTermsubmit: boolean = false;
   ShipmentTermForm: FormGroup;
-  ShipmentTermList: any;
+  ShipmentTermList: any[] = [];
   //ShipmentTerm End
 
   //ShipmentMethod Start
@@ -77,7 +79,7 @@ export class GeneralSetupComponent implements OnInit {
   ShipmentMethodTitle: string = "Shipment Method"
   ShipmentMethodsubmit: boolean = false;
   ShipmentMethodForm: FormGroup;
-  ShipmentMethodList: any;
+  ShipmentMethodList: any[] = [];
   //ShipmentMethod End
 
   //Payment Term Start
@@ -85,9 +87,22 @@ export class GeneralSetupComponent implements OnInit {
   PaymentTermTitle: string = "Shipment Method"
   PaymentTermsubmit: boolean = false;
   PaymentTermForm: FormGroup;
-  PaymentTermList: any;
+  PaymentTermList: any[] = [];
   //Payment Term End
-
+  //Payment Term Start
+  @ViewChild('SalesOrderTypeModel', { static: false }) public SalesOrderTypeModel: ModalDirective;
+  SalesOrderTypeTitle: string = "Sales Order Type"
+  SalesOrderTypesubmit: boolean = false;
+  SalesOrderTypeForm: FormGroup;
+  SalesOrderTypeList: any[] = [];
+  //Payment Term End
+   //Additional Charge Start
+   @ViewChild('AdditionalChargeModel', { static: false }) public AdditionalChargeModel: ModalDirective;
+   AdditionalChargeTitle: string = "Sales Order Type"
+   AdditionalChargesubmit: boolean = false;
+   AdditionalChargeForm: FormGroup;
+   AdditionalChargeList: any[] = [];
+   //Additional Charge End
   constructor(private FormBuilder: FormBuilder,
     private CountryService: CountryService,
     private WarehouseService: WarehouseService,
@@ -97,6 +112,8 @@ export class GeneralSetupComponent implements OnInit {
     private ShipmentTermService: ShipmentTermService,
     private ShipmentMethodService: ShipmentMethodService,
     private PaymentTermService: PaymentTermService,
+    private SalesOrderTypeService: SalesOrderTypeService,
+    private AdditionalChargeService: AdditionalChargeService,
   ) { }
 
   ngOnInit() {
@@ -109,6 +126,8 @@ export class GeneralSetupComponent implements OnInit {
     this.onLoadShipmentTerm();
     this.OnloadPaymentTerms();
     this.onLoadShipmentMethod();
+    this.onLoadSalesOrderTypeList();
+    this.onLoadAdditionalChargeList();
   }
   //#region Currency Section Start 
 
@@ -134,7 +153,7 @@ export class GeneralSetupComponent implements OnInit {
       }
     })
   }
-  public AddCurrency(CurrencyForm: FormControl) {
+  public AddCurrency(CurrencyForm: any) {
     this.CurrencySubmiited = true;
     if (this.CurrencyForm.invalid) {
       return;
@@ -254,7 +273,7 @@ export class GeneralSetupComponent implements OnInit {
       }
     })
   }
-  public AddCreditTerms(CreditTermForm: FormControl) {
+  public AddCreditTerms(CreditTermForm: any) {
     this.CreditTermSubmiited = true;
     if (CreditTermForm.invalid) {
       return;
@@ -360,8 +379,7 @@ export class GeneralSetupComponent implements OnInit {
 
   get fPaymentTerms() { return this.PaymentTermForm.controls; }
 
-  public AddPaymentTerms(PaymentTermForm: FormControl) {
-    debugger
+  public AddPaymentTerms(PaymentTermForm: any) {
     this.PaymentTermsubmit = true;
     if (PaymentTermForm.invalid) {
       return;
@@ -499,7 +517,7 @@ export class GeneralSetupComponent implements OnInit {
 
   }
 
-  public AddCoutry(CountryForm: FormControl) {
+  public AddCoutry(CountryForm: any) {
     this.Countrysubmit = true;
     if (CountryForm.invalid) {
       return;
@@ -597,7 +615,7 @@ export class GeneralSetupComponent implements OnInit {
     });
   }
 
-  AddLocation(LocationForm: FormControl) {
+  AddLocation(LocationForm: any) {
     this.Locationsubmit = true;
     if (LocationForm.invalid) {
       return
@@ -717,7 +735,7 @@ export class GeneralSetupComponent implements OnInit {
 
   get taxform() { return this.TaxcodeForm.controls }
 
-  AddTaxcode(TaxcodeForm: FormControl) {
+  AddTaxcode(TaxcodeForm: any) {
     this.Taxcodesubmit = true;
     if (TaxcodeForm.invalid) {
       return
@@ -826,7 +844,7 @@ export class GeneralSetupComponent implements OnInit {
 
   get shiptermform() { return this.ShipmentTermForm.controls }
 
-  AddShipmentTerm(ShipmentTermForm: FormControl) {
+  AddShipmentTerm(ShipmentTermForm: any) {
     this.ShipmentTermsubmit = true;
     if (ShipmentTermForm.invalid) {
       return
@@ -965,7 +983,7 @@ export class GeneralSetupComponent implements OnInit {
     });
   }
 
-  AddShipmentMethod(ShipmentMethodForm: FormControl) {
+  AddShipmentMethod(ShipmentMethodForm: any) {
     this.ShipmentMethodsubmit = true;
     if (ShipmentMethodForm.invalid) {
       return
@@ -1059,6 +1077,258 @@ export class GeneralSetupComponent implements OnInit {
 
   //#endregion ShipmentMethod Section End
 
+//#region Sales Order type Start
+
+onLoadSalesOrderTypeList() {
+  this.SalesOrderTypeForm = this.FormBuilder.group({
+    SalesOrderTypeId: [0],
+    TypeName: ['', Validators.required],
+    Description: [''],
+    IsActive: [true],
+  })
+  this.getSalesOrderTypeList();
+  this.SalesOrderTypesubmit = false;
+}
+
+get SalesOrderTypeform() { return this.SalesOrderTypeForm.controls }
+
+OpenSalesOrderTypeModal() {
+  this.SalesOrderTypeModel.show();
+}
+
+getSalesOrderTypeList() {
+  this.SalesOrderTypeService.GetSalesOrderTypeList().subscribe((responce: any) => {
+    if (responce.status) {
+      this.SalesOrderTypeList = responce.data;
+    }
+  });
+}
+
+AddSalesOrderType(SalesOrderTypeForm: any) {
+  this.SalesOrderTypesubmit = true;
+  if (SalesOrderTypeForm.invalid) {
+    return
+  }
+  const self = this;
+  self.saving = true;
+  this.SalesOrderTypesubmit = false;
+  this.SalesOrderTypeService.AddSalesOrderType(SalesOrderTypeForm.value)
+    .pipe(finalize(() => self.saving = false))
+    .subscribe((responce: any) => {
+      if (responce.status) {
+        this.onLoadSalesOrderTypeList();
+        Toast.fire({
+          type: 'success',
+          title: responce.message,
+        });
+        document.getElementById("SalesOrderTypeList-link").click();
+      }
+
+    })
+}
+
+SalesOrderTypeReset() {
+  this.SalesOrderTypeModel.hide();
+  this.onLoadSalesOrderTypeList();
+}
+
+GetSalesOrderType(SalesOrderTypeId: any) {
+  this.SalesOrderTypeService.GetSalesOrderTypeById(SalesOrderTypeId).subscribe((responce: any) => {
+    let result = responce.data;
+    if (responce.status) {
+      this.SalesOrderTypeForm.patchValue({
+        SalesOrderTypeId:result.salesOrderTypeId, 
+        TypeName: result.typeName,
+        Description:result.description,
+        IsActive: result.isActive
+      })
+      document.getElementById("SalesOrderTypeFor-link").click();
+    }
+  })
+}
+public SalesOrderTypeChange(event, SalesOrderTypeId) {
+  if (SalesOrderTypeId != 0) {
+    this.SalesOrderTypeService.SalesOrderTypeStatusChange(SalesOrderTypeId, event).subscribe((responce: any) => {
+      if (responce.status) {
+        this.onLoadSalesOrderTypeList();
+        Toast.fire({
+          type: 'success',
+          title: responce.message,
+        })
+      } else {
+        Toast.fire({
+          type: 'error',
+          title: responce.message,
+        })
+      }
+    });
+  }
+}
+
+DeleteSalesOrderType(SalesOrderTypeId: any) {
+  if (SalesOrderTypeId != 0) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.value) {
+        this.SalesOrderTypeService.DeleteSalesOrderType(SalesOrderTypeId).subscribe((responce: any) => {
+          if (responce.status) {
+            Swal.fire(
+              'Deleted!',
+              responce.message,
+              'success'
+            )
+            this.getSalesOrderTypeList()
+            this.onLoadSalesOrderTypeList();
+          }
+        });
+      }
+    })
+  }
+}
+
+SalesOrderTypetabclick(event) {
+  if (event == "SalesOrderTypeList-link") {
+    this.onLoadSalesOrderTypeList();
+  }
+
+}
+
+//#endregion Sales Order list End
+
+  //#region Additional Charge Start
+
+  onLoadAdditionalChargeList() {
+    this.AdditionalChargeForm = this.FormBuilder.group({
+      AdditionalChargeId: [0],
+      Name: ['', Validators.required],
+      UnitPriceType: ['Fixed'],
+      UnitPrice: ['', Validators.required],
+      Description: [''],
+      IsActive: [true],
+    })
+    this.getAdditionalChargeList();
+    this.AdditionalChargesubmit = false;
+  }
+
+  get AdditionalChargeform() { return this.AdditionalChargeForm.controls }
+
+  OpenAdditionalChargeModal() {
+    this.AdditionalChargeModel.show();
+    document.getElementById("AdditionalChargeList-link").click();
+  }
+
+  getAdditionalChargeList() {
+    this.AdditionalChargeService.GetAdditionalChargeList().subscribe((responce: any) => {
+      if (responce.status) {
+        this.AdditionalChargeList = responce.data;
+      }
+    });
+  }
+
+  AddAdditionalCharge(AdditionalChargeForm: any) {
+    this.AdditionalChargesubmit = true;
+    if (AdditionalChargeForm.invalid) {
+      return
+    }
+    const self = this;
+    self.saving = true;
+    this.AdditionalChargeService.AddAdditionalCharge(AdditionalChargeForm.value)
+      .pipe(finalize(() => self.saving = false))
+      .subscribe((responce: any) => {
+        if (responce.status) {
+          this.onLoadAdditionalChargeList();
+          Toast.fire({
+            type: 'success',
+            title: responce.message,
+          });
+          document.getElementById("AdditionalChargeList-link").click();
+        }
+
+      })
+  }
+
+  AdditionalChargeReset() {
+    this.AdditionalChargeModel.hide();
+    this.onLoadAdditionalChargeList();
+  }
+
+  GetAdditionalCharge(AdditionalChargeId: any) {
+    this.AdditionalChargeService.GetAdditionalChargeById(AdditionalChargeId).subscribe((responce: any) => {
+      let result = responce.data;
+      if (responce.status) {
+        this.AdditionalChargeForm.patchValue({
+          AdditionalChargeId:result.additionalChargeId, 
+          Name: result.name,
+          UnitPriceType:result.unitPriceType,
+          UnitPrice:result.unitPrice,
+          Description:result.description,
+          IsActive: result.isActive
+        })
+        document.getElementById("AdditionalChargeFor-link").click();
+      }
+    })
+  }
+  public AdditionalChargeChange(event, AdditionalChargeId) {
+    if (AdditionalChargeId != 0) {
+      this.AdditionalChargeService.AdditionalChargeStatusChange(AdditionalChargeId, event).subscribe((responce: any) => {
+        if (responce.status) {
+          this.onLoadAdditionalChargeList();
+          Toast.fire({
+            type: 'success',
+            title: responce.message,
+          })
+        } else {
+          Toast.fire({
+            type: 'error',
+            title: responce.message,
+          })
+        }
+      });
+    }
+  }
+
+  DeleteAdditionalCharge(AdditionalChargeId: any) {
+    if (AdditionalChargeId != 0) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.value) {
+          this.AdditionalChargeService.DeleteAdditionalCharge(AdditionalChargeId).subscribe((responce: any) => {
+            if (responce.status) {
+              Swal.fire(
+                'Deleted!',
+                responce.message,
+                'success'
+              )
+              this.onLoadAdditionalChargeList()
+            }
+          });
+        }
+      })
+    }
+  }
+
+  AdditionalChargetabclick(event) {
+    if (event == "AdditionalChargeList-link") {
+      this.onLoadAdditionalChargeList();
+    }
+
+  }
+
+  //#endregion Additional Charge End
   allowalpha(event: any) {
     const pattern = /[a-z\\A-Z\ \a-z\\A-Z]/;
     let inputChar = String.fromCharCode(event.charCode);

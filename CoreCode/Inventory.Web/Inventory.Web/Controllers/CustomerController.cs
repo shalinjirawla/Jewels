@@ -79,6 +79,12 @@ namespace Inventory.Web.Controllers
             var customer = _icustomer.GetCustomerByIdAsyc(Id);
             return Ok(GetAjaxResponse(true, string.Empty, customer));
         }
+        [HttpGet]
+        public IActionResult CustomerIsExist(string Name)
+        {
+           Status = _icustomerType.CustomerTypeAsycExist(Name);
+            return Ok(GetAjaxResponse(Status, string.Empty, null));
+        }
 
         [HttpGet]
         public IActionResult GetCustomerType()
@@ -113,7 +119,12 @@ namespace Inventory.Web.Controllers
             var CustomerType = _icustomerType.DeleteCustomerTypeAsyc(Id);
             return Ok(GetAjaxResponse(true, string.Empty, CustomerType));
         }
-        
+        [HttpGet]
+        public IActionResult GetCustomerAddress(int Id)
+        {
+            var customer = _icustomer.GetCustomerAddress(Id);
+            return Ok(GetAjaxResponse(true, string.Empty, customer));
+        }
 
     }
 }

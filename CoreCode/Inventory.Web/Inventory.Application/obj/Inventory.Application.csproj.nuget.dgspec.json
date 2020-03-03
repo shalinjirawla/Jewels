@@ -181,10 +181,6 @@
               "target": "Package",
               "version": "[2.2.0, )"
             },
-            "Microsoft.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[2.2.6, )"
-            },
             "Microsoft.Extensions.Identity.Stores": {
               "target": "Package",
               "version": "[2.2.0, )"

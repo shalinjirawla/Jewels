@@ -16,5 +16,6 @@ namespace Inventory.Application.Interface.Tenants
         Task<Boolean> RegisterTenantActived(UserVm model);
         Task<Boolean> ChechTenants(long TenantId);
         Task<Boolean> CheckUserId(string UserId);
+        Task<List<TenantUserList>>GetTenantUserList(long TenantId);
     }
 }

@@ -185,7 +185,6 @@ export class WarehouseService {
   }
 
   public DeleteLocation(Id:any):Observable<any>{
-    debugger
     let result;
     let url = this.BaseURL + `DeleteWarehouse?Id=${Id}`;
     return this.HttpClient.delete(url, httpOption).pipe((responce: any) => {
@@ -212,7 +211,6 @@ export class TaxCodeService {
   }
 
   public AddTaxCode(input): Observable<any> {
-    debugger
     let url = this.BaseURL + `AddTextCode`;
     return this.HttpClient.post(url, JSON.stringify(input), httpOption).pipe((responce: any) => {
       return this.Responce = responce;
@@ -259,7 +257,6 @@ export class ShipmentTermService {
   }
 
   public AddShipmentTerm(input): Observable<any> {
-    debugger
     let url = this.BaseURL + `AddShipmentTerm`;
     return this.HttpClient.post(url, JSON.stringify(input), httpOption).pipe((responce: any) => {
       return this.Responce = responce;
@@ -306,7 +303,6 @@ export class ShipmentMethodService {
   }
 
   public AddShipmentMethod(input): Observable<any> {
-    debugger
     let url = this.BaseURL + `AddShipmentMethod`;
     return this.HttpClient.post(url, JSON.stringify(input), httpOption).pipe((responce: any) => {
       return this.Responce = responce;
@@ -353,7 +349,6 @@ export class PaymentTermService {
   }
 
   public AddPaymentTerm(input): Observable<any> {
-    debugger
     let url = this.BaseURL + `AddPaymentTerm`;
     return this.HttpClient.post(url, JSON.stringify(input), httpOption).pipe((responce: any) => {
       return this.Responce = responce;
@@ -381,4 +376,102 @@ export class PaymentTermService {
     });
   }
   
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class SalesOrderTypeService {
+
+  Responce: any;
+  constructor(private HttpClient: HttpClient) { }
+  private BaseURL: string = "https://localhost:44315/api/Commons/";
+
+  public GetSalesOrderTypeList(): Observable<any> {
+    let url = this.BaseURL + `GetSalesOrderTypeList`;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+  public GetActiveSalesOrderTypeList(): Observable<any> {
+    let url = this.BaseURL + `GetActiveSalesOrderTypeList`;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+  public AddSalesOrderType(input): Observable<any> {
+    let url = this.BaseURL + `AddSalesOrderType`;
+    return this.HttpClient.post(url, JSON.stringify(input), httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+
+  public GetSalesOrderTypeById(SalesOrderTypeId:number): Observable<any> {
+    let url = this.BaseURL + `GetSalesOrderTypeById?SalesOrderTypeId=` + SalesOrderTypeId;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+
+  public DeleteSalesOrderType(SalesOrderTypeId:number): Observable<any> {
+    let url = this.BaseURL + `DeleteSalesOrderType?SalesOrderTypeId=` + SalesOrderTypeId;
+    return this.HttpClient.delete(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+  public SalesOrderTypeStatusChange(SalesOrderTypeId, Status): Observable<any> {
+    let url = this.BaseURL + `SalesOrderTypeStatuschange?SalesOrderTypeId=${SalesOrderTypeId}&Statuschange=${Status}`;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AdditionalChargeService {
+
+  Responce: any;
+  constructor(private HttpClient: HttpClient) { }
+  private BaseURL: string = "https://localhost:44315/api/Commons/";
+
+  public GetAdditionalChargeList(): Observable<any> {
+    let url = this.BaseURL + `GetAdditionalChargeList`;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+  public GetActiveAdditionalChargeList(): Observable<any> {
+    let url = this.BaseURL + `GetActiveAdditionalChargeList`;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+  public AddAdditionalCharge(input): Observable<any> {
+    let url = this.BaseURL + `AddAdditionalCharge`;
+    return this.HttpClient.post(url, JSON.stringify(input), httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+
+  public GetAdditionalChargeById(AdditionalChargeId:number): Observable<any> {
+    let url = this.BaseURL + `GetAdditionalChargeById?AdditionalChargeId=` + AdditionalChargeId;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+
+  public DeleteAdditionalCharge(AdditionalChargeId:number): Observable<any> {
+    let url = this.BaseURL + `DeleteAdditionalCharge?AdditionalChargeId=` + AdditionalChargeId;
+    return this.HttpClient.delete(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
+  public AdditionalChargeStatusChange(AdditionalChargeId, Status): Observable<any> {
+    let url = this.BaseURL + `AdditionalChargeStatuschange?AdditionalChargeId=${AdditionalChargeId}&Statuschange=${Status}`;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
 }

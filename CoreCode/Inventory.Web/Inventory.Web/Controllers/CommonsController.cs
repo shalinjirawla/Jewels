@@ -33,6 +33,8 @@ namespace Inventory.Web.Controllers
         private readonly IPaymentTerm _ipaymentTerm;
         private readonly IUOM _IUOM;
         private readonly IMetric_Units _imetric_Units;
+        private readonly ISalesOrderType _SalesOrderType;
+        private readonly IAdditionalCharge _AdditionalCharge;
         public Boolean Status = false;
         public string Message = "";
         public object Data = null;
@@ -45,7 +47,9 @@ namespace Inventory.Web.Controllers
             ITaxCode itaxCode, IShipmentTerm shipmentTerm,
             IShipmentMethod shipmentMethod, IPaymentTerm ipaymentTerm,
             IUOM IUOM, IMetric_Units imetric_Units,
-            SessionHanlderController SessionHanlderController
+            SessionHanlderController SessionHanlderController,
+             ISalesOrderType SalesOrderType,
+             IAdditionalCharge AdditionalCharge
             )
         {
 
@@ -60,9 +64,10 @@ namespace Inventory.Web.Controllers
             _ipaymentTerm = ipaymentTerm;
             _IUOM = IUOM;
             _imetric_Units = imetric_Units;
-
+            _SalesOrderType = SalesOrderType;
             _SessionHanlderController = SessionHanlderController;
-           
+            _AdditionalCharge = AdditionalCharge;
+
         }
         [NonAction]
         public ApiResponse GetAjaxResponse(bool status, string message, object data)
@@ -158,12 +163,12 @@ namespace Inventory.Web.Controllers
             if (ModelState.IsValid)
             {
 
-              
+
 
                 GetUserId = _SessionHanlderController.GetUserId(HttpContext);
                 GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
 
-                Status = await _currency.SaveCurrency(model,GetUserId,GetTenantId);
+                Status = await _currency.SaveCurrency(model, GetUserId, GetTenantId);
                 if (Status)
                 {
                     Message = "Currency Succesfully Saved..!";
@@ -284,7 +289,7 @@ namespace Inventory.Web.Controllers
             {
                 msg = "Country Updated Successfully";
             }
-          
+
             GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
             GetUserId = _SessionHanlderController.GetUserId(HttpContext);
             var CountryId = _icountry.AddCountryAsyc(model, GetUserId, GetTenantId);
@@ -339,7 +344,7 @@ namespace Inventory.Web.Controllers
 
                 GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
                 GetUserId = _SessionHanlderController.GetUserId(HttpContext);
-                Status = await _icreditTerms.SaveCreditTerms(model,GetUserId,GetTenantId);
+                Status = await _icreditTerms.SaveCreditTerms(model, GetUserId, GetTenantId);
                 if (Status)
                 {
                     Message = "Credit Terms Added....!";
@@ -358,7 +363,7 @@ namespace Inventory.Web.Controllers
 
 
             GetUserId = _SessionHanlderController.GetUserId(HttpContext);
-            Status = await _icreditTerms.UpdateCreditTerms(CreditTermId,model,GetUserId);
+            Status = await _icreditTerms.UpdateCreditTerms(CreditTermId, model, GetUserId);
             if (Status)
             {
                 Message = "Credit Terms is Updated....!";
@@ -593,7 +598,7 @@ namespace Inventory.Web.Controllers
             ShipmentTermVm ShipmentTerm = new ShipmentTermVm();
             if (ShipmentTermId != 0)
             {
-                ShipmentTerm = await  _shipmentTerm.GetShipmentTerm(ShipmentTermId);
+                ShipmentTerm = await _shipmentTerm.GetShipmentTerm(ShipmentTermId);
             }
             else { return BadRequest(); }
 
@@ -758,7 +763,7 @@ namespace Inventory.Web.Controllers
         public IActionResult GetUOMList()
         {
 
-            var UOMList =  _IUOM.GetUOMList();
+            var UOMList = _IUOM.GetUOMList();
             return Ok(GetAjaxResponse(true, string.Empty, UOMList));
         }
 
@@ -783,5 +788,173 @@ namespace Inventory.Web.Controllers
         }
 
         #endregion Metric_Units APIs End
+        #region Sales Order Type APIs Start
+
+        [HttpPost]
+        public async Task<IActionResult> AddSalesOrderType(SalesOrderTypeVM model)
+        {
+            if (ModelState.IsValid && model != null)
+            {
+                GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
+                GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+                var SaleOrderTypeId = await _SalesOrderType.SaveSalesOrderTypeAsync(model, GetUserId, GetTenantId);
+                if (SaleOrderTypeId != 0)
+                {
+                    Status = true;
+                    Message = "Sales Order Type is Saved....!";
+                }
+                else { Status = false; Message = "Error Occurss..!"; }
+            }
+            else { return BadRequest(); }
+
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetSalesOrderTypeList()
+        {
+            GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
+            var SalesOrderTypeList = await _SalesOrderType.GetSalesOrderTypeListAsync(GetTenantId);
+            return Ok(GetAjaxResponse(true, string.Empty, SalesOrderTypeList));
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetActiveSalesOrderTypeList()
+        {
+
+            GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
+            var SalesOrderTypeList = await _SalesOrderType.GetActiveSalesOrderTypeListAsync(GetTenantId);
+            return Ok(GetAjaxResponse(true, string.Empty, SalesOrderTypeList));
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetSalesOrderTypeById(long SalesOrderTypeId)
+        {
+            SalesOrderTypeVM SalesOrderType = new SalesOrderTypeVM();
+            if (SalesOrderTypeId != 0)
+            {
+                SalesOrderType = await _SalesOrderType.GetSalesOrderTypeAsync(SalesOrderTypeId);
+            }
+            else { return BadRequest(); }
+
+            return Ok(GetAjaxResponse(true, string.Empty, SalesOrderType));
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteSalesOrderType(long SalesOrderTypeId)
+        {
+            Status = await _SalesOrderType.DeleteSalesOrderTypeAsync(SalesOrderTypeId);
+            if (Status)
+            {
+                Message = "Sales Order Type is Deleted...!";
+            }
+            else { Message = "Error Occurss..!"; }
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+        [HttpGet]
+        public async Task<IActionResult> SalesOrderTypeStatuschange(long SalesOrderTypeId, Boolean Statuschange)
+        {
+            if (SalesOrderTypeId != 0)
+            {
+                Status = await _SalesOrderType.SalesOrderTypeStatusChange(SalesOrderTypeId, Statuschange);
+                if (Status)
+                {
+                    if (Statuschange)
+                    {
+                        Message = "Sales Order Type is Active..!";
+                    }
+                    else
+                    {
+                        Message = "Sales Order Type is Deactive...!";
+                    }
+                }
+                else { }
+            }
+            else { return BadRequest(); }
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+        #endregion Sales Order Type APIs End
+        #region Additional Charge APIs Start
+
+        [HttpPost]
+        public async Task<IActionResult> AddAdditionalCharge(AdditionalChargeVM model)
+        {
+            if (ModelState.IsValid && model != null)
+            {
+                GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
+                GetUserId = _SessionHanlderController.GetUserId(HttpContext);
+                var AdditionalChargeId = await _AdditionalCharge.SaveAdditionalChargeAsync(model, GetUserId, GetTenantId);
+                if (AdditionalChargeId != 0)
+                {
+                    Status = true;
+                    Message = "Additional Charge is Saved....!";
+                }
+                else { Status = false; Message = "Error Occurss..!"; }
+            }
+            else { return BadRequest(); }
+
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAdditionalChargeList()
+        {
+            GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
+            var AdditionalChargeList = await _AdditionalCharge.GetAdditionalChargeListAsync(GetTenantId);
+            return Ok(GetAjaxResponse(true, string.Empty, AdditionalChargeList));
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetActiveAdditionalChargeList()
+        {
+
+            GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
+            var AdditionalChargeList = await _AdditionalCharge.GetActiveAdditionalChargeAsync(GetTenantId);
+            return Ok(GetAjaxResponse(true, string.Empty, AdditionalChargeList));
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAdditionalChargeById(long AdditionalChargeId)
+        {
+            AdditionalChargeVM AdditionalCharge = new AdditionalChargeVM();
+            if (AdditionalChargeId != 0)
+            {
+                AdditionalCharge = await _AdditionalCharge.GetAdditionalChargeAsync(AdditionalChargeId);
+            }
+            else { return BadRequest(); }
+
+            return Ok(GetAjaxResponse(true, string.Empty, AdditionalCharge));
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAdditionalCharge(long AdditionalChargeId)
+        {
+            Status = await _AdditionalCharge.DeleteAdditionalChargeAsync(AdditionalChargeId);
+            if (Status)
+            {
+                Message = "Additional Charge is Deleted...!";
+            }
+            else { Message = "Error Occurss..!"; }
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+        [HttpGet]
+        public async Task<IActionResult> AdditionalChargeStatuschange(long AdditionalChargeId, Boolean Statuschange)
+        {
+            if (AdditionalChargeId != 0)
+            {
+                Status = await _AdditionalCharge.AdditionalChargeStatusChange(AdditionalChargeId, Statuschange);
+                if (Status)
+                {
+                    if (Statuschange)
+                    {
+                        Message = "Additional Charge is Active..!";
+                    }
+                    else
+                    {
+                        Message = "Additional Charge is Deactive...!";
+                    }
+                }
+                else { }
+            }
+            else { return BadRequest(); }
+            return Ok(GetAjaxResponse(Status, Message, null));
+        }
+        #endregion Additional Charge APIs End
     }
 }

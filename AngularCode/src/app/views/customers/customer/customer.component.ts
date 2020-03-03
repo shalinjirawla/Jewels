@@ -2,9 +2,7 @@ import { Component, OnInit, ViewChild, AbstractType } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { CustomerService } from '../../../Services/Customer-Services/customer.service'
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { map } from 'rxjs/operators';
-import { nextTick } from 'q';
-import { JsonPipe } from '@angular/common';
+
 import Swal from 'sweetalert2'
 import { from } from 'rxjs';
 import * as $ from 'jquery';
@@ -27,6 +25,7 @@ export class CustomerComponent implements OnInit {
   @ViewChild('largeModal', { static: false }) public largeModal: ModalDirective;
   constructor(private customerservice: CustomerService,
     private formBuilder: FormBuilder) { }
+  saving: boolean = false;
   Result: any;
   savebtntitle: string = "Save & Next";
   copyAddress: string;
@@ -157,10 +156,9 @@ export class CustomerComponent implements OnInit {
     }
   }
   click(event) {
-    debugger
   }
 
-  AddCustomer(AddCustomerForm: FormControl) {
+  AddCustomer(AddCustomerForm: any) {
     this.submitted = true;
     if (this.AddCustomerForm.invalid) {
       document.getElementById("customerDetail-link").click();
@@ -231,7 +229,7 @@ export class CustomerComponent implements OnInit {
       ele.checked = false;
     }
   }
-  AddCustomerAddress(AddCustomerAddressForm: FormControl) {
+  AddCustomerAddress(AddCustomerAddressForm: any) {
     this.Addresssubmitted = true;
     if (this.AddCustomerAddressForm.invalid) {
       return;
@@ -451,7 +449,7 @@ export class CustomerComponent implements OnInit {
 
   }
 
-  AddCustomerContact(AddCustomerContactForm: FormControl) {
+  AddCustomerContact(AddCustomerContactForm: any) {
     this.contactsubmitted = true;
     if (this.AddCustomerContactForm.invalid) {
       return;
@@ -594,7 +592,6 @@ export class CustomerComponent implements OnInit {
 
   GetCurrencyList() {
     this.customerservice.GetCurrency().subscribe((responce: any) => {
-      debugger
       this.CurrencyList = responce.body.data;
     });
   }

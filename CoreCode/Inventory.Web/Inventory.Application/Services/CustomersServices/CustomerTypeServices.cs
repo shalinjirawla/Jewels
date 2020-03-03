@@ -12,7 +12,7 @@ namespace Inventory.Application.Services.CustomersServices
     public class CustomerTypeServices : IcustomerType
     {
         private readonly ApplicationDbContext _DbContext;
-
+        public Boolean status = false;
         public CustomerTypeServices(ApplicationDbContext DbContext)
         {
             _DbContext = DbContext;
@@ -45,18 +45,12 @@ namespace Inventory.Application.Services.CustomersServices
                         var alreadyCustomertype = _DbContext.CustomerTypes.FirstOrDefault(x => x.CustomerTypeId == model.CustomerTypeId);
                         if (alreadyCustomertype != null)
                         {
-                            CustomerType customerType = new CustomerType();
-                            customerType.CustomerTypeId = model.CustomerTypeId;
-                            customerType.CustomerTypeName = model.CustomerTypeName;
-                            customerType.CreationTime = alreadyCustomertype.CreationTime;
-                            customerType.CreatorUserId = alreadyCustomertype.CreatorUserId;
-                            customerType.LastModificationTime = DateTime.Now;
-                            customerType.LastModifierUserId = UserId;
-                            customerType.IsActive = true;
-
-                            _DbContext.Update(customerType);
+                            alreadyCustomertype.CustomerTypeName = model.CustomerTypeName;
+                            alreadyCustomertype.LastModificationTime = DateTime.Now;
+                            alreadyCustomertype.LastModifierUserId = UserId;
+                            _DbContext.Update(alreadyCustomertype);
                             _DbContext.SaveChanges();
-                            CustomerTypeId = int.Parse(customerType.CustomerTypeId.ToString());
+                            CustomerTypeId = int.Parse(alreadyCustomertype.CustomerTypeId.ToString());
                         }
                         else
                         {
@@ -71,6 +65,29 @@ namespace Inventory.Application.Services.CustomersServices
                 throw ex;
             }
             return CustomerTypeId;
+        }
+
+        public bool CustomerTypeAsycExist(string Name)
+        {
+            try
+            {
+                if (Name != null && !string.IsNullOrEmpty(Name))
+                {
+                    Name = Name.TrimEnd();
+                    var IsExist = _DbContext.CustomerTypes.Where(x => x.CustomerTypeName == Name);
+                    if (IsExist != null && IsExist.Any())
+                        status = true;
+                    else
+                        status = false;
+                }
+                else
+                    throw new Exception("Name not allow null values");
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return status;
         }
 
         public int DeleteCustomerTypeAsyc(int Id)

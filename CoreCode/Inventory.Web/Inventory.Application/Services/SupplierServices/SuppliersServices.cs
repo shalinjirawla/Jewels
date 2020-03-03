@@ -221,6 +221,36 @@ namespace Inventory.Application.Services.SupplierServices
             return Status;
         }
 
+        public async Task<List<DefaultSupplierList>> GetDefaultSupplierList()
+        {
+            List<DefaultSupplierList> list = new List<DefaultSupplierList>();
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var supplierlist = _DbContext.Suppliers.ToList();
+                    if (supplierlist != null && supplierlist.Count > 0)
+                    {
+                        foreach (var item in supplierlist)
+                        {
+                            DefaultSupplierList dto = new DefaultSupplierList();
+                            dto.SupplierId = item.SupplierId;
+                            dto.SupplierCode = item.SupplierCode;
+                            dto.CompanyName = item.CompanyName;
+                            list.Add(dto);
+                        }
+                    }
+                }); 
+                
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return list;
+        }
+
         public async Task<SupplierVm> GetSupplierById(long Id)
         {
             SupplierVm SupplierVm = new SupplierVm();

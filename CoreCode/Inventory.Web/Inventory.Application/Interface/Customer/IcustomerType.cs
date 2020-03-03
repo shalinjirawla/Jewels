@@ -11,5 +11,6 @@ namespace Inventory.Application.Interface.Customer
         CustomerTypeVm GetCustomerTypeById(int id);
         int AddCustomerTypeAsyc(CustomerTypeVm model, string UserId, long TenantId);
         int DeleteCustomerTypeAsyc(int Id);
+        Boolean CustomerTypeAsycExist(string Name);
     }
 }

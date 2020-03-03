@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { SalesOrderComponent } from './sales-order/sales-order.component';
+import { QuotationsComponent } from './quotations/quotations.component';
 import { AuthGuardService} from './../../shared/guards/auth-guard.service';
 
 const routes: Routes = [
@@ -23,7 +24,14 @@ const routes: Routes = [
             title: 'Sales'
           }
         },
-        
+        {
+          path: 'quotations',
+          component: QuotationsComponent,
+          canActivate: [AuthGuardService],
+          data: {
+            title: 'Sales'
+          }
+        },
        
       ]
     }

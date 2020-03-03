@@ -24,12 +24,24 @@ export class TenantsServicesService {
 
     }
   }
-  public GetRegisterData(TenantId: any,UserId:any): Observable<any> {
+  public GetRegisterData(TenantId: any, UserId: any): Observable<any> {
     if (TenantId != 0) {
-      let url = this.BaseURL+`GetRegisterData?TenantId=${TenantId}&UserId=${UserId}`;
+      let url = this.BaseURL + `GetRegisterData?TenantId=${TenantId}&UserId=${UserId}`;
       return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
         return this.Responce = responce;
       });
     }
+  }
+  public GetTenantUserList(): Observable<any> {
+    let AccessToken;
+    AccessToken = localStorage.getItem('AccessToken');
+    const httpOption = {
+      headers: new HttpHeaders({ 'Content-type': 'application/json' }).set('Authorization', 'Bearer ' + AccessToken)
+    };
+    let url = this.BaseURL + `GetTenantUserList`;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+
   }
 }

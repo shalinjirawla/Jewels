@@ -7,10 +7,12 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { CustomersRoutingModule } from '../Sales/sales-routing.module';
+import { QuotationsComponent } from './quotations/quotations.component';
 
 @NgModule({
   declarations: [
-    SalesOrderComponent
+    SalesOrderComponent,
+    QuotationsComponent
   ],
   imports: [
     CommonModule,

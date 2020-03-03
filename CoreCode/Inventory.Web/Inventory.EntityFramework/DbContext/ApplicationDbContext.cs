@@ -4,6 +4,7 @@ using Inventory.Core.Models.Commons;
 using Inventory.Core.Models.Currency;
 using Inventory.Core.Models.Customer;
 using Inventory.Core.Models.Products;
+using Inventory.Core.Models.SalesOrder;
 using Inventory.Core.Models.Supplier;
 using Inventory.Core.Models.Tenants;
 using Inventory.Core.Models.UploadImage;
@@ -52,5 +53,16 @@ namespace Inventory.EntityFrameworkCore.DbContext
         public DbSet<UploadImage> UploadImages { get; set; }
         public DbSet<RawMaterails> RawMaterails { get; set; }
         public DbSet<UOM> UOMs { get; set; }
+        public DbSet<Product> Product { get; set; }
+        public DbSet<ProductVariant> ProductVariant { get; set; }
+        public DbSet<ProductService> ProductService { get; set; }
+        public DbSet<SalesOrderType> SalesOrderType { get; set; }
+        public DbSet<AdditionalCharge> AdditionalCharge { get; set; }
+
+        public DbSet<SalesOrders> SalesOrders { get; set; }
+        public DbSet<SalesOrderItems> SalesOrderItems { get; set; }
+        public DbSet<SalesOrderDetails> SalesOrderDetails { get; set; }
+        public DbSet<SalesOrderAdditionalChargeForProduct> SalesOrderAdditionalChargeForProduct { get; set; }
+        public DbSet<SalesOrderAdditionalChargeForAll> SalesOrderAdditionalChargeForAll { get; set; }
     }
 }

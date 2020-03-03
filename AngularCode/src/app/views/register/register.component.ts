@@ -23,7 +23,7 @@ const Toast = Swal.mixin({
 
 })
 export class RegisterComponent implements OnInit {
-  private loading: boolean = false;
+  public loading: boolean = false;
   constructor(private FormBuilder: FormBuilder,
     private ApplicationUserService: ApplicationUserService,
     private TenantsServicesService: TenantsServicesService,
@@ -42,7 +42,6 @@ export class RegisterComponent implements OnInit {
     const url = window.location.href;
     this.Onload();
     if (url.includes('?')) {
-debugger
       let httpParams = url.split('?')[1];
       let data=httpParams.split("&")
       if(data!=null && data!=undefined && data.length>1){
@@ -76,7 +75,7 @@ debugger
       });
 
   }
-  public SaveRegsiter(RegisterForm: FormControl) {
+  public SaveRegsiter(RegisterForm: any) {
     this.FormSubmitted = true;
     if (this.RegisterForm.invalid) {
       return;

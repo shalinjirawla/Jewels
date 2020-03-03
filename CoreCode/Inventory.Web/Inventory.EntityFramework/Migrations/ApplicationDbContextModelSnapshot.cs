@@ -15,7 +15,7 @@ namespace Inventory.EntityFrameworkCore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -70,6 +70,43 @@ namespace Inventory.EntityFrameworkCore.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.Commons.AdditionalCharge", b =>
+                {
+                    b.Property<long>("AdditionalChargeId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("CreationTime");
+
+                    b.Property<string>("CreatorUserId");
+
+                    b.Property<string>("Description");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<string>("LastModifierUserId");
+
+                    b.Property<string>("Name");
+
+                    b.Property<long?>("TenantsId");
+
+                    b.Property<string>("UnitPrice");
+
+                    b.Property<string>("UnitPriceType");
+
+                    b.HasKey("AdditionalChargeId");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("LastModifierUserId");
+
+                    b.HasIndex("TenantsId");
+
+                    b.ToTable("AdditionalCharge");
                 });
 
             modelBuilder.Entity("Inventory.Core.Models.Commons.CreditTerms", b =>
@@ -186,6 +223,41 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasIndex("TenantsId");
 
                     b.ToTable("PaymentTerms");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.Commons.SalesOrderType", b =>
+                {
+                    b.Property<long>("SalesOrderTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active");
+
+                    b.Property<DateTime?>("CreationTime");
+
+                    b.Property<string>("CreatorUserId");
+
+                    b.Property<string>("Description");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<string>("LastModifierUserId");
+
+                    b.Property<long?>("TenantsId");
+
+                    b.Property<string>("TypeName");
+
+                    b.HasKey("SalesOrderTypeId");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("LastModifierUserId");
+
+                    b.HasIndex("TenantsId");
+
+                    b.ToTable("SalesOrderType");
                 });
 
             modelBuilder.Entity("Inventory.Core.Models.Commons.ShipmentMethod", b =>
@@ -571,6 +643,57 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.ToTable("CustomerTypes");
                 });
 
+            modelBuilder.Entity("Inventory.Core.Models.Products.Product", b =>
+                {
+                    b.Property<long>("ProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("BatchItem");
+
+                    b.Property<long?>("BrandId");
+
+                    b.Property<long?>("CategorieId");
+
+                    b.Property<DateTime?>("CreationTime");
+
+                    b.Property<string>("CreatorUserId");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<bool>("IsProductVariants");
+
+                    b.Property<bool>("IsRawMaterail");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<string>("LastModifierUserId");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("RawMaterial_points");
+
+                    b.Property<bool>("SerialNumber");
+
+                    b.Property<string>("Sku");
+
+                    b.Property<bool>("Stockitem");
+
+                    b.Property<bool>("Taxable");
+
+                    b.Property<long?>("TenantsId");
+
+                    b.HasKey("ProductId");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("LastModifierUserId");
+
+                    b.HasIndex("TenantsId");
+
+                    b.ToTable("Product");
+                });
+
             modelBuilder.Entity("Inventory.Core.Models.Products.ProductBrand", b =>
                 {
                     b.Property<long>("BrandId")
@@ -639,6 +762,112 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasIndex("TenantsId");
 
                     b.ToTable("ProductCategories");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.Products.ProductService", b =>
+                {
+                    b.Property<long>("ServiceId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("CreationTime");
+
+                    b.Property<string>("CreatorUserId");
+
+                    b.Property<string>("Description");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<string>("LastModifierUserId");
+
+                    b.Property<long>("MinmOrderQuantity");
+
+                    b.Property<string>("Name");
+
+                    b.Property<double>("PurchasePrice");
+
+                    b.Property<string>("SKU");
+
+                    b.Property<double>("SellingPrice");
+
+                    b.Property<long>("TaxId");
+
+                    b.Property<bool>("Taxble");
+
+                    b.Property<long?>("TenantsId");
+
+                    b.HasKey("ServiceId");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("LastModifierUserId");
+
+                    b.HasIndex("TaxId");
+
+                    b.HasIndex("TenantsId");
+
+                    b.ToTable("ProductService");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.Products.ProductVariant", b =>
+                {
+                    b.Property<long>("ProductVariantId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long?>("DefaultSupplierId");
+
+                    b.Property<int?>("DefaultTaxId");
+
+                    b.Property<long?>("DefaultWarehouseId");
+
+                    b.Property<string>("Image");
+
+                    b.Property<double?>("InitialHandCost");
+
+                    b.Property<double?>("InitialStockHand");
+
+                    b.Property<double?>("InitialStockPrice");
+
+                    b.Property<long?>("ProductId");
+
+                    b.Property<double?>("PurchasePrice");
+
+                    b.Property<long?>("ReorderQuantity");
+
+                    b.Property<double?>("SellingPrice");
+
+                    b.Property<string>("Sku");
+
+                    b.Property<long?>("SupplierId");
+
+                    b.Property<double?>("UnitsOfMeasurement");
+
+                    b.Property<long?>("VariMinmOrderQuantity");
+
+                    b.Property<string>("VariantDesc");
+
+                    b.Property<string>("VariantOptionsType");
+
+                    b.Property<string>("VariantOptionslabel");
+
+                    b.Property<string>("Variantslabel");
+
+                    b.Property<int?>("VariantslabelId");
+
+                    b.Property<long?>("WarehouseId");
+
+                    b.HasKey("ProductVariantId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("SupplierId");
+
+                    b.HasIndex("WarehouseId");
+
+                    b.ToTable("ProductVariant");
                 });
 
             modelBuilder.Entity("Inventory.Core.Models.RawMaterails", b =>
@@ -754,6 +983,195 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasIndex("WarehouseId");
 
                     b.ToTable("RawMaterails");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.SalesOrder.SalesOrderAdditionalChargeForAll", b =>
+                {
+                    b.Property<long>("AdditionalChargeForAllId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long?>("AdditionalChargeId");
+
+                    b.Property<long?>("SalesOrdersId");
+
+                    b.Property<long?>("TaxId");
+
+                    b.HasKey("AdditionalChargeForAllId");
+
+                    b.HasIndex("AdditionalChargeId");
+
+                    b.HasIndex("SalesOrdersId");
+
+                    b.HasIndex("TaxId");
+
+                    b.ToTable("SalesOrderAdditionalChargeForAll");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.SalesOrder.SalesOrderAdditionalChargeForProduct", b =>
+                {
+                    b.Property<long>("AdditionalChargeForProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long?>("AdditionalChargeId");
+
+                    b.Property<bool?>("IsTaxble");
+
+                    b.Property<long?>("ProductId");
+
+                    b.Property<long>("SalesOrdersId");
+
+                    b.Property<long?>("TaxId");
+
+                    b.HasKey("AdditionalChargeForProductId");
+
+                    b.HasIndex("AdditionalChargeId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("SalesOrdersId");
+
+                    b.HasIndex("TaxId");
+
+                    b.ToTable("SalesOrderAdditionalChargeForProduct");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.SalesOrder.SalesOrderDetails", b =>
+                {
+                    b.Property<long>("SalesOrderDetailsId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double?>("AdditionalChargeAmount");
+
+                    b.Property<string>("AdditionalChargeType");
+
+                    b.Property<double?>("FinalTaxTotal");
+
+                    b.Property<double?>("FinalTotal");
+
+                    b.Property<bool?>("IsAdditionalChargeApply");
+
+                    b.Property<string>("IsAdditionalChargeApplyType");
+
+                    b.Property<long>("SalesOrdersId");
+
+                    b.Property<bool?>("TaxInclude");
+
+                    b.Property<double?>("Total");
+
+                    b.Property<long?>("TotalQTY");
+
+                    b.HasKey("SalesOrderDetailsId");
+
+                    b.HasIndex("SalesOrdersId");
+
+                    b.ToTable("SalesOrderDetails");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.SalesOrder.SalesOrderItems", b =>
+                {
+                    b.Property<long>("OrderItemsId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double?>("Discount");
+
+                    b.Property<int?>("DiscountType");
+
+                    b.Property<bool?>("IsTaxble");
+
+                    b.Property<long?>("ProductId");
+
+                    b.Property<int?>("QTY");
+
+                    b.Property<long?>("SalesOrdersId");
+
+                    b.Property<long?>("TaxId");
+
+                    b.Property<double?>("TaxTotal");
+
+                    b.Property<double?>("Total");
+
+                    b.Property<int?>("Unit");
+
+                    b.Property<double?>("UnitPrice");
+
+                    b.HasKey("OrderItemsId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("SalesOrdersId");
+
+                    b.HasIndex("TaxId");
+
+                    b.ToTable("SalesOrderItems");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.SalesOrder.SalesOrders", b =>
+                {
+                    b.Property<long>("SalesOrdersId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("CreationTime");
+
+                    b.Property<string>("CreatorUserId");
+
+                    b.Property<long?>("CreditTermId");
+
+                    b.Property<long?>("CurrencyId");
+
+                    b.Property<long>("CustomerId");
+
+                    b.Property<string>("CustomerPurchesOrderNumber");
+
+                    b.Property<DateTime?>("DateOrdered");
+
+                    b.Property<DateTime?>("EstimatedDeliveryDate");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<string>("LastModifierUserId");
+
+                    b.Property<int>("PaymentStatus");
+
+                    b.Property<string>("Remarks");
+
+                    b.Property<string>("SalesOrderNumber");
+
+                    b.Property<long?>("SalesOrderRepId");
+
+                    b.Property<long?>("SalesOrderTypeId");
+
+                    b.Property<long?>("ShipmentMethodId");
+
+                    b.Property<int>("ShipmentStatus");
+
+                    b.Property<long?>("TenantsId");
+
+                    b.HasKey("SalesOrdersId");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("CreditTermId");
+
+                    b.HasIndex("CurrencyId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("LastModifierUserId");
+
+                    b.HasIndex("SalesOrderTypeId");
+
+                    b.HasIndex("ShipmentMethodId");
+
+                    b.HasIndex("TenantsId");
+
+                    b.ToTable("SalesOrders");
                 });
 
             modelBuilder.Entity("Inventory.Core.Models.Supplier.Supplier", b =>
@@ -1093,6 +1511,21 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasDiscriminator().HasValue("ApplicationUserToken");
                 });
 
+            modelBuilder.Entity("Inventory.Core.Models.Commons.AdditionalCharge", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId");
+
+                    b.HasOne("Inventory.Core.Models.Tenants.Tenants", "Tenants")
+                        .WithMany()
+                        .HasForeignKey("TenantsId");
+                });
+
             modelBuilder.Entity("Inventory.Core.Models.Commons.CreditTerms", b =>
                 {
                     b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
@@ -1124,6 +1557,21 @@ namespace Inventory.EntityFrameworkCore.Migrations
                 });
 
             modelBuilder.Entity("Inventory.Core.Models.Commons.PaymentTerm", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId");
+
+                    b.HasOne("Inventory.Core.Models.Tenants.Tenants", "Tenants")
+                        .WithMany()
+                        .HasForeignKey("TenantsId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.Commons.SalesOrderType", b =>
                 {
                     b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
                         .WithMany()
@@ -1312,6 +1760,21 @@ namespace Inventory.EntityFrameworkCore.Migrations
                         .HasForeignKey("TenantsId");
                 });
 
+            modelBuilder.Entity("Inventory.Core.Models.Products.Product", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId");
+
+                    b.HasOne("Inventory.Core.Models.Tenants.Tenants", "Tenants")
+                        .WithMany()
+                        .HasForeignKey("TenantsId");
+                });
+
             modelBuilder.Entity("Inventory.Core.Models.Products.ProductBrand", b =>
                 {
                     b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
@@ -1340,6 +1803,41 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasOne("Inventory.Core.Models.Tenants.Tenants", "Tenants")
                         .WithMany()
                         .HasForeignKey("TenantsId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.Products.ProductService", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.TaxCode", "TaxCode")
+                        .WithMany()
+                        .HasForeignKey("TaxId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Inventory.Core.Models.Tenants.Tenants", "Tenants")
+                        .WithMany()
+                        .HasForeignKey("TenantsId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.Products.ProductVariant", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.Products.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("Inventory.Core.Models.Supplier.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.Warehouse", "Warehouse")
+                        .WithMany()
+                        .HasForeignKey("WarehouseId");
                 });
 
             modelBuilder.Entity("Inventory.Core.Models.RawMaterails", b =>
@@ -1395,6 +1893,100 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasOne("Inventory.Core.Models.Commons.Warehouse", "warehouse")
                         .WithMany()
                         .HasForeignKey("WarehouseId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.SalesOrder.SalesOrderAdditionalChargeForAll", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.Commons.AdditionalCharge", "AdditionalCharge")
+                        .WithMany()
+                        .HasForeignKey("AdditionalChargeId");
+
+                    b.HasOne("Inventory.Core.Models.SalesOrder.SalesOrders", "SalesOrders")
+                        .WithMany()
+                        .HasForeignKey("SalesOrdersId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.TaxCode", "TaxCode")
+                        .WithMany()
+                        .HasForeignKey("TaxId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.SalesOrder.SalesOrderAdditionalChargeForProduct", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.Commons.AdditionalCharge", "AdditionalCharge")
+                        .WithMany()
+                        .HasForeignKey("AdditionalChargeId");
+
+                    b.HasOne("Inventory.Core.Models.Products.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("Inventory.Core.Models.SalesOrder.SalesOrders", "SalesOrders")
+                        .WithMany()
+                        .HasForeignKey("SalesOrdersId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Inventory.Core.Models.Commons.TaxCode", "TaxCode")
+                        .WithMany()
+                        .HasForeignKey("TaxId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.SalesOrder.SalesOrderDetails", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.SalesOrder.SalesOrders", "SalesOrders")
+                        .WithMany()
+                        .HasForeignKey("SalesOrdersId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.SalesOrder.SalesOrderItems", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.Products.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("Inventory.Core.Models.SalesOrder.SalesOrders", "SalesOrders")
+                        .WithMany()
+                        .HasForeignKey("SalesOrdersId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.TaxCode", "TaxCode")
+                        .WithMany()
+                        .HasForeignKey("TaxId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.SalesOrder.SalesOrders", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.CreditTerms", "CreditTerms")
+                        .WithMany()
+                        .HasForeignKey("CreditTermId");
+
+                    b.HasOne("Inventory.Core.Models.Currency.Currency", "Currency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId");
+
+                    b.HasOne("Inventory.Core.Models.Customer.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.SalesOrderType", "SalesOrderType")
+                        .WithMany()
+                        .HasForeignKey("SalesOrderTypeId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.ShipmentMethod", "ShipmentMethod")
+                        .WithMany()
+                        .HasForeignKey("ShipmentMethodId");
+
+                    b.HasOne("Inventory.Core.Models.Tenants.Tenants", "Tenants")
+                        .WithMany()
+                        .HasForeignKey("TenantsId");
                 });
 
             modelBuilder.Entity("Inventory.Core.Models.Supplier.Supplier", b =>

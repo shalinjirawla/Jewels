@@ -9,7 +9,6 @@ export class AuthGuardService implements CanActivate {
   v: any;
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     let isLoggedIn = false;
-    debugger
     this.v = new Date();
     let p = localStorage.getItem("logintime");
     let diff = this.v.valueOf() - parseInt(p);

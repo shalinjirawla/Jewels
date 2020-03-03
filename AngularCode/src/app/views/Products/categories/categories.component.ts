@@ -37,6 +37,7 @@ export class CategoriesComponent implements OnInit {
   CategoriesListEmplty: boolean = true;
   ngOnInit() {
     this.OnLoad();
+    this.GetCategoriesList();
   }
   public OnLoad() {
     this.CategoriesForm = this.FormBuilder.group({
@@ -47,7 +48,7 @@ export class CategoriesComponent implements OnInit {
       Description: [''],
     });
     this.FormSubmitted=false;
-    this.GetCategoriesList();
+    
   }
   public GetCategoriesList() {
     this.ProductCategoriesService.GetProductCategoriesList().subscribe((responce: any) => {
@@ -58,7 +59,7 @@ export class CategoriesComponent implements OnInit {
     });
     this.CategoriesListEmplty = false;
   }
-  public AddCategories(CategoriesForm: FormControl) {
+  public AddCategories(CategoriesForm: any) {
     this.FormSubmitted = true;
     if (CategoriesForm.invalid) {
       return;
@@ -84,8 +85,8 @@ export class CategoriesComponent implements OnInit {
   public CategorieEdit(CategorieId: any) {
     if (CategorieId != 0) {
       this.ProductCategoriesService.GetProductCategories(CategorieId).subscribe((responce: any) => {
-        debugger
         if (responce.status && responce.data != null) {
+          this.ModelTitleString= "Edit Product Categories";
           let Data = responce.data;
           this.largeModal.show();
           this.CategoriesForm.patchValue({
@@ -132,6 +133,7 @@ export class CategoriesComponent implements OnInit {
   }
   public ResetForm() {
     this.largeModal.hide();
+    this.ModelTitleString= "Add New Product Categories";
     this.OnLoad();
   }
   get f() { return this.CategoriesForm.controls; }

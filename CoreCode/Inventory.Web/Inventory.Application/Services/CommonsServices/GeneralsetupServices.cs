@@ -13,8 +13,8 @@ using static Inventory.Application.Interface.Common.IGenerealsetup;
 
 namespace Inventory.Application.Services.CommonsServices
 {
-    public class GeneralsetupServices : ICurrency, ITaxCode, ICreditTerms, IShipmentTerm, IShipmentMethod, 
-            IPaymentTerm, IWarehouse, IUOM, IMetric_Units
+    public class GeneralsetupServices : ICurrency, ITaxCode, ICreditTerms, IShipmentTerm, IShipmentMethod,
+            IPaymentTerm, IWarehouse, IUOM, IMetric_Units, ISalesOrderType, IAdditionalCharge
     {
         private readonly ApplicationDbContext _DbContext;
         public GeneralsetupServices(ApplicationDbContext DbContext)
@@ -652,7 +652,7 @@ namespace Inventory.Application.Services.CommonsServices
                             LastModificationTime = DateTime.Now,
                             LastModifierUserId = UserId,
                             IsActive = true,
-                            TenantsId= TenantId
+                            TenantsId = TenantId
                         };
                         _DbContext.ShipmentTerms.Add(ShipmentTerm);
                         _DbContext.SaveChanges();
@@ -723,7 +723,7 @@ namespace Inventory.Application.Services.CommonsServices
 
                 throw e;
             }
-            return ShipmentTermList; 
+            return ShipmentTermList;
         }
 
         public async Task<ShipmentTermVm> GetShipmentTerm(long ShipmentTermId)
@@ -834,7 +834,7 @@ namespace Inventory.Application.Services.CommonsServices
                             LastModificationTime = DateTime.Now,
                             LastModifierUserId = UserId,
                             IsActive = true,
-                            TenantsId=TenantId
+                            TenantsId = TenantId
                         };
                         _DbContext.ShipmentMethods.Add(ShipmentMethod);
                         _DbContext.SaveChanges();
@@ -1010,7 +1010,7 @@ namespace Inventory.Application.Services.CommonsServices
                         PaymentTerm PaymentTerm = new PaymentTerm
                         {
                             Code = model.Code,
-                            Duration=model.Duration,
+                            Duration = model.Duration,
                             Description = model.Description,
                             CreationTime = DateTime.Now,
                             CreatorUserId = UserId,
@@ -1359,7 +1359,7 @@ namespace Inventory.Application.Services.CommonsServices
             try
             {
                 var data = _DbContext.UOMs.ToList();
-                foreach(var a in data)
+                foreach (var a in data)
                 {
                     UOMVm uom = new UOMVm();
                     uom.UOMId = a.UOMId;
@@ -1386,7 +1386,7 @@ namespace Inventory.Application.Services.CommonsServices
             try
             {
                 var data = _DbContext.Metric_Units.Where(x => x.Metric_UnitsType == 0).ToList();
-                foreach(var a in data)
+                foreach (var a in data)
                 {
                     Metric_UnitsVm metric_Units = new Metric_UnitsVm();
                     metric_Units.Metric_UnitsId = a.Metric_UnitsId;
@@ -1425,7 +1425,425 @@ namespace Inventory.Application.Services.CommonsServices
             }
             return MetricUnitList;
         }
-
         #endregion UOM Services Start
+        #region Sales Order Type Services Start
+        public async Task<List<SalesOrderTypeVM>> GetSalesOrderTypeListAsync(long TenantId)
+        {
+            List<SalesOrderTypeVM> List = new List<SalesOrderTypeVM>();
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var SalesList = _DbContext.SalesOrderType.Where(x => x.TenantsId == TenantId).ToList();
+                    if (SalesList != null && SalesList.Count() > 0)
+                    {
+                        foreach (var item in SalesList)
+                        {
+                            SalesOrderTypeVM saleitem = new SalesOrderTypeVM()
+                            {
+                                SalesOrderTypeId = item.SalesOrderTypeId,
+                                TypeName = item.TypeName,
+                                Description = item.Description,
+                                IsActive = item.IsActive
+                            };
+                            List.Add(saleitem);
+                        }
+                    }
+
+                });
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return List;
+        }
+
+        public async Task<SalesOrderTypeVM> GetSalesOrderTypeAsync(long id)
+        {
+            SalesOrderTypeVM output = new SalesOrderTypeVM();
+            try
+            {
+                if (id != 0)
+                {
+                    await Task.Run(() =>
+                    {
+                        var Sales = _DbContext.SalesOrderType.FirstOrDefault(x => x.SalesOrderTypeId == id);
+                        if (Sales != null)
+                        {
+                            output.SalesOrderTypeId = Sales.SalesOrderTypeId;
+                            output.TypeName = Sales.TypeName;
+                            output.Description = Sales.Description;
+                            output.IsActive = Sales.IsActive;
+                        }
+                    });
+                }
+                else
+                    throw new Exception("Sales Order id not zero");
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return output;
+        }
+
+        public async Task<long> SaveSalesOrderTypeAsync(SalesOrderTypeVM model, string UserId, long TenantId)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    await Task.Run(() =>
+                    {
+                        SalesOrderType input = new SalesOrderType()
+                        {
+                            SalesOrderTypeId = model.SalesOrderTypeId,
+                            TypeName = model.TypeName,
+                            Description = model.Description,
+                            IsActive = model.IsActive
+                        };
+                        if (model.SalesOrderTypeId == 0)
+                        {
+                            input.CreationTime = DateTime.Now;
+                            input.CreatorUserId = UserId;
+                            input.TenantsId = TenantId;
+                            _DbContext.SalesOrderType.Add(input);
+                            _DbContext.SaveChanges();
+                            model.SalesOrderTypeId = input.SalesOrderTypeId;
+                        }
+                        else
+                        {
+                            var Salesorder = _DbContext.SalesOrderType.FirstOrDefault(x => x.SalesOrderTypeId == input.SalesOrderTypeId);
+                            if (Salesorder != null)
+                            {
+                                Salesorder.SalesOrderTypeId = model.SalesOrderTypeId;
+                                Salesorder.TypeName = model.TypeName;
+                                Salesorder.Description = model.Description;
+                                Salesorder.IsActive = model.IsActive;
+                                Salesorder.LastModificationTime = DateTime.Now;
+                                Salesorder.LastModifierUserId = UserId;
+                                _DbContext.SalesOrderType.Update(Salesorder);
+                                _DbContext.SaveChanges();
+                            }
+
+
+                        }
+                    });
+                }
+                else
+                    throw new Exception("input not allow null");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return model.SalesOrderTypeId;
+        }
+
+        public async Task<Boolean> DeleteSalesOrderTypeAsync(long id)
+        {
+            try
+            {
+                if (id != 0)
+                {
+                    await Task.Run(() =>
+                    {
+                        var SaleOrderType = _DbContext.SalesOrderType.FirstOrDefault(x => x.SalesOrderTypeId == id);
+                        if (SaleOrderType != null)
+                        {
+                            _DbContext.SalesOrderType.Remove(SaleOrderType);
+                            _DbContext.SaveChanges();
+                        }
+                    });
+                }
+                else
+                    throw new Exception("id not zero allow");
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+            return true;
+        }
+
+        public async Task<List<SalesOrderTypeVM>> GetActiveSalesOrderTypeListAsync(long TenantId)
+        {
+            List<SalesOrderTypeVM> List = new List<SalesOrderTypeVM>();
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var SalesList = _DbContext.SalesOrderType.Where(x => x.TenantsId == TenantId && x.IsActive == true).ToList();
+                    if (SalesList != null && SalesList.Count() > 0)
+                    {
+                        foreach (var item in SalesList)
+                        {
+                            SalesOrderTypeVM saleitem = new SalesOrderTypeVM()
+                            {
+                                SalesOrderTypeId = item.SalesOrderTypeId,
+                                TypeName = item.TypeName,
+                                Description = item.Description,
+                                IsActive = item.IsActive
+                            };
+                            List.Add(saleitem);
+                        }
+                    }
+
+                });
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return List;
+        }
+
+        public async Task<bool> SalesOrderTypeStatusChange(long SalesOrderTypeId, bool Statuschange)
+        {
+            Boolean Status = false;
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var Sales = _DbContext.SalesOrderType.FirstOrDefault(x => x.SalesOrderTypeId == SalesOrderTypeId);
+                    if (Sales != null)
+                    {
+                        Sales.IsActive = Statuschange;
+                        Sales.LastModificationTime = DateTime.Now;
+                        _DbContext.Update(Sales);
+                        _DbContext.SaveChanges();
+                        Status = true;
+                    }
+                    else { Status = false; }
+                });
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return Status;
+        }
+
+
+
+        #endregion Sales Order Type Services Start
+        #region Additional Charge Start
+        public async Task<List<AdditionalChargeVM>> GetAdditionalChargeListAsync(long TenantId)
+        {
+            List<AdditionalChargeVM> List = new List<AdditionalChargeVM>();
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var ChargeList = _DbContext.AdditionalCharge.Where(x => x.TenantsId == TenantId).ToList();
+                    if (ChargeList != null && ChargeList.Count() > 0)
+                    {
+                        foreach (var item in ChargeList)
+                        {
+                            AdditionalChargeVM charge = new AdditionalChargeVM()
+                            {
+                                AdditionalChargeId = item.AdditionalChargeId,
+                                Name = item.Name,
+                                UnitPriceType = item.UnitPriceType,
+                                UnitPrice = item.UnitPrice,
+                                Description = item.Description,
+                                IsActive = item.IsActive
+                            };
+                            List.Add(charge);
+                        }
+                    }
+
+                });
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return List;
+        }
+
+        public async Task<AdditionalChargeVM> GetAdditionalChargeAsync(long AdditionalCharge)
+        {
+            AdditionalChargeVM output = new AdditionalChargeVM();
+            try
+            {
+                if (AdditionalCharge != 0)
+                {
+                    await Task.Run(() =>
+                    {
+                        var Charge = _DbContext.AdditionalCharge.FirstOrDefault(x => x.AdditionalChargeId == AdditionalCharge);
+                        if (Charge != null)
+                        {
+                            output.AdditionalChargeId = Charge.AdditionalChargeId;
+                            output.Name = Charge.Name;
+                            output.UnitPriceType = Charge.UnitPriceType;
+                            output.UnitPrice = Charge.UnitPrice;
+                            output.Description = Charge.Description;
+                            output.IsActive = Charge.IsActive;
+                        }
+                    });
+                }
+                else
+                    throw new Exception("Additional Charge not zero");
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return output;
+        }
+
+        public async Task<long> SaveAdditionalChargeAsync(AdditionalChargeVM model, string UserId, long TenantId)
+        {
+            try
+            {
+                if (model != null)
+                {
+                    await Task.Run(() =>
+                    {
+                        AdditionalCharge input = new AdditionalCharge()
+                        {
+                            AdditionalChargeId = model.AdditionalChargeId,
+                            Name = model.Name,
+                            UnitPriceType = model.UnitPriceType,
+                            UnitPrice = model.UnitPrice,
+                            Description = model.Description,
+                            IsActive = model.IsActive
+                        };
+                        if (model.AdditionalChargeId == 0)
+                        {
+                            input.CreationTime = DateTime.Now;
+                            input.CreatorUserId = UserId;
+                            input.TenantsId = TenantId;
+                            _DbContext.AdditionalCharge.Add(input);
+                            _DbContext.SaveChanges();
+                            model.AdditionalChargeId = input.AdditionalChargeId;
+                        }
+                        else
+                        {
+                            var AdditionalCharge = _DbContext.AdditionalCharge.FirstOrDefault(x => x.AdditionalChargeId == input.AdditionalChargeId);
+                            if (AdditionalCharge != null)
+                            {
+                                AdditionalCharge.AdditionalChargeId = model.AdditionalChargeId;
+                                AdditionalCharge.Name = model.Name;
+                                AdditionalCharge.UnitPriceType = model.UnitPriceType;
+                                AdditionalCharge.UnitPrice = model.UnitPrice;
+                                AdditionalCharge.Description = model.Description;
+                                AdditionalCharge.IsActive = model.IsActive;
+                                AdditionalCharge.LastModificationTime = DateTime.Now;
+                                AdditionalCharge.LastModifierUserId = UserId;
+                                _DbContext.AdditionalCharge.Update(AdditionalCharge);
+                                _DbContext.SaveChanges();
+                            }
+
+
+                        }
+                    });
+                }
+                else
+                    throw new Exception("input not allow null");
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return model.AdditionalChargeId;
+        }
+
+        public async Task<bool> DeleteAdditionalChargeAsync(long id)
+        {
+            try
+            {
+                if (id != 0)
+                {
+                    await Task.Run(() =>
+                    {
+                        var AdditionalCharge = _DbContext.AdditionalCharge.FirstOrDefault(x => x.AdditionalChargeId == id);
+                        if (AdditionalCharge != null)
+                        {
+                            _DbContext.AdditionalCharge.Remove(AdditionalCharge);
+                            _DbContext.SaveChanges();
+                        }
+                    });
+                }
+                else
+                    throw new Exception("id not zero allow");
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+            return true;
+        }
+
+        public async Task<bool> AdditionalChargeStatusChange(long AdditionalChargeId, bool Statuschange)
+        {
+            try
+            {
+                if (AdditionalChargeId != 0)
+                {
+                    await Task.Run(() =>
+                    {
+                        var charge = _DbContext.AdditionalCharge.FirstOrDefault(x => x.AdditionalChargeId == AdditionalChargeId);
+                        if (charge != null)
+                        {
+                            charge.IsActive = Statuschange;
+                            _DbContext.AdditionalCharge.Update(charge);
+                            _DbContext.SaveChanges();
+                        }
+                    });
+                }
+                else
+                    throw new Exception("id not zero allow");
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+            return true;
+        }
+
+        public async Task<List<AdditionalChargeVM>> GetActiveAdditionalChargeAsync(long TenantId)
+        {
+            List<AdditionalChargeVM> List = new List<AdditionalChargeVM>();
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var AdditionalChargeList = _DbContext.AdditionalCharge.Where(x => x.TenantsId == TenantId && x.IsActive == true).ToList();
+                    if (AdditionalChargeList != null && AdditionalChargeList.Count() > 0)
+                    {
+                        foreach (var item in AdditionalChargeList)
+                        {
+                            AdditionalChargeVM model = new AdditionalChargeVM()
+                            {
+                                AdditionalChargeId = item.AdditionalChargeId,
+                                Name = item.Name,
+                                UnitPriceType = item.UnitPriceType,
+                                UnitPrice = item.UnitPrice,
+                                Description = item.Description,
+                                IsActive = item.IsActive
+                            };
+                            List.Add(model);
+                        }
+                    }
+
+                });
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return List;
+        }
+        #endregion Additional Charge Services end
+
     }
 }

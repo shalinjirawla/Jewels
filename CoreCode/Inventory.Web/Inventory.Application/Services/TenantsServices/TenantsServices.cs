@@ -288,7 +288,8 @@ namespace Inventory.Application.Services.TenantsServices
                     await Task.Run(() =>
                     {
                         var user = _UserManager.Users.FirstOrDefault(x => x.Id == UserId);
-                        if (user != null) {
+                        if (user != null)
+                        {
                             Status = true;
                         }
                         else { Status = false; }
@@ -301,6 +302,51 @@ namespace Inventory.Application.Services.TenantsServices
                 throw e;
             }
             return Status;
+        }
+
+        public async Task<List<TenantUserList>> GetTenantUserList(long TenantId)
+        {
+            List<TenantUserList> list = new List<TenantUserList>();
+            try
+            {
+                if (TenantId != 0)
+                {
+                    await Task.Run(() =>
+                    {
+                        var gettenants = (from tetant in _DbContext.Tenants.ToList()
+                                          join user in _DbContext.ApplicationUser.ToList()
+                                          on tetant.TenantId equals user.TenantId
+                                          select new TenantUserList
+                                          {
+                                              TenantId = tetant.TenantId,
+                                              TenancyName = tetant.TenantName,
+                                              UserId = user.Id,
+                                              UserName = user.UserName
+                                          });
+                        if (gettenants != null && gettenants.Count() > 0)
+                        {
+                            foreach (var item in gettenants.ToList())
+                            {
+                                TenantUserList dto = new TenantUserList()
+                                {
+                                    TenantId=item.TenantId,
+                                    TenancyName=item.TenancyName,
+                                    UserId=item.UserId,
+                                    UserName=item.UserName,
+                                };
+                                list.Add(dto);
+                            }
+                        }
+                    });
+                }
+                else
+                    throw new Exception("TenantId not zero");
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            return list;
         }
     }
 }

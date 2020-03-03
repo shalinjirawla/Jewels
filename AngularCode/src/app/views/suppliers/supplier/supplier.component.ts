@@ -69,6 +69,10 @@ export class SupplierComponent implements OnInit {
 
   AddSuppliersvalue: any = [];
   //Suppliers Conatct end
+
+  //filtering start
+  filter:any;
+  //filtering end
   constructor(private FormBuilder: FormBuilder,
     private CurrencyService: CurrencyService,
     private TaxCodeService: TaxCodeService,
@@ -216,7 +220,7 @@ export class SupplierComponent implements OnInit {
   public TabClick(event) {
 
   }
-  public saveSuppliers(AddSuppliersForm: FormControl) {
+  public saveSuppliers(AddSuppliersForm: any) {
     this.FormSubmittedSupplliers = true;
     if (this.AddSuppliersForm.invalid) {
       document.getElementById("SuppliersDetail-link").click();
@@ -261,8 +265,7 @@ export class SupplierComponent implements OnInit {
     })
   }
 
-  public AddSupplliersAddress(AddSuppliersAddressForm: FormControl) {
-    debugger
+  public AddSupplliersAddress(AddSuppliersAddressForm: any) {
     this.Addresssubmitted = true;
     if (this.AddSuppliersAddressForm.invalid) {
       return;
@@ -594,7 +597,7 @@ export class SupplierComponent implements OnInit {
     }
   }
 
-  public AddSuppliersContact(AddSuppliersContactForm: FormControl) {
+  public AddSuppliersContact(AddSuppliersContactForm: any) {
     this.contactsubmitted = true;
     if (this.AddSuppliersContactForm.invalid) {
       return;
@@ -613,7 +616,6 @@ export class SupplierComponent implements OnInit {
       }
       AddSuppliersContactForm.value.contactId = '_' + Math.random().toString(36).substr(2, 9);
       this.Contact = AddSuppliersContactForm.value;
-      debugger
       if (this.Contact != undefined) {
         this.ContactList.contact.push(this.Contact);
         if (this.ContactList.contact.length != 0) {

@@ -74,7 +74,7 @@ namespace Inventory.Web.Controllers
         {
             if (SupplierId != 0)
             {
-                var data =await _supplier.GetSupplierById(SupplierId);
+                var data = await _supplier.GetSupplierById(SupplierId);
                 await Task.Run(() =>
                 {
                     if (data != null)
@@ -102,6 +102,12 @@ namespace Inventory.Web.Controllers
             }
             else { return BadRequest(); }
             return Ok(GetAjaxResponse(Status, Message, null));
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetDafaultSuppliers()
+        {
+            var data = await _supplier.GetDefaultSupplierList();
+            return Ok(GetAjaxResponse(true, string.Empty, data));
         }
     }
 }

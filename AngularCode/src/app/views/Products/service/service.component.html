@@ -1,0 +1,147 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header card-header-danger">
+            <button type="button" class="btn btn-primary float-right btn-sm" id="AddServicebtn" data-toggle="modal"
+                (click)="ShowModel()">
+                Add Service
+            </button>
+            <h4 class="card-title mt-0">Service List</h4>
+        </div>
+        <div class="card-body bg-white">
+            <div class="table-responsive animated flash">
+                <table class="table " id="DisplayServiceView">
+                    <thead class="">
+                        <th>
+                            Service Name
+                        </th>
+                        <th>
+                          Purchase Price
+                        </th>
+
+                        <th>
+                            Selling Price
+                        </th>
+                        <th>
+                            Description
+                        </th>
+
+                        <th colspan="2" class="text-center">
+                            Action
+                        </th>
+                    </thead>
+                    <tbody [hidden]="ProductServiceslaod">
+                        <tr *ngFor="let item of ServiceList" class="ServiceListID">
+                            <td class="mr-2">
+                                {{item.name}}
+                            </td>
+                            <td class="mr-2">
+                                {{item.purchasePrice}}
+                            </td>
+                            <td class="mr-2">
+                                {{item.sellingPrice}}
+                            </td>
+                            <td class="mr-2">
+                                {{item.description}}
+                            </td>
+
+                            <td class="text-right">
+
+                                <button class="btn  btn-lg" type="button" (click)="GetProductService(item.serviceId)"> <i class="fa fa-pencil text-success"> </i></button>
+                            </td>
+                            <td class="mb-2" >
+                                <button class="btn  btn-lg" type="button" (click)="DeleteService(item.serviceId)"><i class="fa fa-trash text-danger"></i> </button>
+
+                            </td>
+                        </tr>
+                        <tr *ngIf="!ProductServiceNoDataFound">
+                            <td colspan="6" class="text-success text-center">No Data Found...!</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="mt-2 mb-2 text-center" [hidden]="!ProductServiceslaod">
+                    <div class="spinner-border text-danger" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div bsModal #largeModal="bs-modal" class="modal fade" [config]="{ backdrop: 'static' }" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{ModelTitleString}}</h4>
+                <button type="button" class="close" (click)="Close()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="ServiceForm">
+                    <input type="hidden" formControlName="ServiceId">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label>NAME</label>
+                            <input class="form-control" id="Name" formControlName="Name"
+                                placeholder="NAME" type="text"
+                                [ngClass]="{ 'is-invalid': FormSubmitted && f.Name.errors }">
+                            <div *ngIf="FormSubmitted && f.Name.errors" class="invalid-feedback">
+                                <div *ngIf="f.Name.errors.required"> Name is required</div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label>SKU</label>
+                            <input class="form-control" id="SKU" formControlName="SKU" placeholder="SKU" type="text">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <div class="custom-control custom-checkbox ">
+                                <input class="custom-control-input" (change)="IsTexaledChange($event.target.checked)"
+                                    type="checkbox" formControlName="Taxble" id=Taxble>
+                                <label class="custom-control-label" for="Taxble">TAXABLE <i
+                                        class="fa fa-info-circle text-info"
+                                        tooltip="Check this option if tax is applicable for this product."
+                                        placement="right"></i></label>
+                            </div>
+                            <div class="mt-2">
+                                <select class="form-control" formControlName="TaxId" *ngIf="IsTaxbled">
+                                    <option value="">--Select--</option>
+                                    <option *ngFor="let tax of TaxList" [value]="tax.taxId">
+                                        {{tax.code}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="mini">MINIMUM ORDER QUANTITY</label>
+                            <input class="form-control" formControlName="MinmOrderQuantity" id="MinmOrderQuantity"
+                                type="number">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for="mini">PURCHASE PRICE</label>
+                            <input type="number" class="form-control" formControlName="PurchasePrice">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="desc">SELLING PRICE</label>
+                            <input type="number" class="form-control" formControlName="SellingPrice">
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label>DESCRIPTION</label>
+                            <textarea class="form-control" id="Description" formControlName="Description"
+                                placeholder="DESCRIPTION"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" [disabled]="saving" (click)="Close()">Close</button>
+                <button type="button" [disabled]="saving" class="btn btn-primary" (click)="SaveService(ServiceForm)">Save
+                    changes</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>

@@ -11,6 +11,7 @@ namespace Inventory.Application.ViewModel.CustomersVm
         public string Address { get; set; }
         public bool DefaultAddress { get; set; }
         public string CountryId { get; set; }
+        public string CountryName { get; set; }
         public string State { get; set; }
         public string City { get; set; }
         public string PostalCode { get; set; }

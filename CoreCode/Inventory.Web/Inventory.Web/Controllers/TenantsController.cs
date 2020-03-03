@@ -21,9 +21,11 @@ namespace Inventory.Web.Controllers
         public Boolean Status = false;
         public string Message = "";
         public object Data;
-        public TenantsController(ITenants tenants)
+        private readonly SessionHanlderController _SessionHanlderController;
+        public TenantsController(ITenants tenants, SessionHanlderController SessionHanlderController)
         {
             _tenants = tenants;
+            _SessionHanlderController = SessionHanlderController;
         }
         [NonAction]
         public ApiResponse GetAjaxResponse(bool status, string message, object data)
@@ -34,14 +36,16 @@ namespace Inventory.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveTenant(TenantsVm vm)
         {
-            if (vm != null) {
-                Status =await _tenants.SaveTenants(vm);
-                if (Status) {
+            if (vm != null)
+            {
+                Status = await _tenants.SaveTenants(vm);
+                if (Status)
+                {
                     Message = "Register Succesfully completed, Please Check Your Emailid for Confirm your account..";
                 }
                 else
                 {
-                    Message = vm.EmailId+" Is Already Exist...!";
+                    Message = vm.EmailId + " Is Already Exist...!";
                 }
             }
             else { return BadRequest(); }
@@ -50,15 +54,15 @@ namespace Inventory.Web.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> GetRegisterData(long TenantId,string UserId)
+        public async Task<IActionResult> GetRegisterData(long TenantId, string UserId)
         {
             if (TenantId != 0)
             {
                 TenantsDetailsVm vm = new TenantsDetailsVm();
-               Status =await _tenants.ChechTenants(TenantId);
+                Status = await _tenants.ChechTenants(TenantId);
                 if (Status)
                 {
-                    Status =await _tenants.CheckUserId(UserId);
+                    Status = await _tenants.CheckUserId(UserId);
                     if (Status)
                     {
                         var data = _tenants.GetRegisterDataAsync(TenantId, UserId);
@@ -80,16 +84,29 @@ namespace Inventory.Web.Controllers
                             Status = false;
                         }
                     }
-                    else {
+                    else
+                    {
                         Message = "UserId could  Not Found..";
                     }
                 }
-                else {
+                else
+                {
                     Message = "Company Already Activated... Please Login..";
                 }
-                
+
             }
             else { return BadRequest(); }
+            return Ok(GetAjaxResponse(Status, Message, Data));
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetTenantUserList()
+        {
+            await Task.Run(async () =>
+            {
+                var GetTenantId = _SessionHanlderController.GetTenantId(HttpContext);
+                Data =await _tenants.GetTenantUserList(GetTenantId);
+              
+            });
             return Ok(GetAjaxResponse(Status, Message, Data));
         }
     }

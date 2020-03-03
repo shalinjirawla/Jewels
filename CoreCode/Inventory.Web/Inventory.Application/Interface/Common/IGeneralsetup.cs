@@ -83,5 +83,23 @@ namespace Inventory.Application.Interface.Common
             List<Metric_UnitsVm> GetKgMetricUnitList();
             List<Metric_UnitsVm> GetFtMetricUnitList();
         }
+        public interface ISalesOrderType
+        {
+            Task<List<SalesOrderTypeVM>> GetSalesOrderTypeListAsync(long TenantId);
+            Task<SalesOrderTypeVM> GetSalesOrderTypeAsync(long id);
+            Task<long> SaveSalesOrderTypeAsync(SalesOrderTypeVM model, string UserId, long TenantId);
+            Task<Boolean> DeleteSalesOrderTypeAsync(long id);
+            Task<Boolean> SalesOrderTypeStatusChange(long SalesOrderTypeId  , Boolean Statuschange);
+            Task<List<SalesOrderTypeVM>> GetActiveSalesOrderTypeListAsync(long TenantId );
+        }
+        public interface IAdditionalCharge
+        {
+            Task<List<AdditionalChargeVM>> GetAdditionalChargeListAsync(long TenantId);
+            Task<AdditionalChargeVM> GetAdditionalChargeAsync(long AdditionalCharge);
+            Task<long> SaveAdditionalChargeAsync(AdditionalChargeVM model, string UserId, long TenantId);
+            Task<Boolean> DeleteAdditionalChargeAsync(long id);
+            Task<Boolean> AdditionalChargeStatusChange(long AdditionalChargeId, Boolean Statuschange);
+            Task<List<AdditionalChargeVM>> GetActiveAdditionalChargeAsync(long TenantId);
+        }
     }
 }   

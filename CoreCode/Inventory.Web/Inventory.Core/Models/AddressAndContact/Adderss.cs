@@ -11,7 +11,7 @@ namespace Inventory.Core.Models.Customer
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long AddressId { get; set; }
-        public string AddressType { get; set; }
+        public string AddressType { get; set; }//billing address ==1  && shipping address ==2
         public string Address { get; set; }
         public bool DefaultAddress { get; set; }
         [ForeignKey("Customer")]

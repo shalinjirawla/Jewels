@@ -10,6 +10,7 @@ namespace Inventory.Application.Interface.Supplier
     {
         Task<long> AddUpadteSupplier(SupplierVm Model, string UserId, long TenantId);
         Task<List<SupplierVm>> GetSupplierList();
+        Task<List<DefaultSupplierList>> GetDefaultSupplierList();
         Task<SupplierVm> GetSupplierById(long Id);
         Task<Boolean> DeleteSupplier(long Id);
     }

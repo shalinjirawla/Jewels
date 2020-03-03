@@ -17,11 +17,11 @@ export class TestComponent implements OnInit {
     /* Initiate the form structure */
     this.productForm = this.fb.group({
       title: [],
-      selling_points: this.fb.array([this.fb.group({point:''})])
+      selling_points: this.fb.array([this.fb.group({ point: '' })])
     })
   }
   addSellingPoint() {
-    this.sellingPoints.push(this.fb.group({point:''}));
+    this.sellingPoints.push(this.fb.group({ point: '' }));
   }
 
   deleteSellingPoint(index) {
@@ -31,9 +31,7 @@ export class TestComponent implements OnInit {
   get sellingPoints() {
     return this.productForm.get('selling_points') as FormArray;
   }
-  Save(productForm:FormControl)
-  {
-debugger
+  Save(productForm: any) {
   }
 }
 export class Product {

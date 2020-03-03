@@ -99,7 +99,7 @@ export const navItems: NavData[] = [
       },
       {
         name: 'Services',
-        url: '/products/carousels',
+        url: '/products/service',
         icon: 'icon-fire'
       },
       {
@@ -125,7 +125,7 @@ export const navItems: NavData[] = [
     children: [
       {
         name: 'Quotations',
-        url: '/buttons/buttons',
+        url: '/sales/quotations',
         icon: 'cui-bookmark icons'
       },
       {

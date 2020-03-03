@@ -5,6 +5,7 @@ import { ProductComponent } from './product/product.component';
 
 import {BrandComponent} from './brand/brand.component';
 import {RawMaterialsComponent} from './raw-materials/raw-materials.component';
+import {ServiceComponent} from './service/service.component';
 import { AuthGuardService} from './../../shared/guards/auth-guard.service';
 const routes: Routes = [
   {
@@ -47,6 +48,14 @@ const routes: Routes = [
         canActivate: [AuthGuardService],
         data:{
           title:'Raw Materails'
+        }
+      },
+      {
+        path:'service',
+        component:ServiceComponent,
+        canActivate: [AuthGuardService],
+        data:{
+          title:'Services'
         }
       },
     ]

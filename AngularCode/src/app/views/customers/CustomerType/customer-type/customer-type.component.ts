@@ -3,7 +3,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { CustomerTypeService } from '../../../../Services/Customer-Services/customer-type.service';
 import Swal from 'sweetalert2';
-
+import { finalize } from 'rxjs/operators';
 @Component({
   selector: 'app-customer-type',
   templateUrl: './customer-type.component.html',
@@ -15,12 +15,12 @@ export class CustomerTypeComponent implements OnInit {
 
   modeltitle: string = "Add New Customer Group";
   savebtntitle: string = "Add";
-
+  saving: boolean = false;
   AddCustomerTypeForm: FormGroup;
 
   submitted: boolean = false;
   CustomerTypelist: any;
-
+  LoderoutCustomer: any = false;
   ngOnInit() {
     this.GetCustomertypelist();
     this.onLoad();
@@ -37,7 +37,7 @@ export class CustomerTypeComponent implements OnInit {
   }
 
   ResetForm() {
-    debugger
+
     this.largeModal.hide();
   }
 
@@ -55,58 +55,76 @@ export class CustomerTypeComponent implements OnInit {
     this.largeModal.show();
   }
 
-  AddCustomerType(AddCustomerTypeForm: FormControl) {
+  AddCustomerType(AddCustomerTypeForm: any) {
     this.submitted = true;
     if (AddCustomerTypeForm.invalid) {
       return
     }
-    this.customerTypeService.AddCustomerType(AddCustomerTypeForm.value).subscribe((responce: any) => {
-      let Result = responce;
-      debugger
-      if (responce.status) {
-        this.GetCustomertypelist();
-        debugger
-        if (this.AddCustomerTypeForm.value.customerTypeId == 0) {
-          Swal.fire(
-            'Customer Group Added Successfully',
-            responce.message,
-            'success'
-          )
-        }
-        else if (this.AddCustomerTypeForm.value.customerTypeId >= 0) {
-          Swal.fire(
-            'Customer Group Updated Successfully',
-            responce.message,
-            'success'
-          )
-        }
-
-      }
-      this.largeModal.hide();
-    })
-
-
+    const self = this;
+    self.saving = true;
+   self.CustomerIsExist(AddCustomerTypeForm);
+ 
+   
   }
 
   EditCustomerType(i: any) {
-    debugger
-    this.customerTypeService.GetCustomerTypeById(i).subscribe((responce: any) => {
-      debugger
-      let Result = responce.data;
-      this.AddCustomerTypeForm.patchValue({
-        customerTypeId: Result.customerTypeId,
-        customerTypeName: Result.customerTypeName
+
+    this.customerTypeService.GetCustomerTypeById(i)
+      .subscribe((responce: any) => {
+        let Result = responce.data;
+        this.AddCustomerTypeForm.patchValue({
+          customerTypeId: Result.customerTypeId,
+          customerTypeName: Result.customerTypeName
+        })
+        this.savebtntitle = "Update";
+        this.modeltitle = "Update Customer Group";
+        this.largeModal.show();
       })
-      this.savebtntitle = "Update";
-      this.modeltitle = "Update Customer Group";
-      this.largeModal.show();
-    })
 
 
   }
-
+  CustomerIsExist(AddCustomerTypeForm: any):any {
+    if (AddCustomerTypeForm != null && AddCustomerTypeForm != undefined) {
+      const self = this;
+      self.saving = true;
+      this.customerTypeService.CustomerTypeIsExist(AddCustomerTypeForm.value.customerTypeName)
+        .pipe(finalize(() => { self.saving = false }))
+        .subscribe((resonce: any) => {
+          if (resonce.status){
+            Swal.fire(
+              'Warning',
+              'Customer Group is already Is Exist..',
+            )
+          }else
+          {
+            this.customerTypeService.AddCustomerType(AddCustomerTypeForm.value)
+            .pipe(finalize(() => { self.saving = false }))
+            .subscribe((responce: any) => {
+              if (responce.status) {
+                this.GetCustomertypelist();
+                if (this.AddCustomerTypeForm.value.customerTypeId == 0) {
+                  Swal.fire(
+                    'Customer Group Added Successfully',
+                    responce.message,
+                    'success'
+                  )
+                }
+                else if (this.AddCustomerTypeForm.value.customerTypeId >= 0) {
+                  Swal.fire(
+                    'Customer Group Updated Successfully',
+                    responce.message,
+                    'success'
+                  )
+                }
+      
+              }
+              this.largeModal.hide();
+            })
+          }
+      });
+    }
+  }
   DeleteCustomerType(i: any) {
-    debugger
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -118,9 +136,7 @@ export class CustomerTypeComponent implements OnInit {
     }).then((result) => {
       if (result.value) {
         this.customerTypeService.DeleteCustomerTypeById(i).subscribe((responce: any) => {
-
           this.GetCustomertypelist();
-          debugger
           if (responce.status) {
             Swal.fire(
               'Deleted!',

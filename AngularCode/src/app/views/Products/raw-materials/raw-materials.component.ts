@@ -45,6 +45,7 @@ export class RawMaterialsComponent implements OnInit {
   FtMetricUnitList: any[];
   KgMetricUnitList: any[];
   RawMaterailsList: any[];
+  SupplierLsi: any[];
   UOMList: any[];
   PictureList: any = { "picture": [] };
   PictureLenghtcount: boolean = false;
@@ -52,7 +53,7 @@ export class RawMaterialsComponent implements OnInit {
   Base64File: any;
   ouMatric: string = "";
   inMatric: string = "";
-
+  Searchfilter:any;
   key: string = 'Companyname'; //set default
   reverse: boolean = false;
   sort(key) {
@@ -180,7 +181,7 @@ export class RawMaterialsComponent implements OnInit {
     })
 
   }
-  public AddRawMaterial(RawMaterialForm: FormControl, RawMaterialForm2: FormControl, UnitofMeasure: FormControl) {
+  public AddRawMaterial(RawMaterialForm: any, RawMaterialForm2: any, UnitofMeasure: any) {
     this.FormSubmitted = true;
     if (RawMaterialForm.invalid) {
       document.getElementById("RawMaterialFormtab-link").click();
@@ -485,7 +486,7 @@ export class RawMaterialsComponent implements OnInit {
     }
   }
 
-  outerUOM(event, flag) {
+  outerUOM(event, flag?) {
     if (event != 0) {
       this.FtMetricUnitList.map((result: any, index) => {
         if (result.metric_UnitsId == event) {
@@ -540,7 +541,7 @@ export class RawMaterialsComponent implements OnInit {
     }
   }
 
-  InnerUOM(event, flag) {
+  InnerUOM(event, flag?) {
     if (event != 0) {
       this.FtMetricUnitList.map((result: any, index) => {
         if (result.metric_UnitsId == event) {

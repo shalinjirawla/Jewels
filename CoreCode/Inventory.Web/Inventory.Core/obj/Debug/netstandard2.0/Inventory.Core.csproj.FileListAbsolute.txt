@@ -19,3 +19,12 @@ D:\Ravi\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Core\obj\Debug\
 D:\Ravi\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Core\obj\Debug\netstandard2.0\Inventory.Core.csproj.CopyComplete
 D:\Ravi\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Core\obj\Debug\netstandard2.0\Inventory.Core.dll
 D:\Ravi\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Core\obj\Debug\netstandard2.0\Inventory.Core.pdb
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Core\bin\Debug\netstandard2.0\Inventory.Core.deps.json
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Core\bin\Debug\netstandard2.0\Inventory.Core.dll
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Core\bin\Debug\netstandard2.0\Inventory.Core.pdb
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Core\obj\Debug\netstandard2.0\Inventory.Core.csproj.CoreCompileInputs.cache
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Core\obj\Debug\netstandard2.0\Inventory.Core.AssemblyInfoInputs.cache
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Core\obj\Debug\netstandard2.0\Inventory.Core.AssemblyInfo.cs
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Core\obj\Debug\netstandard2.0\Inventory.Core.dll
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Core\obj\Debug\netstandard2.0\Inventory.Core.pdb
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Core\obj\Debug\netstandard2.0\Inventory.Core.csprojAssemblyReference.cache

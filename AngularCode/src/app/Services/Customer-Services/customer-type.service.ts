@@ -40,10 +40,14 @@ export class CustomerTypeService {
   }
 
   public DeleteCustomerTypeById(Id:any):Observable<any>{
-    debugger
     let url = this.BaseURL + `/DeleteCustomerType?Id=`+Id;
     return this.HttpClient.delete(url,httpOption).pipe((responce: any) => {
-      debugger
+      return this.Responce = responce;
+    });
+  }
+  public CustomerTypeIsExist(Name:any):Observable<any>{
+    let url = this.BaseURL + `/CustomerIsExist?Name=`+Name;
+    return this.HttpClient.get(url,httpOption).pipe((responce: any) => {
       return this.Responce = responce;
     });
   }

@@ -43,11 +43,14 @@
                                 </span>
                             </td>
                         </tr>
+                        <tr *ngIf="CustomerList.Customer?.length == 0" >
+                            <td class="text-success text-center" colspan="4">Not Data found</td>
+                        </tr>
                     </tbody>
                 </table>
 
 
-                <div class="mt-2 text-center" [hidden]="!LoderoutCustomer">
+                <div class="mt-2 mb-2 text-center" [hidden]="!LoderoutCustomer">
                     <div class="spinner-border text-danger" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
@@ -57,7 +60,7 @@
     </div>
 </div>
 
-<div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<div bsModal #largeModal="bs-modal" class="modal fade" [config]="{ backdrop: 'static' }" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -125,13 +128,15 @@
                                 <div class="form-group col-sm-4">
                                     <label for="city">TAX REGISTRATION NUMBER</label>
                                     <input class="form-control" id="TAX-REGISTRATION-NUMBER"
-                                        placeholder="TAX REGISTRATION NUMBER" formControlName="taxRegistrationNumber" [ngClass]="{ 'is-invalid': submitted && f.taxRegistrationNumber.errors }"
+                                        placeholder="TAX REGISTRATION NUMBER" formControlName="taxRegistrationNumber"
+                                        [ngClass]="{ 'is-invalid': submitted && f.taxRegistrationNumber.errors }"
                                         type="text">
-                                    <div *ngIf="submitted && f.taxRegistrationNumber.errors"
-                                        class="invalid-feedback">
-                                        <div *ngIf="f.taxRegistrationNumber.errors.maxlength">Tax Registration Number is allow only(9)
+                                    <div *ngIf="submitted && f.taxRegistrationNumber.errors" class="invalid-feedback">
+                                        <div *ngIf="f.taxRegistrationNumber.errors.maxlength">Tax Registration Number is
+                                            allow only(9)
                                         </div>
-                                        <div *ngIf="f.taxRegistrationNumber.errors.minlength">Tax Registration Number is allow only(9)
+                                        <div *ngIf="f.taxRegistrationNumber.errors.minlength">Tax Registration Number is
+                                            allow only(9)
                                         </div>
 
                                     </div>
@@ -184,10 +189,9 @@
                                 <div class="form-group col-sm-4">
                                     <label for="postal-code">DISCOUNT AMOUNT
                                     </label>
-                                    <input class="form-control" digitOnly
-                                        formControlName="discountAmount" id="DEFAULT-CREDIT-LIMIT"
-                                        (keypress)="allownumberwithdot($event)" autocomplete="off"
-                                        placeholder="DISCOUNT AMOUNT" type="text">
+                                    <input class="form-control" digitOnly formControlName="discountAmount"
+                                        id="DEFAULT-CREDIT-LIMIT" (keypress)="allownumberwithdot($event)"
+                                        autocomplete="off" placeholder="DISCOUNT AMOUNT" type="text">
                                 </div>
 
                             </div>
@@ -290,8 +294,7 @@
                                         </label>
                                         <select class="form-control"
                                             [ngClass]="{ 'is-invalid': Addresssubmitted && add.countryId.errors }"
-                                            formControlName="countryId"
-                                            id="customer_Coutry">
+                                            formControlName="countryId" id="customer_Coutry">
                                             <option value="">--Select--</option>
                                             <option *ngFor="let item of CountryList" [value]="item.countryId">
                                                 {{item.countryName}}</option>
@@ -345,7 +348,7 @@
                                     <div class="custom-control custom-checkbox">
                                         <input class="custom-control-input"
                                             (change)="CheckAddress($event.target.checked)" id="copyaddress"
-                                            type="checkbox" [value]="CopyAddress">
+                                            type="checkbox" [value]="copyAddress">
                                         <!-- <span class="form-check-sign">
                                             <span class="check"></span>
                                         </span> -->
@@ -548,8 +551,10 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" (click)="ResetForm()">Close</button>
-                <button type="button" class="btn btn-primary"
-                    (click)="AddCustomer(AddCustomerForm)">{{savebtntitle}}</button>
+                <button type="button" class="btn btn-primary" (click)="AddCustomer(AddCustomerForm)"
+                    [disabled]="saving">
+                    {{savebtntitle}}
+                </button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

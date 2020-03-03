@@ -181,10 +181,6 @@
               "target": "Package",
               "version": "[2.2.0, )"
             },
-            "Microsoft.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[2.2.6, )"
-            },
             "Microsoft.Extensions.Identity.Stores": {
               "target": "Package",
               "version": "[2.2.0, )"
@@ -291,7 +287,7 @@
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
-              "version": "[2.2.3, )"
+              "version": "[2.2.4, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

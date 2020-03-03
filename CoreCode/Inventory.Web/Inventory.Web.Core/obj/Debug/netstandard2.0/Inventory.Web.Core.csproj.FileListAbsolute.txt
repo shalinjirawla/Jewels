@@ -6,3 +6,11 @@ D:\Ravi\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Web.Core\obj\De
 D:\Ravi\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Web.Core\obj\Debug\netstandard2.0\Inventory.Web.Core.AssemblyInfo.cs
 D:\Ravi\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Web.Core\obj\Debug\netstandard2.0\Inventory.Web.Core.dll
 D:\Ravi\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Web.Core\obj\Debug\netstandard2.0\Inventory.Web.Core.pdb
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Web.Core\bin\Debug\netstandard2.0\Inventory.Web.Core.deps.json
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Web.Core\bin\Debug\netstandard2.0\Inventory.Web.Core.dll
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Web.Core\bin\Debug\netstandard2.0\Inventory.Web.Core.pdb
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Web.Core\obj\Debug\netstandard2.0\Inventory.Web.Core.csproj.CoreCompileInputs.cache
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Web.Core\obj\Debug\netstandard2.0\Inventory.Web.Core.AssemblyInfoInputs.cache
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Web.Core\obj\Debug\netstandard2.0\Inventory.Web.Core.AssemblyInfo.cs
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Web.Core\obj\Debug\netstandard2.0\Inventory.Web.Core.dll
+D:\Shalin\InventoryProject\Jewels\CoreCode\Inventory.Web\Inventory.Web.Core\obj\Debug\netstandard2.0\Inventory.Web.Core.pdb

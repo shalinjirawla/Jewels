@@ -20,7 +20,7 @@ const Toast = Swal.mixin({
   styleUrls: ['./tenants.component.scss']
 })
 export class TenantsComponent implements OnInit {
-  private loading: boolean=false;
+  public loading: boolean=false;
   constructor(private FormBuilder: FormBuilder,
     private TenantsServicesService: TenantsServicesService,
     private router :Router,
@@ -44,7 +44,7 @@ export class TenantsComponent implements OnInit {
         validator: MustMatch('Password', 'ConfirmPassword')
       });
   }
-  public SaveTenants(TenantsForm: FormControl) {
+  public SaveTenants(TenantsForm: any) {
     this.FormSubmitted = true;
     if (this.TenantsForm.invalid) {
       return;
