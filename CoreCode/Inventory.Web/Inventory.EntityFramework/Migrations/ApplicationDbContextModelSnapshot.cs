@@ -764,6 +764,59 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.ToTable("ProductCategories");
                 });
 
+            modelBuilder.Entity("Inventory.Core.Models.Products.ProductDetail", b =>
+                {
+                    b.Property<long>("ProductDetailId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long?>("DefaultSupplierId");
+
+                    b.Property<int?>("DefaultTaxId");
+
+                    b.Property<long?>("DefaultWarehouseId");
+
+                    b.Property<string>("Desc");
+
+                    b.Property<string>("Image");
+
+                    b.Property<double?>("InitialHandCost");
+
+                    b.Property<double?>("InitialStockHand");
+
+                    b.Property<double?>("InitialStockPrice");
+
+                    b.Property<long?>("MinmOrderQuantity");
+
+                    b.Property<long>("ProductId");
+
+                    b.Property<double?>("PurchasePrice");
+
+                    b.Property<long?>("ReorderQuantity");
+
+                    b.Property<double?>("SellingPrice");
+
+                    b.Property<long?>("SupplierId");
+
+                    b.Property<long?>("TaxCodeTaxId");
+
+                    b.Property<string>("UnitsOfMeasurement");
+
+                    b.Property<long?>("WarehouseId");
+
+                    b.HasKey("ProductDetailId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("SupplierId");
+
+                    b.HasIndex("TaxCodeTaxId");
+
+                    b.HasIndex("WarehouseId");
+
+                    b.ToTable("ProductDetail");
+                });
+
             modelBuilder.Entity("Inventory.Core.Models.Products.ProductService", b =>
                 {
                     b.Property<long>("ServiceId")
@@ -843,7 +896,7 @@ namespace Inventory.EntityFrameworkCore.Migrations
 
                     b.Property<long?>("SupplierId");
 
-                    b.Property<double?>("UnitsOfMeasurement");
+                    b.Property<string>("UnitsOfMeasurement");
 
                     b.Property<long?>("VariMinmOrderQuantity");
 
@@ -868,6 +921,265 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasIndex("WarehouseId");
 
                     b.ToTable("ProductVariant");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.PurchaseOrder.PurchaseOrderAdditionalChargeForAll", b =>
+                {
+                    b.Property<long>("AdditionalChargeForAllId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long?>("AdditionalChargeId");
+
+                    b.Property<long?>("PurchaseOrdersId");
+
+                    b.Property<long?>("TaxId");
+
+                    b.HasKey("AdditionalChargeForAllId");
+
+                    b.HasIndex("AdditionalChargeId");
+
+                    b.HasIndex("PurchaseOrdersId");
+
+                    b.HasIndex("TaxId");
+
+                    b.ToTable("PurchaseOrderAdditionalChargeForAll");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.PurchaseOrder.PurchaseOrderAdditionalChargeForProduct", b =>
+                {
+                    b.Property<long>("AdditionalChargeForProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long?>("AdditionalChargeId");
+
+                    b.Property<bool?>("IsTaxble");
+
+                    b.Property<long?>("ProductId");
+
+                    b.Property<long?>("PurchaseOrdersId");
+
+                    b.Property<long?>("TaxId");
+
+                    b.HasKey("AdditionalChargeForProductId");
+
+                    b.HasIndex("AdditionalChargeId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("PurchaseOrdersId");
+
+                    b.HasIndex("TaxId");
+
+                    b.ToTable("PurchaseOrderAdditionalChargeForProduct");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.PurchaseOrder.PurchaseOrderDetails", b =>
+                {
+                    b.Property<long>("PurchaseOrderDetailsId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double?>("AdditionalChargeAmount");
+
+                    b.Property<string>("AdditionalChargeType");
+
+                    b.Property<double?>("FinalTaxTotal");
+
+                    b.Property<double?>("FinalTotal");
+
+                    b.Property<bool?>("IsAdditionalChargeApply");
+
+                    b.Property<string>("IsAdditionalChargeApplyType");
+
+                    b.Property<long?>("PurchaseOrdersId");
+
+                    b.Property<bool?>("TaxInclude");
+
+                    b.Property<double?>("Total");
+
+                    b.Property<long?>("TotalQTY");
+
+                    b.HasKey("PurchaseOrderDetailsId");
+
+                    b.HasIndex("PurchaseOrdersId");
+
+                    b.ToTable("PurchaseOrderDetails");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.PurchaseOrder.PurchaseOrderItems", b =>
+                {
+                    b.Property<long>("OrderItemsId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double?>("Discount");
+
+                    b.Property<int?>("DiscountType");
+
+                    b.Property<bool?>("IsTaxble");
+
+                    b.Property<long?>("ProductId");
+
+                    b.Property<long?>("PurchaseOrdersId");
+
+                    b.Property<int?>("QTY");
+
+                    b.Property<long?>("TaxId");
+
+                    b.Property<double?>("TaxTotal");
+
+                    b.Property<double?>("Total");
+
+                    b.Property<int?>("Unit");
+
+                    b.Property<double?>("UnitPrice");
+
+                    b.HasKey("OrderItemsId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("PurchaseOrdersId");
+
+                    b.HasIndex("TaxId");
+
+                    b.ToTable("PurchaseOrderItems");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.PurchaseOrder.PurchaseOrders", b =>
+                {
+                    b.Property<long>("PurchaseOrdersId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("CreationTime");
+
+                    b.Property<string>("CreatorUserId");
+
+                    b.Property<long?>("CreditTermId");
+
+                    b.Property<long?>("CurrencyId");
+
+                    b.Property<DateTime?>("DateOrdered");
+
+                    b.Property<DateTime?>("EstimatedDeliveryDate");
+
+                    b.Property<double?>("ExchangeRate");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<string>("LastModifierUserId");
+
+                    b.Property<int>("PaymentStatus");
+
+                    b.Property<long?>("PaymentTermId");
+
+                    b.Property<string>("PurchaseOrderNumber");
+
+                    b.Property<int>("ReceiveStatus");
+
+                    b.Property<string>("ReferenceNumber");
+
+                    b.Property<string>("Remarks");
+
+                    b.Property<long?>("ShipmentMethodId");
+
+                    b.Property<long>("SupplierId");
+
+                    b.Property<long?>("TenantsId");
+
+                    b.HasKey("PurchaseOrdersId");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("CreditTermId");
+
+                    b.HasIndex("CurrencyId");
+
+                    b.HasIndex("LastModifierUserId");
+
+                    b.HasIndex("PaymentTermId");
+
+                    b.HasIndex("ShipmentMethodId");
+
+                    b.HasIndex("SupplierId");
+
+                    b.HasIndex("TenantsId");
+
+                    b.ToTable("PurchaseOrders");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.PurchaseOrder.ReceiveNotes", b =>
+                {
+                    b.Property<long>("ReceiveNoteId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime?>("CreationTime");
+
+                    b.Property<string>("CreatorUserId");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<string>("LastModifierUserId");
+
+                    b.Property<DateTime>("ReceiveDate");
+
+                    b.Property<string>("ReceiveNoteNumber");
+
+                    b.Property<string>("Remarks");
+
+                    b.Property<int>("Status");
+
+                    b.Property<long>("SupplierId");
+
+                    b.Property<long?>("TenantsId");
+
+                    b.HasKey("ReceiveNoteId");
+
+                    b.HasIndex("CreatorUserId");
+
+                    b.HasIndex("LastModifierUserId");
+
+                    b.HasIndex("SupplierId");
+
+                    b.HasIndex("TenantsId");
+
+                    b.ToTable("ReceiveNotes");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.PurchaseOrder.ReceiveNotesItems", b =>
+                {
+                    b.Property<long>("ReceiveNoteItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("ProductId");
+
+                    b.Property<long>("ProductQTY");
+
+                    b.Property<long?>("PurchaseOrdersId");
+
+                    b.Property<long?>("ReceiveNoteId");
+
+                    b.Property<long>("WarehouseId");
+
+                    b.HasKey("ReceiveNoteItemId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("PurchaseOrdersId");
+
+                    b.HasIndex("ReceiveNoteId");
+
+                    b.HasIndex("WarehouseId");
+
+                    b.ToTable("ReceiveNotesItems");
                 });
 
             modelBuilder.Entity("Inventory.Core.Models.RawMaterails", b =>
@@ -1805,6 +2117,26 @@ namespace Inventory.EntityFrameworkCore.Migrations
                         .HasForeignKey("TenantsId");
                 });
 
+            modelBuilder.Entity("Inventory.Core.Models.Products.ProductDetail", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.Products.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Inventory.Core.Models.Supplier.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.TaxCode", "TaxCode")
+                        .WithMany()
+                        .HasForeignKey("TaxCodeTaxId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.Warehouse", "Warehouse")
+                        .WithMany()
+                        .HasForeignKey("WarehouseId");
+                });
+
             modelBuilder.Entity("Inventory.Core.Models.Products.ProductService", b =>
                 {
                     b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
@@ -1838,6 +2170,139 @@ namespace Inventory.EntityFrameworkCore.Migrations
                     b.HasOne("Inventory.Core.Models.Commons.Warehouse", "Warehouse")
                         .WithMany()
                         .HasForeignKey("WarehouseId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.PurchaseOrder.PurchaseOrderAdditionalChargeForAll", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.Commons.AdditionalCharge", "AdditionalCharge")
+                        .WithMany()
+                        .HasForeignKey("AdditionalChargeId");
+
+                    b.HasOne("Inventory.Core.Models.PurchaseOrder.PurchaseOrders", "PurchaseOrders")
+                        .WithMany()
+                        .HasForeignKey("PurchaseOrdersId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.TaxCode", "TaxCode")
+                        .WithMany()
+                        .HasForeignKey("TaxId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.PurchaseOrder.PurchaseOrderAdditionalChargeForProduct", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.Commons.AdditionalCharge", "AdditionalCharge")
+                        .WithMany()
+                        .HasForeignKey("AdditionalChargeId");
+
+                    b.HasOne("Inventory.Core.Models.Products.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("Inventory.Core.Models.PurchaseOrder.PurchaseOrders", "PurchaseOrders")
+                        .WithMany()
+                        .HasForeignKey("PurchaseOrdersId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.TaxCode", "TaxCode")
+                        .WithMany()
+                        .HasForeignKey("TaxId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.PurchaseOrder.PurchaseOrderDetails", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.PurchaseOrder.PurchaseOrders", "PurchaseOrders")
+                        .WithMany()
+                        .HasForeignKey("PurchaseOrdersId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.PurchaseOrder.PurchaseOrderItems", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.Products.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("Inventory.Core.Models.PurchaseOrder.PurchaseOrders", "PurchaseOrders")
+                        .WithMany()
+                        .HasForeignKey("PurchaseOrdersId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.TaxCode", "TaxCode")
+                        .WithMany()
+                        .HasForeignKey("TaxId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.PurchaseOrder.PurchaseOrders", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.CreditTerms", "CreditTerms")
+                        .WithMany()
+                        .HasForeignKey("CreditTermId");
+
+                    b.HasOne("Inventory.Core.Models.Currency.Currency", "Currency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId");
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.PaymentTerm", "PaymentTerm")
+                        .WithMany()
+                        .HasForeignKey("PaymentTermId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.ShipmentMethod", "ShipmentMethod")
+                        .WithMany()
+                        .HasForeignKey("ShipmentMethodId");
+
+                    b.HasOne("Inventory.Core.Models.Supplier.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Inventory.Core.Models.Tenants.Tenants", "Tenants")
+                        .WithMany()
+                        .HasForeignKey("TenantsId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.PurchaseOrder.ReceiveNotes", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("CreatorUserId");
+
+                    b.HasOne("Inventory.Core.Models.ApplicationUser.ApplicationUser", "UserId")
+                        .WithMany()
+                        .HasForeignKey("LastModifierUserId");
+
+                    b.HasOne("Inventory.Core.Models.Supplier.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Inventory.Core.Models.Tenants.Tenants", "Tenants")
+                        .WithMany()
+                        .HasForeignKey("TenantsId");
+                });
+
+            modelBuilder.Entity("Inventory.Core.Models.PurchaseOrder.ReceiveNotesItems", b =>
+                {
+                    b.HasOne("Inventory.Core.Models.Products.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Inventory.Core.Models.PurchaseOrder.PurchaseOrders", "PurchaseOrders")
+                        .WithMany()
+                        .HasForeignKey("PurchaseOrdersId");
+
+                    b.HasOne("Inventory.Core.Models.PurchaseOrder.ReceiveNotes", "ReceiveNotes")
+                        .WithMany()
+                        .HasForeignKey("ReceiveNoteId");
+
+                    b.HasOne("Inventory.Core.Models.Commons.Warehouse", "Warehouse")
+                        .WithMany()
+                        .HasForeignKey("WarehouseId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Inventory.Core.Models.RawMaterails", b =>

@@ -1,0 +1,381 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header card-header-danger">
+            <button type="button" class="btn btn-primary float-right btn-sm" id="AddCustomerbtn" data-toggle="modal"
+                (click)="OpenReceiveNoteModel()">
+                Add Receive Notes
+            </button>
+            <h4 class="card-title mt-0">Receive Notes List</h4>
+        </div>
+        <div class="card-body bg-white">
+            <div class="table-responsive animated flash">
+                <table class="table " id="DisplayCustomerView">
+                    <thead class="">
+                        <th>
+                            Receive Notes#
+                        </th>
+                        <th>
+                            Supplier
+                        </th>
+
+                        <th>
+                            Receive Date
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Date Created
+                        </th>
+                        <th colspan="2" class="text-center">
+                            Action
+                        </th>
+                    </thead>
+                    <tbody class="LoderoutCustomer">
+                        <tr *ngFor="let item of ReceiveNotesList" class="CustomerListID">
+                            <td class="mr-2 ">
+                                {{item.receiveNoteNumber}}
+                            </td>
+                            <td class="mr-2">
+
+                                {{item.supplierName}}
+                            </td>
+
+                            <td class="mr-2 ">
+                                {{item.receiveDate |date}}
+                            </td>
+                            <td class="mr-2 ">
+                                <span *ngIf="item.status==0" class="badge p-2 badge-success">New</span>
+                                <span *ngIf="item.status==1" class="badge p-2 badge-danger">Recevied</span>
+                            </td>
+
+                            <td class="mr-2">
+                                {{item.creationTime | date}}
+                            </td>
+                            <td>
+                                <i (click)="GetReceiveNotesDetails(item.receiveNoteId)"
+                                    class="fa fa-pencil h5 pointer text-success"></i>
+                            </td>
+
+                            <td class="text-center">
+                                <i (click)="DeleteReceiveNotes(item.receiveNoteId)"
+                                    class="fa fa-trash h5 pointer text-danger">
+                                </i>
+                            </td>
+                        </tr>
+                        <tr *ngIf="EmpltyReceiveNotesList">
+                            <td colspan="9">
+                                <div class="alert alert-success">Not Data Found</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <div class="mt-2 mb-2 text-center LodersetEmployee" [hidden]="!loadReceiveNotesList">
+                    <div class="spinner-border text-danger" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" [config]="{ backdrop: 'static' }" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{ReceiveNoteTitle}}</h4>
+                <button type="button" class="close" (click)="Close()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <tabset>
+                    <tab id="Tabinfo">
+                        <ng-template tabHeading><i class="fa fa-shopping-cart text-info"></i> Info
+                        </ng-template>
+                        <form [formGroup]="ReceiveNotesForm">
+                            <input type="hidden" name="ReceiveNotesId" id="ReceiveNotesId"
+                                formControlName="ReceiveNotesId">
+                            <input type="hidden" name="ReceiveNotesNumber" id="ReceiveNotesNumber"
+                                formControlName="ReceiveNotesNumber">
+
+                            <div class="row">
+                                <div class="form-group col-sm-4">
+                                    <label>RECEIVE NOTES # </label>
+                                    <p *ngIf="ReceiveNotesForm.value.ReceiveNotesId==null || ReceiveNotesForm.value.ReceiveNotesId=='0'"
+                                        class="text-info">New</p>
+                                    <p *ngIf="ReceiveNotesForm.value.ReceiveNotesId!=null && ReceiveNotesForm.value.ReceiveNotesId!=''"
+                                        class="text-info">{{ReceiveNotesForm.value.ReceiveNotesNumber}}</p>
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <label><i class="fa fa-calendar"></i> RECEIVE DATE
+                                    </label>
+                                    <p *ngIf="ReceiveNotesForm.value.ReceiveNotesId!=null && ReceiveNotesForm.value.ReceiveNotesId!='' 
+                                    && ReceiveNotesForm.value.ReceiveNotesId!='0'">
+                                        {{ReceiveNotesForm.value.ReceiveDate |date}}</p>
+
+                                    <!-- formControlName="DateOrdered" -->
+                                    <input class="form-control" [ngModelOptions]="{standalone: true}"
+                                        *ngIf="ReceiveNotesForm.value.ReceiveNotesId==null || ReceiveNotesForm.value.ReceiveNotesId=='0'"
+                                        [disabled]="ReceiveNotesForm.value.ReceiveNotesId!=0"
+                                        [ngModel]="CurrentDate | date:'yyyy-MM-dd'" id="ReceiveDate"
+                                        [ngClass]="{'is-invalid': ReveiveSubmit && f.ReceiveDate.errors }"
+                                        placeholder="DATE ORDERED" type="date">
+                                    <div *ngIf="ReveiveSubmit && f.ReceiveDate.errors" class="invalid-feedback">
+                                        <div *ngIf="f.ReceiveDate.errors.required">Please Select
+                                            Delivery Date</div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label>SUPPLIER</label>
+                                    <select class="form-control" (change)="SupplierChange($event.target.value)"
+                                        formControlName="SupplierId" id="SupplierId"
+                                        [ngClass]="{ 'is-invalid': ReveiveSubmit && f.SupplierId.errors }">
+                                        <option value="" selected>--Select--</option>
+                                        <option [value]="supplier.supplierId" *ngFor="let supplier of SupplierList">
+                                            {{supplier.companyName}}({{supplier.supplierCode}})</option>
+                                    </select>
+                                    <div *ngIf="ReveiveSubmit && f.SupplierId.errors" class="invalid-feedback">
+                                        <div *ngIf="f.SupplierId.errors.required">Supplier is required</div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-6" *ngIf="SupplierBillingAddress!=null">
+                                    <label>SHIPPING ADDRESS </label>
+                                    <a [routerLink]="['/suppliers/supplier']" class="btn btn-link">Edit</a>
+                                    <p class="h5">
+                                        {{SupplierBillingAddress.address}},
+                                        {{SupplierBillingAddress.state}},
+                                        {{SupplierBillingAddress.city}},
+                                        {{SupplierBillingAddress.postalCode}}
+
+                                    </p>
+                                </div>
+                                <div class="form-group col-sm-6" *ngIf="SupplierShipingAddress!=null">
+                                    <label>BILLING ADDRESS </label>
+                                    <a [routerLink]="['/suppliers/supplier']" class="btn btn-link">Edit</a>
+                                    <p class="h5">
+                                        {{SupplierShipingAddress.address}},
+                                        {{SupplierShipingAddress.state}},
+                                        {{SupplierShipingAddress.city}},
+                                        {{SupplierShipingAddress.postalCode}}
+                                    </p>
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <label>REMARK</label>
+                                    <input type="text" class="form-control" id="remark" name="remark"
+                                        formControlName="Remarks">
+                                    <input type="hidden" formControlName="Status" id="Status" name="Status">
+                                </div>
+                            </div>
+                        </form>
+                    </tab>
+                    <tab id="Tabitems">
+                        <ng-template tabHeading><i class="fa fa-shopping-cart text-info"></i> Items
+                        </ng-template>
+                        <form [formGroup]="AddItemsForm" [hidden]="!SupplierSelected">
+                            <div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <h5 class=" text-center">ADD ITEMS</h5>
+                                        <hr class="sethrborder">
+                                        <div class="form-group">
+
+                                            <input type="hidden" name="ReceiveNotesId" formControlName="ReceiveNotesId"
+                                                id="ReceiveNotesId">
+                                            <select class="form-control" formControlName="PurchaseOrderId"
+                                                id="PurchaseOrderId" (change)="PurhcaseOrderChange($event.target.value)"
+                                                [ngClass]="{ 'is-invalid': ReveiveItemsSubmit && f1.PurchaseOrderId.errors }">
+                                                <option value="" selected>--Select--</option>
+                                                <option [value]="purchase.purchaseOrderId"
+                                                    *ngFor="let purchase of PurchaseOrderList">
+                                                    {{purchase.code}}</option>
+                                            </select>
+                                            <div *ngIf="ReveiveItemsSubmit && f1.PurchaseOrderId.errors"
+                                                class="invalid-feedback">
+                                                <div *ngIf="f1.PurchaseOrderId.errors.required">Supplier is required
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div id="PurchaseOrderListId"
+                                            *ngIf="SelectedPurchaseOrderName!=null && SelectedPurchaseOrderName!=''">
+                                            <div class="alert alert-success"><button class="btn btn-link"
+                                                    (click)="MoveToAllProductItems(PurchaseOrderProductList)"><i
+                                                        class="fa fa-plus text-left"></i></button> Sales
+                                                Order: <b> {{SelectedPurchaseOrderName}}</b></div>
+                                            <div class="text-center" *ngIf="IsLoadData">
+                                                <div class="spinner-border text-danger " role="status">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" [hidden]="IsLoadData">
+                                                <div class="text-center" id="PurchaseOrderProductListId"
+                                                    *ngIf="PurchaseOrderProductList!=null && PurchaseOrderProductList.length!={}">
+                                                    <div class="row"
+                                                        *ngFor="let product of PurchaseOrderProductList; let productindex=index">
+                                                        <div class="col-md-9">
+                                                            <div><b>{{product.productName}}</b></div>
+                                                            <div>[{{product.productCode}}]</div>
+                                                            <div>{{product.qty}} - Unit[{{product.uom}}]</div>
+                                                            <div>{{product.price}}</div>
+                                                            <div>{{product.uniquIndex}}</div>
+                                                            <hr>
+                                                        </div>
+                                                        <div class="col-md-3 text-info text-center">
+                                                            <button class="btn btn-link mt-3"
+                                                                (click)="MoveToSelectedProductItems(product,productindex)">
+                                                                <i class="fa fa-arrow-right"></i></button>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div *ngIf="SelectedPurchaseOrderName==null || SelectedPurchaseOrderName==''"
+                                            class="alert alert-info">
+                                            <i class="fa fa-arrow-up"></i> Please Select Sales Order
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <h5 class=" text-center"> SELECTED ITEMS</h5>
+                                        <hr class="sethrborder">
+                                        <input type="hidden" formControlName="IsselectedAll" name="IsselectedAll"
+                                            id="IsselectedAll">
+                                        <button class="btn btn-outline-danger ml-2" [disabled]="!IsValidProductList"
+                                            (click)="RemoveSelectedProduct()">Remove</button>
+                                        <div class="row m-2" formArrayName="PurchaseOrderItemList">
+                                            <table class="table" id="selectedProductListId">
+                                                <thead class="">
+                                                    <th width="5.4%">
+                                                        #
+                                                    </th>
+                                                    <th width="5.4%" *ngIf="IsValidProductList">
+                                                        <input class="custom-control-input" type="checkbox"
+                                                            (change)="SelectAllItemForRemove($event.target.checked)"
+                                                            id="SeletceAll">
+                                                        <label class="custom-control-label " for="SeletceAll"></label>
+                                                    </th>
+
+                                                    <th>
+                                                        ITEM
+                                                    </th>
+                                                    <th>
+                                                        SECTION <i class="text-danger">*</i>
+                                                    </th>
+                                                    <th>
+                                                        BATCH
+                                                    </th>
+                                                    <th>
+                                                        QTY SECTION <i class="text-danger">*</i>
+                                                    </th>
+                                                    <th>
+
+                                                    </th>
+                                                </thead>
+
+                                                <tbody [hidden]="!IsValidProductList"
+                                                    *ngFor="let productlist of PurchaseOrderItemList.controls; let pointIndex=index"
+                                                    [formGroupName]="pointIndex">
+                                                    <tr>
+                                                        <td>
+                                                            {{pointIndex+1}}
+                                                        </td>
+                                                        <td>
+                                                            <input type="hidden" name="ReceiveNoteItemId"
+                                                                formControlName="ReceiveNoteItemId"
+                                                                id="ReceiveNoteItemId">
+                                                            <input class="custom-control-input" type="checkbox"
+                                                                formControlName="Isselected"
+                                                                id="SupllierSeletceAll_{{pointIndex}}">
+                                                            <label class="custom-control-label"
+                                                                for="SupllierSeletceAll_{{pointIndex}}"></label>
+                                                        </td>
+                                                        <td>
+                                                            <div><b>{{productlist.value.ProductName}}</b></div>
+                                                            <div>[{{productlist.value.ProductCode}}]</div>
+                                                            <div>{{productlist.value.QTY}} -
+                                                                Unit[{{productlist.value.UOM}}]</div>
+                                                            <div>{{productlist.value.Price}}</div>
+                                                        </td>
+                                                        <td>
+                                                            {{f1.controls |json}}
+                                                            <select class="form-control" formControlName="WarehouseId"
+                                                                id="WarehouseId">
+                                                                <option [value]="''" selected>--Select--</option>
+                                                                <option [value]="location.warehouseId"
+                                                                    *ngFor="let location of WarehouseList">
+                                                                    {{location.warehouseName}}[{{location.warehousecode}}]
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control" formControlName="ProductQTY"
+                                                                id="ProductQTY" placeholder="QTY" min="0"
+                                                                (input)="CheckIsValidQTY($event.target.value,productlist.value.QTY,pointIndex)"
+                                                                [max]="productlist.value.QTY"
+                                                                (keypress)="allownumber($event)" type="number">
+
+                                                        </td>
+                                                        <td>
+                                                            Of {{productlist.value.QTY}}
+                                                        </td>
+                                                    </tr>
+
+
+                                                </tbody>
+                                                <tbody *ngIf="!IsValidProductList">
+                                                    <tr>
+                                                        <td colspan="7">
+                                                            <div class="alert alert-info"><i class="fa fa-arrow-left">
+                                                                    No Item Added. Please Select item(s) form left side
+                                                                    section</i></div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                                <tbody >
+                                                    <tr *ngIf="IsLoadData">
+                                                        <td colspan="7">
+                                                            <div class="text-center">
+                                                                <div class="spinner-border text-danger " role="status">
+                                                                    <span class="sr-only">Loading...</span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+
+                        <div [hidden]="SupplierSelected" class="alert alert-warning">Please Select Supplier....</div>
+                    </tab>
+                </tabset>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" [disabled]="saving" (click)="Close()">Close</button>
+                <button type="button" class="btn btn-primary" [disabled]="saving"
+                    (click)="SaveReceiveNotes(ReceiveNotesForm,AddItemsForm)">{{ReceiveNotebtnTitle}}</button>
+
+            </div>
+        </div>
+
+    </div>
+</div>

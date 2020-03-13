@@ -44,6 +44,7 @@ namespace Inventory.Application.Services.ProductsServices
         {
             ProductVariantMergeVM output = new ProductVariantMergeVM();
             ProductVariantVM ProductVarinatData = new ProductVariantVM();
+            ProductDetailVM productDetailVM = new ProductDetailVM();
             try
             {
                 if (ProductId != 0)
@@ -112,6 +113,28 @@ namespace Inventory.Application.Services.ProductsServices
                                     output.ProductVarinatData = ProductVarinatData;
                                 }
                             }
+                            else
+                            {
+                                var productdetails = _DbContext.ProductDetail.FirstOrDefault(x => x.ProductId == ProductId);
+                                if (productdetails != null)
+                                {
+                                    productDetailVM.ProductId = productdetails.ProductId;
+                                    productDetailVM.Image = productdetails.Image;
+                                    productDetailVM.ReorderQuantity = productdetails.ReorderQuantity;
+                                    productDetailVM.PurchasePrice = productdetails.PurchasePrice;
+                                    productDetailVM.SellingPrice = productdetails.SellingPrice;
+                                    productDetailVM.MinmOrderQuantity = productdetails.MinmOrderQuantity;
+                                    productDetailVM.Desc = productdetails.Desc;
+                                    productDetailVM.DefaultSupplierId = productdetails.DefaultSupplierId;
+                                    productDetailVM.DefaultTaxId = productdetails.DefaultTaxId;
+                                    productDetailVM.DefaultWarehouseId = productdetails.DefaultWarehouseId;
+                                    productDetailVM.UnitsOfMeasurement = productdetails.UnitsOfMeasurement;
+                                    productDetailVM.InitialStockHand = productdetails.InitialStockHand;
+                                    productDetailVM.InitialStockPrice = productdetails.InitialStockPrice;
+                                    productDetailVM.InitialHandCost = productdetails.InitialHandCost;
+                                    output.ProductDetailData = productDetailVM;
+                                }
+                            }
                         }
                     });
                 }
@@ -125,9 +148,9 @@ namespace Inventory.Application.Services.ProductsServices
             return output;
         }
 
-        public async Task<List<ProductVM>> GetProductList(long TenantId)
+        public async Task<List<ProductListVM>> GetProductList(long TenantId)
         {
-            List<ProductVM> List = new List<ProductVM>();
+            List<ProductListVM> List = new List<ProductListVM>();
             try
             {
                 await Task.Run(() =>
@@ -137,15 +160,35 @@ namespace Inventory.Application.Services.ProductsServices
                     {
                         foreach (var item in ProductList)
                         {
-                            ProductVM dto = new ProductVM()
+                            ProductListVM dto = new ProductListVM()
                             {
                                 ProductId = item.ProductId,
                                 Name = item.Name,
                                 Sku = item.Sku,
                                 IsActive = item.IsActive,
                                 Stockitem = item.Stockitem,
-                                Taxable=item.Taxable,
+                                Taxable = item.Taxable,
                             };
+                            if(item.IsProductVariants)
+                            {
+                                var variant = _DbContext.ProductVariant.Where(x => x.Image != null).FirstOrDefault(x => x.ProductId == item.ProductId);
+                                if(variant!=null)
+                                {
+                                    dto.Images = variant.Image;
+                                    dto.SellingPrice = variant.SellingPrice??0.00;
+                                    dto.PurchasePrice = variant.PurchasePrice??0.00;
+                                }
+                            }
+                            else
+                            {
+                                var productdetails = _DbContext.ProductDetail.FirstOrDefault(x => x.ProductId ==item.ProductId);
+                                if(productdetails!=null)
+                                {
+                                    dto.Images = productdetails.Image;
+                                    dto.SellingPrice = productdetails.SellingPrice ?? 0.00;
+                                    dto.PurchasePrice = productdetails.PurchasePrice ?? 0.00;
+                                }
+                            }
                             List.Add(dto);
                         }
                     }
@@ -167,6 +210,7 @@ namespace Inventory.Application.Services.ProductsServices
                     await Task.Run(async () =>
                     {
                         var input = model.ProductData;
+                        var inputProductdetails = model.ProductDetailData;
                         var inputvariant = model.ProductVarinatData.ProductVariantListVMs;
                         Product product = new Product
                         {
@@ -199,6 +243,25 @@ namespace Inventory.Application.Services.ProductsServices
                                 if (inputvariant != null && inputvariant.Count > 0)
                                     await SaveProductVariant(inputvariant, product.ProductId, model.ProductVarinatData.VariantOptionsType, model.ProductVarinatData.VariantOptionLabel);
                             }
+                            else
+                            {
+                                ProductDetail productDetail = new ProductDetail()
+                                {
+                                    ProductId = product.ProductId,
+                                    Image = inputProductdetails.Image,
+                                    MinmOrderQuantity = inputProductdetails.MinmOrderQuantity,
+                                    Desc = inputProductdetails.Desc,
+                                    DefaultSupplierId = inputProductdetails.DefaultSupplierId,
+                                    DefaultTaxId = inputProductdetails.DefaultTaxId,
+                                    DefaultWarehouseId = inputProductdetails.DefaultWarehouseId,
+                                    UnitsOfMeasurement = inputProductdetails.UnitsOfMeasurement,
+                                    InitialStockHand = inputProductdetails.InitialStockHand,
+                                    InitialStockPrice = inputProductdetails.InitialStockPrice,
+                                    InitialHandCost = inputProductdetails.InitialHandCost,
+                                };
+                                _DbContext.ProductDetail.Add(productDetail);
+                                _DbContext.SaveChanges();
+                            }
                         }
                         else
                         {
@@ -209,7 +272,52 @@ namespace Inventory.Application.Services.ProductsServices
                             if (input.IsProductVariants)
                             {
                                 if (inputvariant != null && inputvariant.Count > 0)
-                                    await SaveProductVariant(inputvariant,input.ProductId, model.ProductVarinatData.VariantOptionsType, model.ProductVarinatData.VariantOptionLabel);
+                                    await SaveProductVariant(inputvariant, input.ProductId, model.ProductVarinatData.VariantOptionsType, model.ProductVarinatData.VariantOptionLabel);
+                            }
+                            else
+                            {
+                                var productdetails = _DbContext.ProductDetail.FirstOrDefault(x => x.ProductId == input.ProductId);
+                                if (productdetails != null)
+                                {
+                                    productdetails.Image = inputProductdetails.Image;
+                                    productdetails.MinmOrderQuantity = inputProductdetails.MinmOrderQuantity;
+                                    productdetails.ReorderQuantity = inputProductdetails.ReorderQuantity;
+                                    productdetails.PurchasePrice = inputProductdetails.PurchasePrice;
+                                    productdetails.SellingPrice = inputProductdetails.SellingPrice;
+                                    productdetails.Desc = inputProductdetails.Desc;
+                                    productdetails.DefaultSupplierId = inputProductdetails.DefaultSupplierId;
+                                    productdetails.DefaultTaxId = inputProductdetails.DefaultTaxId;
+                                    productdetails.DefaultWarehouseId = inputProductdetails.DefaultWarehouseId;
+                                    productdetails.UnitsOfMeasurement = inputProductdetails.UnitsOfMeasurement;
+                                    productdetails.InitialStockHand = inputProductdetails.InitialStockHand;
+                                    productdetails.InitialStockPrice = inputProductdetails.InitialStockPrice;
+                                    productdetails.InitialHandCost = inputProductdetails.InitialHandCost;
+                                    _DbContext.ProductDetail.Update(productdetails);
+                                    _DbContext.SaveChanges();
+                                }
+                                else
+                                {
+                                    ProductDetail productDetail = new ProductDetail()
+                                    {
+                                        ProductId = product.ProductId,
+                                        Image = inputProductdetails.Image,
+                                        ReorderQuantity = inputProductdetails.ReorderQuantity,
+                                        PurchasePrice = inputProductdetails.PurchasePrice,
+                                        SellingPrice = inputProductdetails.SellingPrice,
+                                        MinmOrderQuantity = inputProductdetails.MinmOrderQuantity,
+                                        Desc = inputProductdetails.Desc,
+                                        DefaultSupplierId = inputProductdetails.DefaultSupplierId,
+                                        DefaultTaxId = inputProductdetails.DefaultTaxId,
+                                        DefaultWarehouseId = inputProductdetails.DefaultWarehouseId,
+                                        UnitsOfMeasurement = inputProductdetails.UnitsOfMeasurement,
+                                        InitialStockHand = inputProductdetails.InitialStockHand,
+                                        InitialStockPrice = inputProductdetails.InitialStockPrice,
+                                        InitialHandCost = inputProductdetails.InitialHandCost,
+                                    };
+                                    _DbContext.ProductDetail.Add(productDetail);
+                                    _DbContext.SaveChanges();
+                                }
+
                             }
                         }
                     });
@@ -224,7 +332,7 @@ namespace Inventory.Application.Services.ProductsServices
             }
             return true;
         }
-        public async Task SaveProductVariant(List<ProductVariantListVM> inputlist,long ProductId,string VariantOptionsType,string VariantOptionslabel)
+        public async Task SaveProductVariant(List<ProductVariantListVM> inputlist, long ProductId, string VariantOptionsType, string VariantOptionslabel)
         {
             try
             {
@@ -295,7 +403,7 @@ namespace Inventory.Application.Services.ProductsServices
                                         }
                                         else
                                         {
-                                            var islist = inputlist.FirstOrDefault(x=>x.ProductVariantId== item.ProductVariantId);
+                                            var islist = inputlist.FirstOrDefault(x => x.ProductVariantId == item.ProductVariantId);
                                             if (islist == null)
                                             {
                                                 _DbContext.ProductVariant.Remove(item);
@@ -303,7 +411,7 @@ namespace Inventory.Application.Services.ProductsServices
                                                 break;
                                             }
                                         }
-                                        
+
                                     }
                                 }
 

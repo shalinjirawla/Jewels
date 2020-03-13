@@ -31,7 +31,7 @@ namespace Inventory.Application.ViewModel.ProductsVm
         public long? DefaultSupplierId { get; set; }
         public int? DefaultTaxId { get; set; }
         public long? DefaultWarehouseId { get; set; }
-        public double? UnitsOfMeasurement { get; set; }
+        public string UnitsOfMeasurement { get; set; }
         public double? InitialStockHand { get; set; }
         public double? InitialStockPrice { get; set; }
         public double? InitialHandCost { get; set; }

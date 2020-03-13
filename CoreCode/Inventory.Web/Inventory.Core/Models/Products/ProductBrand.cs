@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Inventory.Core.Models.Products
 {
-   public class ProductBrand
+    public class ProductBrand
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

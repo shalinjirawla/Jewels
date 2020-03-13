@@ -28,7 +28,7 @@
                     </thead>
                     <tbody class="LoderoutCustomer">
                         <tr *ngFor="let item of CustomerList.Customer">
-                            <td>{{item.customerName}}</td>
+                            <td>{{item.customerName | firstcharcateruppercase}}</td>
                             <td>{{item.customerCode}}</td>
                             <td>{{item.customerTypeId}}</td>
                             <td class="h5">

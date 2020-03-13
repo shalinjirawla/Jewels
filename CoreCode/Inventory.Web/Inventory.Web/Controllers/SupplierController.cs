@@ -109,5 +109,11 @@ namespace Inventory.Web.Controllers
             var data = await _supplier.GetDefaultSupplierList();
             return Ok(GetAjaxResponse(true, string.Empty, data));
         }
+        [HttpGet]
+        public IActionResult GetSupplierAddress(int Id)
+        {
+            var customer = _supplier.GetSupplierAddress(Id);
+            return Ok(GetAjaxResponse(true, string.Empty, customer));
+        }
     }
 }

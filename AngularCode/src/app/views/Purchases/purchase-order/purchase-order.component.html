@@ -1,0 +1,839 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header card-header-danger">
+            <button type="button" class="btn btn-primary float-right btn-sm" id="AddCustomerbtn" data-toggle="modal"
+                (click)="OpenPurchaseOrderModel()">
+                Add Purchases Order
+            </button>
+            <h4 class="card-title mt-0">Purchases Order List</h4>
+        </div>
+        <div class="card-body bg-white">
+            <div class="table-responsive animated flash">
+                <table class="table " id="DisplayCustomerView">
+                    <thead class="">
+                        <th>
+                            Purchases Order
+                        </th>
+                        <th>
+                            Reference Number
+                        </th>
+
+                        <th>
+                            Supplier
+                        </th>
+                        <th>
+                            Receive
+                        </th>
+                        <th>
+                            Payment
+                        </th>
+                        <th>
+                            Total
+                        </th>
+                        <th>
+                            Date Created
+                        </th>
+                        <th colspan="2" class="text-center">
+                            Action
+                        </th>
+                    </thead>
+                    <tbody class="LoderoutCustomer">
+                        <tr *ngFor="let item of PurchasesOrderList" class="CustomerListID">
+                            <td class="mr-2 text-center">
+                                {{item.purchaseOrderNumber}}
+                            </td>
+                            <td class="mr-2">
+
+                                {{item.referenceNumber}}
+                            </td>
+
+                            <td class="mr-2 ">
+                                {{item.supplierName}}
+                            </td>
+                            <td class="mr-2 text-center">
+                                <span *ngIf="item.receiveStatus==0" class="badge p-2 badge-secondary">In
+                                    Progress</span>
+                                <span *ngIf="item.receiveStatus==1" class="badge p-2 badge-info">Partial Paid</span>
+                                <span *ngIf="item.receiveStatus==2" class="badge p-2 badge-success">Paid</span>
+                                <span *ngIf="item.receiveStatus==3" class="badge p-2 badge-danger">Issued</span>
+                            </td>
+                            <td class="mr-2">
+                                <span *ngIf="item.paymentStatus==0" class="badge p-2 badge-secondary">In
+                                    Progress</span>
+                                <span *ngIf="item.paymentStatus==1" class="badge p-2 badge-success">Delivered</span>
+                                <span *ngIf="item.paymentStatus==2" class="badge p-2 badge-info">Partial
+                                    Delivered</span>
+                                <span *ngIf="item.paymentStatus==3" class="badge p-2 badge-warning">Partially
+                                    Issued</span>
+                                <span *ngIf="item.paymentStatus==4" class="badge p-2 badge-danger">Issued</span>
+                            </td>
+                            <td class="mr-2">
+                                {{item.total }}
+                            </td>
+                            <td class="mr-2">
+                                {{item.dateOrdered | date}}
+                            </td>
+                            <td>
+                                <i (click)="GetPurchaseOrder(item.purchaseOrderId)"
+                                    class="fa fa-pencil h5 pointer text-success"></i>
+                            </td>
+
+                            <td class="text-center">
+                                <i (click)="DeletePurchaseOrder(item.purchaseOrderId)"
+                                    class="fa fa-trash h5 pointer text-danger">
+                                </i>
+                            </td>
+                        </tr>
+                        <tr *ngIf="EmpltyPurchaseOrderList">
+                            <td colspan="9">
+                                <div class="alert alert-success">Not Data Found</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <div class="mt-2 mb-2 text-center LodersetEmployee" [hidden]="!loadSalesOrderList">
+                    <div class="spinner-border text-danger" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" [config]="{ backdrop: 'static' }" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{PurchaseTitle}}</h4>
+                <button type="button" class="close" (click)="Close()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <tabset>
+                    <tab id="TabOrderDetail">
+                        <ng-template tabHeading><i class="fa fa-shopping-cart text-info"></i> Order Details
+                        </ng-template>
+                        <form [formGroup]="PurchaseOrderDetailsForm">
+                            <input type="hidden" name="PurchaseOrdersId" id="PurchaseOrdersId"
+                                formControlName="PurchaseOrdersId">
+                            <input type="hidden" name="PurchaseOrderNumber" id="PurchaseOrderNumber"
+                                formControlName="PurchaseOrderNumber">
+
+                            <div class="row">
+                                <div class="form-group col-sm-4">
+                                    <label>PURCHASE ORDER # </label>
+                                    <p *ngIf="PurchaseOrderDetailsForm.value.PurchaseOrdersId==null || PurchaseOrderDetailsForm.value.PurchaseOrdersId=='0'"
+                                        class="text-info">New</p>
+                                    <p *ngIf="PurchaseOrderDetailsForm.value.PurchaseOrdersId!=null && PurchaseOrderDetailsForm.value.PurchaseOrdersId!=''"
+                                        class="text-info">{{PurchaseOrderDetailsForm.value.PurchaseOrderNumber}}</p>
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <label><i class="fa fa-calendar"></i> DATE ORDERED
+                                    </label>
+                                    <p *ngIf="PurchaseOrderDetailsForm.value.PurchaseOrdersId!=null && PurchaseOrderDetailsForm.value.PurchaseOrdersId!='' 
+                                    && PurchaseOrderDetailsForm.value.PurchaseOrdersId!='0'">
+                                        {{PurchaseOrderDetailsForm.value.DateOrdered |date}}</p>
+
+                                    <!-- formControlName="DateOrdered" -->
+                                    <input class="form-control" [ngModelOptions]="{standalone: true}"
+                                        *ngIf="PurchaseOrderDetailsForm.value.PurchaseOrdersId==null || PurchaseOrderDetailsForm.value.PurchaseOrdersId=='0'"
+                                        [disabled]="PurchaseOrderDetailsForm.value.PurchaseOrdersId!=0"
+                                        [ngModel]="CurrentDate | date:'yyyy-MM-dd'" id="DateOrdered"
+                                        [ngClass]="{'is-invalid': PurchaseOrderTabSubmit && f.DateOrdered.errors }"
+                                        placeholder="DATE ORDERED" type="date">
+                                    <div *ngIf="PurchaseOrderTabSubmit && f.DateOrdered.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="f.DateOrdered.errors.required">Please Select
+                                            Delivery Date</div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <label><i class="fa fa-calendar"></i> ESTIMATED DELIVERY DATE
+                                    </label>
+                                    <input class="form-control" formControlName="EstimatedDeliveryDate"
+                                        [ngModel]="EstimatedDeliveryDate | date:'yyyy-MM-dd'" id="EstimatedDeliveryDate"
+                                        [ngClass]="{'is-invalid': PurchaseOrderTabSubmit && f.EstimatedDeliveryDate.errors }"
+                                        placeholder="DISCOUNT PERCENTAGE" type="date">
+                                    <div *ngIf="PurchaseOrderTabSubmit && f.EstimatedDeliveryDate.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="f.EstimatedDeliveryDate.errors.required">Please Select Estimated
+                                            Delivery Date</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label>SUPPLIER</label>
+                                    <select class="form-control" (change)="SupplierChange($event.target.value)"
+                                        formControlName="SupplierId" id="SupplierId"
+                                        [ngClass]="{ 'is-invalid': PurchaseOrderTabSubmit && f.SupplierId.errors }">
+                                        <option value="" selected>--Select--</option>
+                                        <option [value]="supplier.supplierId" *ngFor="let supplier of SupplierList">
+                                            {{supplier.companyName}}({{supplier.supplierCode}})</option>
+                                    </select>
+                                    <div *ngIf="PurchaseOrderTabSubmit && f.SupplierId.errors" class="invalid-feedback">
+                                        <div *ngIf="f.SupplierId.errors.required">Supplier is required</div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-6" *ngIf="SupplierBillingAddress!=null">
+                                    <label>SHIPPING ADDRESS </label>
+                                    <a [routerLink]="['/suppliers/supplier']" class="btn btn-link">Edit</a>
+                                    <p class="h5">
+                                        {{SupplierBillingAddress.address}},
+                                        {{SupplierBillingAddress.state}},
+                                        {{SupplierBillingAddress.city}},
+                                        {{SupplierBillingAddress.postalCode}}
+
+                                    </p>
+                                </div>
+                                <div class="form-group col-sm-6" *ngIf="SupplierShipingAddress!=null">
+                                    <label>BILLING ADDRESS </label>
+                                    <a [routerLink]="['/suppliers/supplier']" class="btn btn-link">Edit</a>
+                                    <p class="h5">
+                                        {{SupplierShipingAddress.address}},
+                                        {{SupplierShipingAddress.state}},
+                                        {{SupplierShipingAddress.city}},
+                                        {{SupplierShipingAddress.postalCode}}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label>RERERENCE NUMBER</label>
+                                    <input class="form-control" formControlName="ReferenceNumber" id="ReferenceNumber"
+                                        placeholder="RERERENCE NUMBER" type="text">
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label>REMARKS</label>
+                                    <input class="form-control" formControlName="Remarks" id="REMARKS"
+                                        placeholder="REMARKS" type="text">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label>PAYMENT TERMS </label>
+                                    <select class="form-control" formControlName="PaymentTermId" id="PaymentTermId">
+                                        <option value="" selected>--Select--</option>
+                                        <option [value]="payment.paymentTermId"
+                                            *ngFor="let payment of PaymentTermsList">{{payment.code}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label>SHIPMENT METHOD </label>
+                                    <select class="form-control" formControlName="ShipmentMethodId"
+                                        id="ShipmentMethodId">
+                                        <option value="" selected>--Select--</option>
+                                        <option [value]="creadit.shipmentMethodId"
+                                            *ngFor="let creadit of ShipmentMethodList">{{creadit.code}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label>CREDIT TERMS </label>
+                                    <select class="form-control" formControlName="CreditTermId" id="CreditTermId">
+                                        <option value="" selected>--Select--</option>
+                                        <option [value]="creadit.creditTermId" *ngFor="let creadit of CreditTermsList">
+                                            {{creadit.code}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label>CURRENCY</label>
+                                    <select class="form-control" formControlName="CurrencyId" id="CurrencyId"
+                                        [ngClass]="{ 'is-invalid': PurchaseOrderTabSubmit && f.CurrencyId.errors }">
+                                        <option value="" selected>--Select--</option>
+                                        <option [value]="currency.currencyId" *ngFor="let currency of CurrencyList">
+                                            {{currency.currencyName}}</option>
+                                    </select>
+                                    <div *ngIf="PurchaseOrderTabSubmit && f.CurrencyId.errors" class="invalid-feedback">
+                                        <div *ngIf="f.CurrencyId.errors.required">Currency is required</div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label>EXCHANGE RATE</label>
+                                    <input class="form-control" formControlName="ExchangeRate" id="ExchangeRate"
+                                        placeholder="EXCHANGE RATE" (keypress)="allownumber($event)" type="number"
+                                        [ngClass]="{ 'is-invalid': PurchaseOrderTabSubmit && f.ExchangeRate.errors }">
+                                    <div *ngIf="PurchaseOrderTabSubmit && f.ExchangeRate.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="f.ExchangeRate.errors.required">Exchange Rate is required</div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group col-sm-3"
+                                    *ngIf="PurchaseOrderDetailsForm.value.PurchaseOrdersId!=null 
+                                && PurchaseOrderDetailsForm.value.PurchaseOrdersId!=0 && OrderItemsForm.value.IsAdditionalChargeApply">
+                                    ADDITIONAL CHARGES
+                                    <i class="fa fa-info-circle text-info"
+                                        tooltip="Specify additional charges 
+                                    (eg: insurance or loading fees) if applicable. Additional cost will be 
+                                    applied to 1 item or a group of items selling price or applied to entire sales order." placement="right"></i>
+
+                                    <button class="btn btn-primary mt-2 btn-block"
+                                        (click)="OpenAdditionlChargeModelandBindProduct(OrderItemsForm.value.IsAdditionalChargeApplyType)">Manage</button>
+                                </div>
+                                <div class="form-group col-sm-3" *ngIf="PurchaseOrderDetailsForm.value.PurchaseOrdersId==null 
+                                || PurchaseOrderDetailsForm.value.PurchaseOrdersId==0">
+                                    ADDITIONAL CHARGES
+                                    <i class="fa fa-info-circle text-info"
+                                        tooltip="Specify additional charges 
+                                    (eg: insurance or loading fees) if applicable. Additional cost will be 
+                                    applied to 1 item or a group of items selling price or applied to entire sales order." placement="right"></i>
+
+                                    <button class="btn btn-primary mt-2 btn-block"
+                                        (click)="OpenAdditionlChargeModel()">Manage</button>
+
+                                </div>
+                            </div>
+
+                        </form>
+                    </tab>
+                    <tab id="SaleOrderItem">
+                        <ng-template tabHeading><i class="fa fa-cubes text-info"></i> Order Items
+                        </ng-template>
+                        <form [formGroup]="OrderItemsForm">
+                            <table class="table" formArrayName="OrderItems">
+                                <tr>
+                                    <th>ITEM</th>
+                                    <th>UNIT</th>
+                                    <th>UNIT PRICE</th>
+                                    <th>QTY</th>
+                                    <th>TYPE & DISCOUNT</th>
+                                    <th>TAX</th>
+                                    <th>TOTAL</th>
+                                    <th>ACTION</th>
+                                </tr>
+                                <tr *ngFor="let item of OrderItems.controls; let pointIndex=index"
+                                    [formGroupName]="pointIndex">
+                                    <input type="hidden" name="" id="OrderItemsId" formControlName="OrderItemsId">
+                                    <input type="hidden" name="" id="IsTaxble" formControlName="IsTaxble">
+                                    <td>
+                                        <div class="clo-sm-2">
+                                            <select class="form-control" formControlName="ProductId"
+                                                (change)="CheckIsTaxble($event.target,pointIndex)"
+                                                [ngClass]="{ 'is-invalid': PurchaseOrdeItemTabSubmit && item.value.ProductId=='' }"
+                                                id="ITEM">
+                                                <option value="" selected>--Select--</option>
+                                                <option [value]="product.productId" [title]="product.taxable"
+                                                    *ngFor="let product of ProductList">
+                                                    {{product.name}}</option>
+                                            </select>
+                                            <div *ngIf="PurchaseOrdeItemTabSubmit && item.value.ProductId==''"
+                                                class="invalid-feedback">
+                                                <div>Product is required
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <label class="label label-success"> Unit [1]</label>
+                                        <input type="hidden" formControlName="Unit" id="UNIT">
+                                        <input type="hidden" formControlName="TaxTotal" id="TaxTotal">
+                                    </td>
+                                    <td>
+                                        <div class="clo-sm-2">
+                                            <input [readonly]="item.value.ProductId==''"
+                                                (keypress)="allownumberwithdot($event)"
+                                                [ngClass]="{ 'is-invalid': PurchaseOrdeItemTabSubmit && item.value.UnitPrice=='' || item.value.UnitPrice==null }"
+                                                (change)="CalculateItemOrderData(item.value.UnitPrice,item.value.QTY,item.value.DiscountType,item.value.Discount,pointIndex,item.value.TaxId,item.value.Total)"
+                                                class="form-control" formControlName="UnitPrice" id="UNITPRICE"
+                                                placeholder="UNIT PRICE" type="number">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="clo-sm-2">
+                                            <input class="form-control" [readonly]="item.value.ProductId==''"
+                                                [ngClass]="{ 'is-invalid': PurchaseOrdeItemTabSubmit && item.value.QTY=='' || item.value.QTY==null }"
+                                                (change)="CalculateItemOrderData(item.value.UnitPrice,item.value.QTY,item.value.DiscountType,item.value.Discount,pointIndex,item.value.TaxId,item.value.Total)"
+                                                (keypress)="allownumber($event)" formControlName="QTY" id="QTY"
+                                                placeholder="QTY" type="number">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <div class="input-group-append">
+                                                <select class="form-control"
+                                                    (change)="CalculateItemOrderData(item.value.UnitPrice,item.value.QTY,item.value.DiscountType,item.value.Discount,pointIndex,item.value.TaxId,item.value.Total)"
+                                                    formControlName="DiscountType" id="DISCOUNT">
+                                                    <option [value]="discount.discountTypeId"
+                                                        *ngFor="let discount of  DiscountTypeList">{{discount.name}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <input *ngIf="item.value.DiscountType==1"
+                                                [readonly]="item.value.ProductId==''"
+                                                (change)="CalculateItemOrderData(item.value.UnitPrice,item.value.QTY,item.value.DiscountType,item.value.Discount,pointIndex,item.value.TaxId,item.value.Total)"
+                                                class="form-control" formControlName="Discount" id="DISCOUNT"
+                                                (keypress)="allownumberwithdot($event)" placeholder="Fixed"
+                                                type="number">
+                                            <input *ngIf="item.value.DiscountType!=1"
+                                                [readonly]="item.value.ProductId==''" class="form-control"
+                                                (change)="CalculateItemOrderData(item.value.UnitPrice,item.value.QTY,item.value.DiscountType,item.value.Discount,pointIndex,item.value.TaxId,item.value.Total)"
+                                                formControlName="Discount" id="DISCOUNT"
+                                                (keypress)="allownumberwithdot($event)" placeholder="Percentage"
+                                                type="number">
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="clo-sm-2" *ngIf="item.value.IsTaxble">
+                                            <select class="form-control"
+                                                (change)="ChangeTaxValue($event.target.value,pointIndex,item.value.Total)"
+                                                formControlName="TaxId" id="TAX">
+                                                <option value="" selected>--Select--</option>
+                                                <option [value]="tax.taxId" *ngFor="let tax of TaxcodeList">{{tax.code}}
+                                                    ({{tax.amount}}%)</option>
+                                            </select>
+                                        </div>
+                                        <!-- <div  *ngIf="!item.value.IsTaxble">
+                                                <label class="text-info">Not Taxble..</label>
+                                        </div> -->
+                                    </td>
+                                    <td class="text-right"><label class="mt-2">{{item.value.Total}}</label>
+                                        <input type="hidden" name="" id="OrderItemsId" formControlName="Total">
+                                    </td>
+                                    <td class="text-center"> <i *ngIf="pointIndex!=0"
+                                            class="fa fa-trash h5 mt-2 pointer text-danger"
+                                            (click)="DeleteOrderItems(pointIndex)"></i></td>
+                                </tr>
+                                <tr>
+
+                                    <td>
+                                        <button class="btn btn-link" (click)="AddOrderItems()">Add New Item</button>
+                                    </td>
+                                    <td colspan="2">
+                                        <label class="mt-2"> Maximum 100 items</label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label class="mt-2"> {{OrderItemsForm.value.TotalQTY}}</label>
+                                    </td>
+                                    <td colspan="3" class="text-right">
+                                        <label class="mt-2">{{OrderItemsForm.value.Total}}</label>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" class="text-right">
+                                        <label class="mt-2"><b class="mt-2">ADDITONAL CHARGE</b></label>
+                                    </td>
+                                    <td colspan="1" class="text-right">
+                                        <label class="mt-2">{{OrderItemsForm.value.AdditionalChargeAmount}}</label>
+                                    </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" class="text-right">
+                                        <label class="mt-2"> <b *ngIf="OrderItemsForm.value.TaxInclude">PLUS
+                                                TAX</b></label>
+                                        <label class="mt-2"><b *ngIf="!OrderItemsForm.value.TaxInclude"
+                                                class="mt-2">INCLUDED TAX </b></label>
+                                    </td>
+                                    <td colspan="1" class="text-right">
+                                        <label class="mt-2"
+                                            *ngIf="OrderItemsForm.value.TaxInclude">{{OrderItemsForm.value.FinalTaxTotal}}</label>
+                                        <label class="mt-2" *ngIf="!OrderItemsForm.value.TaxInclude">0.00</label>
+                                    </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="text-right">
+                                        <label class="mt-2"> <b>INCLUDED TAX </b></label>
+                                    </td>
+                                    <td colspan="1" class="text-center">
+                                        <label class="switch switch-3d mt-2 switch-success">
+                                            <input type="checkbox" class="switch-input"
+                                                (change)="ChangeTaxInclude($event.target.checked,OrderItemsForm.value.FinalTaxTotal,OrderItemsForm.value.FinalTotal)"
+                                                [checked]="OrderItemsForm.value.TaxInclude">
+                                            <!-- (change)="AdditionalChargeChange($event.target.checked,item.additionalChargeId)" -->
+                                            <span class="switch-slider"></span>
+                                        </label>
+                                    </td>
+                                    <td class="text-right h5">
+                                        <label class="mt-2"> <b>TOTAL</b></label>
+                                    </td>
+                                    <td colspan="1" class="text-right h5">
+                                        <label class="mt-2"><b>{{OrderItemsForm.value.FinalTotal}}</b></label>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                            <input type="hidden" name="" id="PurchaseOrderDetailsId"
+                                formControlName="PurchaseOrderDetailsId">
+                            <input type="hidden" name="TotalQTY" id="TotalQTY" formControlName="TotalQTY">
+                            <input type="hidden" name="FinalTotal" id="FinalTotal" formControlName="FinalTotal">
+                            <input type="hidden" name="TaxInclude" id="TaxInclude" formControlName="TaxInclude">
+                            <input type="hidden" name="FinalTaxTotal" id="FinalTaxTotal"
+                                formControlName="FinalTaxTotal">
+                            <input type="hidden" name="AdditionalChargeAmount" id="AdditionalChargeAmount"
+                                formControlName="AdditionalChargeAmount">
+                            <input type="hidden" name="" id="IsAdditionalChargeApply"
+                                formControlName="IsAdditionalChargeApply">
+                            <input type="hidden" name="" id="IsAdditionalChargeApplyType"
+                                formControlName="IsAdditionalChargeApplyType">
+
+                        </form>
+                    </tab>
+                </tabset>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" [disabled]="saving" (click)="Close()">Close</button>
+                <button type="button" class="btn btn-primary" [disabled]="saving"
+                    (click)="SavePurchaseOrder(PurchaseOrderDetailsForm,OrderItemsForm)">{{PurchasebtnTitle}}</button>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div bsModal #largeModal1="bs-modal" class="modal fade" id="AdditionalChargeModel" tabindex="-1"
+    [config]="{ backdrop: 'static' }" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Additional Charges {{AdditionalChargeActive}}</h4>
+                <button type="button" class="close" (click)="CloseAdditionlChargeModel()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p> <i class="fa fa-info-circle text-warning"></i> You can add additional charges after shipping, but
+                    cannot edit/add after creating invoices&hellip;</p>
+                <div
+                    *ngIf="PurchaseOrderDetailsForm.value.PurchaseOrdersId==null  || PurchaseOrderDetailsForm.value.PurchaseOrdersId==0">
+                    <tabset>
+                        <tab id="ForAll">
+                            <ng-template tabHeading><a href="javascript:void"
+                                    (click)="ResetAdditionalChargeForProduct()">
+                                    <i class="fa fa-product-hunt text-info"></i> APPLY FOR ALL</a>
+                            </ng-template>
+                            <form [formGroup]="AdditionalChargeFormForAll">
+                                <table class="table " formArrayName="AdditionalChargeForAll">
+                                    <tr>
+                                        <th>ADDITIONAL CHARGES</th>
+                                        <th>AMOUNT</th>
+                                        <th>TAXES</th>
+                                        <th class="text-center">ACTION</th>
+                                    </tr>
+                                    <tr *ngFor="let item of AdditionalChargeForAll.controls; let pointIndex=index"
+                                        [formGroupName]="pointIndex">
+                                        <input type="hidden" name="" id="AdditionalForAllId"
+                                            formControlName="AdditionalForAllId">
+                                        <input type="hidden" name="" id="OrderItemsId" formControlName="OrderItemsId">
+                                        <td>
+                                            <div class="clo-sm-8">
+                                                <select class="form-control" id="additionalChargeId"
+                                                    formControlName="AdditionalChargeId"
+                                                    (change)="ChangeAddAdditionalChargeForAll($event.target,pointIndex)"
+                                                    [ngClass]="{ 'is-invalid': AdditionalChargeSubmit && item.value.AdditionalChargeId==''}">
+                                                    <option value="" selected>--Select--</option>
+                                                    <option [value]="charge.additionalChargeId"
+                                                        *ngFor="let charge of AdditionalChargeList"
+                                                        [attr.title]="charge.unitPrice">{{charge.name}}</option>
+                                                </select>
+                                                <div *ngIf="AdditionalChargeSubmit && item.value.AdditionalChargeId==''"
+                                                    class="invalid-feedback">
+                                                    <div>Additional Charge is required
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="clo-sm-2">
+                                                <input class="form-control" id="AMOUNT" formControlName="Amount"
+                                                    placeholder="AMOUNT" type="number" (keypress)="allownumber()"
+                                                    readonly
+                                                    [ngClass]="{ 'is-invalid': AdditionalChargeSubmit && item.value.Amount=='' || item.value.Amount==null}">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="clo-sm-2">
+                                                <select class="form-control" id="Taxcode" formControlName="TaxId">
+                                                    <option value="" selected>--Select--</option>
+                                                    <option [value]="tax.taxId" *ngFor="let tax of TaxcodeList">
+                                                        {{tax.code}}
+                                                        ({{tax.amount}}%)</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="fa fa-trash h5 mt-2 pointer text-danger"
+                                                (click)="DeleteAdditionalChargeForAll(pointIndex)"></i>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                            <button type="button" class="btn btn-link"
+                                                (click)="AddAdditionalChargeForAll()">Add More Additional
+                                                Charge</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </tab>
+                        <tab id="ForProduct">
+                            <ng-template tabHeading>
+                                <a id="ForProduct" href="javascript:void" (click)="ResetAdditionalChargeForAll()">
+                                    <i class="fa fa-product-hunt text-info"></i>APPLY TO PRODUCT</a>
+                            </ng-template>
+                            <form [formGroup]="AdditionalChargeFormForProduct">
+                                <table class="table" *ngIf="IsProductSalesOrderItemAdded"
+                                    formArrayName="AdditionalChargeForProduct">
+                                    <tr>
+                                        <th>PRODUCT(S)</th>
+                                        <th>UOM</th>
+                                        <th>ADDITIONAL CHARGES</th>
+                                        <th>AMOUNT</th>
+                                        <th>TAX</th>
+                                    </tr>
+                                    <tr [hidden]="IsProductLoad"
+                                        *ngFor="let item of AdditionalChargeForProduct.controls; let pointIndex=index"
+                                        [formGroupName]="pointIndex">
+                                        <input type="hidden" name="" id="OrderItemsId" formControlName="OrderItemsId">
+                                        <input type="hidden" name="" id="IsTaxble" formControlName="IsTaxble">
+                                        <input type="hidden" name="" id="AdditionalForProductId"
+                                            formControlName="AdditionalForProductId">
+                                        <td>
+                                            <div class="clo-sm-8">
+                                                <select class="form-control" formControlName="ProductId" id="ProductId"
+                                                    disabled>
+                                                    <option value="" selected>--Select--</option>
+                                                    <option [value]="product.productId"
+                                                        *ngFor="let product of ProductList">
+                                                        {{product.name}}</option>
+                                                </select>
+                                                <div *ngIf="AdditionalChargeSubmit && item.value.AdditionalChargeId==''"
+                                                    class="invalid-feedback">
+                                                    <div>Additional Charge is required
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="clo-sm-2">
+                                                Unit[1]
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="clo-sm-2">
+                                                <select class="form-control" formControlName="AdditionalChargeId"
+                                                    (change)="ChangeAddAdditionalChargeForProduct($event.target,pointIndex)"
+                                                    [ngClass]="{ 'is-invalid': AdditionalChargeSubmit && item.value.AdditionalChargeId==''}"
+                                                    id="AdditionalCharge">
+                                                    <option value="" selected>--Select--</option>
+                                                    <option [value]="charge.additionalChargeId"
+                                                        *ngFor="let charge of AdditionalChargeList"
+                                                        [attr.title]="charge.unitPrice">{{charge.name}}</option>
+                                                </select>
+
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="clo-sm-2">
+                                                <input class="form-control" readonly formControlName="Amount"
+                                                    id="AMOUNT"
+                                                    [ngClass]="{ 'is-invalid': AdditionalChargeSubmit && item.value.Amount=='' || item.value.Amount==null}"
+                                                    placeholder="AMOUNT" type="number">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="clo-sm-3" *ngIf="item.value.IsTaxble">
+                                                <select class="form-control" formControlName="TaxId" id="TaxId">
+                                                    <option value="" selected>--Select--</option>
+                                                    <option [value]="tax.taxId" *ngFor="let tax of TaxcodeList">
+                                                        {{tax.code}}
+                                                        ({{tax.amount}}%)</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" class="text-center" *ngIf="IsProductLoad">
+                                            <div class="spinner-border text-success" role="status">
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <div [hidden]="IsProductSalesOrderItemAdded" class="alert alert-warning">No Product
+                                    Seletced
+                                    in Order Item Please Select Product Items..</div>
+                            </form>
+                        </tab>
+                    </tabset>
+                </div>
+                <div
+                    *ngIf="PurchaseOrderDetailsForm.value.PurchaseOrdersId!=null  && PurchaseOrderDetailsForm.value.PurchaseOrdersId!=0">
+                    <div *ngIf="OrderItemsForm.value.IsAdditionalChargeApplyType=='All'">
+                        <a href="javascript:void">
+                            <i class="fa fa-product-hunt text-info"></i> APPLY FOR ALL</a>
+                        <form [formGroup]="AdditionalChargeFormForAll">
+                            <table class="table " formArrayName="AdditionalChargeForAll">
+                                <tr>
+                                    <th>ADDITIONAL CHARGES</th>
+                                    <th>AMOUNT</th>
+                                    <th>TAXES</th>
+                                    <th class="text-center">ACTION</th>
+                                </tr>
+                                <tr *ngFor="let item of AdditionalChargeForAll.controls; let pointIndex=index"
+                                    [formGroupName]="pointIndex">
+                                    <input type="hidden" name="" id="AdditionalForAllId"
+                                        formControlName="AdditionalForAllId">
+                                    <input type="hidden" name="" id="OrderItemsId" formControlName="OrderItemsId">
+                                    <td>
+                                        <div class="clo-sm-8">
+                                            <select class="form-control" id="additionalChargeId"
+                                                formControlName="AdditionalChargeId"
+                                                (change)="ChangeAddAdditionalChargeForAll($event.target,pointIndex)"
+                                                [ngClass]="{ 'is-invalid': AdditionalChargeSubmit && item.value.AdditionalChargeId==''}">
+                                                <option value="" selected>--Select--</option>
+                                                <option [value]="charge.additionalChargeId"
+                                                    *ngFor="let charge of AdditionalChargeList"
+                                                    [attr.title]="charge.unitPrice">{{charge.name}}</option>
+                                            </select>
+                                            <div *ngIf="AdditionalChargeSubmit && item.value.AdditionalChargeId==''"
+                                                class="invalid-feedback">
+                                                <div>Additional Charge is required
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="clo-sm-2">
+                                            <input class="form-control" id="AMOUNT" formControlName="Amount"
+                                                placeholder="AMOUNT" type="number" (keypress)="allownumber()" readonly
+                                                [ngClass]="{ 'is-invalid': AdditionalChargeSubmit && item.value.Amount=='' || item.value.Amount==null}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="clo-sm-2">
+                                            <select class="form-control" id="Taxcode" formControlName="TaxId">
+                                                <option value="" selected>--Select--</option>
+                                                <option [value]="tax.taxId" *ngFor="let tax of TaxcodeList">
+                                                    {{tax.code}}
+                                                    ({{tax.amount}}%)</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-trash h5 mt-2 pointer text-danger"
+                                            (click)="DeleteAdditionalChargeForAll(pointIndex)"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <button type="button" class="btn btn-link"
+                                            (click)="AddAdditionalChargeForAll()">Add
+                                            More Additional
+                                            Charge</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                    <div *ngIf="OrderItemsForm.value.IsAdditionalChargeApplyType=='Product'">
+                        <a id="ForProduct" href="javascript:void">
+                            <i class="fa fa-product-hunt text-info"></i>APPLY TO PRODUCT</a>
+                        <form [formGroup]="AdditionalChargeFormForProduct">
+                            <table class="table" *ngIf="IsProductSalesOrderItemAdded"
+                                formArrayName="AdditionalChargeForProduct">
+                                <tr>
+                                    <th>PRODUCT(S)</th>
+                                    <th>UOM</th>
+                                    <th>ADDITIONAL CHARGES</th>
+                                    <th>AMOUNT</th>
+                                    <th>TAX</th>
+                                </tr>
+                                <tr [hidden]="IsProductLoad"
+                                    *ngFor="let item of AdditionalChargeForProduct.controls; let pointIndex=index"
+                                    [formGroupName]="pointIndex">
+                                    <input type="hidden" name="" id="OrderItemsId" formControlName="OrderItemsId">
+                                    <input type="hidden" name="" id="IsTaxble" formControlName="IsTaxble">
+                                    <input type="hidden" name="" id="AdditionalForProductId"
+                                        formControlName="AdditionalForProductId">
+                                    <td>
+                                        <div class="clo-sm-8">
+                                            <select class="form-control" formControlName="ProductId" id="ProductId"
+                                                disabled>
+                                                <option value="" selected>--Select--</option>
+                                                <option [value]="product.productId" *ngFor="let product of ProductList">
+                                                    {{product.name}}</option>
+                                            </select>
+                                            <div *ngIf="AdditionalChargeSubmit && item.value.AdditionalChargeId==''"
+                                                class="invalid-feedback">
+                                                <div>Additional Charge is required
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="clo-sm-2">
+                                            Unit[1]
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="clo-sm-2">
+                                            <select class="form-control" formControlName="AdditionalChargeId"
+                                                (change)="ChangeAddAdditionalChargeForProduct($event.target,pointIndex)"
+                                                [ngClass]="{ 'is-invalid': AdditionalChargeSubmit && item.value.AdditionalChargeId==''}"
+                                                id="AdditionalCharge">
+                                                <option value="" selected>--Select--</option>
+                                                <option [value]="charge.additionalChargeId"
+                                                    *ngFor="let charge of AdditionalChargeList"
+                                                    [attr.title]="charge.unitPrice">{{charge.name}}</option>
+                                            </select>
+
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="clo-sm-2">
+                                            <input class="form-control" readonly formControlName="Amount" id="AMOUNT"
+                                                [ngClass]="{ 'is-invalid': AdditionalChargeSubmit && item.value.Amount=='' || item.value.Amount==null}"
+                                                placeholder="AMOUNT" type="number">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="clo-sm-3" *ngIf="item.value.IsTaxble">
+                                            <select class="form-control" formControlName="TaxId" id="TaxId">
+                                                <option value="" selected>--Select--</option>
+                                                <option [value]="tax.taxId" *ngFor="let tax of TaxcodeList">
+                                                    {{tax.code}}
+                                                    ({{tax.amount}}%)</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="5" class="text-center" *ngIf="IsProductLoad">
+                                        <div class="spinner-border text-success" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div [hidden]="IsProductSalesOrderItemAdded" class="alert alert-warning">No Product
+                                Seletced
+                                in Order Item Please Select Product Items..</div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" [disabled]="applysaving"
+                    (click)="CloseAdditionlChargeModel()">Close</button>
+                <button type="button" class="btn btn-primary" [disabled]="applysaving"
+                    (click)="ApplyAdditionalCharge(AdditionalChargeForAll,AdditionalChargeForProduct)">Apply</button>
+            </div>
+        </div>
+    </div>
+</div>

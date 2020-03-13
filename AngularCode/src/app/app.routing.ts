@@ -10,7 +10,6 @@ import { LoginComponent } from './views/login/login.component';
 import { RegisterComponent } from './views/register/register.component';
 import { TenantsComponent } from './views/Tenants/tenants/tenants.component';
 import { AuthGuardService} from './shared/guards/auth-guard.service';
-  import { from } from 'rxjs';
 export const routes: Routes = [
   {
     path: '',
@@ -90,7 +89,13 @@ export const routes: Routes = [
         path:'masters',
         loadChildren:()=>import('./views/Masters/masters.module').then(m=>m.MastersModule),
         canActivate: [AuthGuardService],
-      }
+      },
+      
+      {
+        path:'purchases',
+        loadChildren:()=>import('./views/Purchases/purchases.module').then(m=>m.PurchasesModule),
+        canActivate: [AuthGuardService],
+      },
 
       
     ]

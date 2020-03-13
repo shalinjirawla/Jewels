@@ -39,7 +39,7 @@ namespace Inventory.Application.Services.SalesOrderServices
                     {
                         SalesOrders salesOrders = new SalesOrders()
                         {
-                            SalesOrderNumber = SalesOrderNumberRandomString(),
+                            SalesOrderNumber = "SO-"+SalesOrderNumberRandomString(),
                             DateOrdered = DateTime.Now,
                             EstimatedDeliveryDate = salesOrdersVM.EstimatedDeliveryDate.HasValue ? salesOrdersVM.EstimatedDeliveryDate : null,
                             CustomerId = salesOrdersVM.CustomerId,
@@ -134,7 +134,7 @@ namespace Inventory.Application.Services.SalesOrderServices
                     else
                     {
                         var salesOrders = _DbContext.SalesOrders.FirstOrDefault(x => x.SalesOrdersId == salesOrdersVM.SalesOrdersId);
-                        if(salesOrders!=null)
+                        if (salesOrders != null)
                         {
                             salesOrders.EstimatedDeliveryDate = salesOrdersVM.EstimatedDeliveryDate.HasValue ? salesOrdersVM.EstimatedDeliveryDate : null;
                             salesOrders.CustomerId = salesOrdersVM.CustomerId;
@@ -147,11 +147,14 @@ namespace Inventory.Application.Services.SalesOrderServices
                             salesOrders.CurrencyId = salesOrdersVM.CurrencyId.HasValue ? salesOrdersVM.CurrencyId : null;
                             salesOrders.LastModificationTime = DateTime.Now;
                             salesOrders.LastModifierUserId = UserId;
+
+
+
                             _DbContext.SalesOrders.Update(salesOrders);
                             _DbContext.SaveChanges();
                         }
                         var salesOrderDetails = _DbContext.SalesOrderDetails.FirstOrDefault(x => x.SalesOrdersId == salesOrdersVM.SalesOrdersId);
-                        if(salesOrderDetails!=null)
+                        if (salesOrderDetails != null)
                         {
                             salesOrderDetails.TotalQTY = salesOrderDetailsVM.TotalQTY;
                             salesOrderDetails.Total = salesOrderDetailsVM.Total;
@@ -167,7 +170,7 @@ namespace Inventory.Application.Services.SalesOrderServices
                         if (SalesOrderItemsList != null && SalesOrderItemsList.Count > 0)
                         {
                             var DeleteSalesOrderItems = _DbContext.SalesOrderItems.Where(x => x.SalesOrdersId == salesOrdersVM.SalesOrdersId).ToList();
-                            if(DeleteSalesOrderItems!=null && DeleteSalesOrderItems.Count()>0)
+                            if (DeleteSalesOrderItems != null && DeleteSalesOrderItems.Count() > 0)
                             {
                                 _DbContext.SalesOrderItems.RemoveRange(DeleteSalesOrderItems);
                                 _DbContext.SaveChanges();
@@ -196,6 +199,51 @@ namespace Inventory.Application.Services.SalesOrderServices
                                     };
                                     _DbContext.SalesOrderItems.Add(salesOrderItems);
                                     _DbContext.SaveChanges();
+                                }
+                            }
+                        }
+                        if (salesOrderDetailsVM.IsAdditionalChargeApply.HasValue && salesOrderDetailsVM.IsAdditionalChargeApply.Value)
+                        {
+                            if (salesOrderDetailsVM.IsAdditionalChargeApplyType == "All")
+                            {
+                                var deleteAdditionalforAll = _DbContext.SalesOrderAdditionalChargeForAll.Where(x => x.SalesOrdersId == salesOrdersVM.SalesOrdersId).ToList();
+                                if (deleteAdditionalforAll != null && deleteAdditionalforAll.Count() > 0)
+                                {
+                                    _DbContext.SalesOrderAdditionalChargeForAll.RemoveRange(deleteAdditionalforAll);
+                                    _DbContext.SaveChanges();
+                                }
+                                var checkIsExistAll = _DbContext.SalesOrderAdditionalChargeForAll.Count(x => x.SalesOrdersId == salesOrdersVM.SalesOrdersId);
+                                if (checkIsExistAll == 0)
+                                {
+                                    foreach (var item in salesOrderDetailsVM.AdditionalChargeForAll)
+                                    {
+                                        if (item != null)
+                                        {
+                                            item.SalesOrdersId = input.SalesOrdersVM.SalesOrdersId;
+                                            await SaveAdditonalChargeForAll(item);
+                                        }
+                                    }
+                                }
+                            }
+                            else if (salesOrderDetailsVM.IsAdditionalChargeApplyType == "Product")
+                            {
+                                var deleteAdditionalforProduct = _DbContext.SalesOrderAdditionalChargeForProduct.Where(x => x.SalesOrdersId == salesOrdersVM.SalesOrdersId).ToList();
+                                if (deleteAdditionalforProduct != null && deleteAdditionalforProduct.Count() > 0)
+                                {
+                                    _DbContext.SalesOrderAdditionalChargeForProduct.RemoveRange(deleteAdditionalforProduct);
+                                    _DbContext.SaveChanges();
+                                }
+                                var checkIsExistProduct = _DbContext.SalesOrderAdditionalChargeForProduct.Count(x => x.SalesOrdersId == salesOrdersVM.SalesOrdersId);
+                                if (checkIsExistProduct == 0)
+                                {
+                                    foreach (var item in salesOrderDetailsVM.AdditionalChargeForProduct)
+                                    {
+                                        if (item != null)
+                                        {
+                                            item.SalesOrdersId = input.SalesOrdersVM.SalesOrdersId;
+                                            await SaveAdditonalChargeForProduct(item);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -243,7 +291,7 @@ namespace Inventory.Application.Services.SalesOrderServices
                         ProductId = input.ProductId.HasValue ? input.ProductId : null,
                         AdditionalChargeId = input.AdditionalChargeId.HasValue ? input.AdditionalChargeId : null,
                         TaxId = input.TaxId.HasValue ? input.TaxId : null,
-                        IsTaxble=input.IsTaxble,
+                        IsTaxble = input.IsTaxble,
                     };
                     if (chargeForProduct.TaxId == 0)
                         chargeForProduct.TaxId = null;
@@ -420,10 +468,10 @@ namespace Inventory.Application.Services.SalesOrderServices
                                          IsAdditionalChargeApplyType = salesOrderDetails.IsAdditionalChargeApplyType,
                                      }).Where(x => x.SalesOrdersId == SalesOrderId && x.IsActive == true).ToList();
 
-                        if(Sales!=null)
+                        if (Sales != null)
                         {
-                          var SalesOrder=  Sales.FirstOrDefault(x => x.SalesOrdersId == SalesOrderId);
-                            if(SalesOrder!=null)
+                            var SalesOrder = Sales.FirstOrDefault(x => x.SalesOrdersId == SalesOrderId);
+                            if (SalesOrder != null)
                             {
                                 SalesOrdersVM.SalesOrdersId = SalesOrder.SalesOrdersId;
                                 SalesOrdersVM.SalesOrderNumber = SalesOrder.SalesOrderNumber;
@@ -456,22 +504,23 @@ namespace Inventory.Application.Services.SalesOrderServices
                                     {
                                         List<SalesOrderAdditionalChargeForAllVM> AdditionalChargeForAll = new List<SalesOrderAdditionalChargeForAllVM>();
                                         var AdditionalChargeForAllList = _DbContext.SalesOrderAdditionalChargeForAll.Where(x => x.SalesOrdersId == SalesOrder.SalesOrdersId).ToList();
-                                        if(AdditionalChargeForAllList!=null && AdditionalChargeForAllList.Count()>0)
+                                        if (AdditionalChargeForAllList != null && AdditionalChargeForAllList.Count() > 0)
                                         {
                                             foreach (var item in AdditionalChargeForAllList)
                                             {
                                                 SalesOrderAdditionalChargeForAllVM all = new SalesOrderAdditionalChargeForAllVM()
                                                 {
-                                                    SalesOrdersId=item.SalesOrdersId.HasValue? item.SalesOrdersId.Value:0,
-                                                    AdditionalChargeId=item.AdditionalChargeId,
-                                                    AdditionalForAllId=item.AdditionalChargeForAllId,
-                                                    TaxId=item.TaxId,
+                                                    SalesOrdersId = item.SalesOrdersId.HasValue ? item.SalesOrdersId.Value : 0,
+                                                    AdditionalChargeId = item.AdditionalChargeId,
+                                                    AdditionalForAllId = item.AdditionalChargeForAllId,
+                                                    TaxId = item.TaxId,
                                                 };
                                                 AdditionalChargeForAll.Add(all);
                                             }
                                             SalesOrderDetailsVM.AdditionalChargeForAll = AdditionalChargeForAll;
                                         }
-                                    }else if(SalesOrder.IsAdditionalChargeApplyType == "Product")
+                                    }
+                                    else if (SalesOrder.IsAdditionalChargeApplyType == "Product")
                                     {
                                         List<SalesOrderAdditionalChargeForProductVM> SalesOrderAdditionalChargeForProductVM = new List<SalesOrderAdditionalChargeForProductVM>();
                                         var AdditionalChargeForProductList = _DbContext.SalesOrderAdditionalChargeForProduct.Where(x => x.SalesOrdersId == SalesOrder.SalesOrdersId).ToList();
@@ -481,12 +530,12 @@ namespace Inventory.Application.Services.SalesOrderServices
                                             {
                                                 SalesOrderAdditionalChargeForProductVM product = new SalesOrderAdditionalChargeForProductVM()
                                                 {
-                                                    AdditionalChargeForProductId=item.AdditionalChargeForProductId,
-                                                    AdditionalChargeId=item.AdditionalChargeId,
-                                                    IsTaxble=item.IsTaxble,
-                                                    ProductId=item.ProductId,
-                                                    SalesOrdersId=item.SalesOrdersId,
-                                                    TaxId=item.TaxId,
+                                                    AdditionalChargeForProductId = item.AdditionalChargeForProductId,
+                                                    AdditionalChargeId = item.AdditionalChargeId,
+                                                    IsTaxble = item.IsTaxble,
+                                                    ProductId = item.ProductId,
+                                                    SalesOrdersId = item.SalesOrdersId,
+                                                    TaxId = item.TaxId,
                                                 };
                                                 SalesOrderAdditionalChargeForProductVM.Add(product);
                                             }
@@ -496,24 +545,24 @@ namespace Inventory.Application.Services.SalesOrderServices
                                 }
 
                                 var SalesOrderProductlist = _DbContext.SalesOrderItems.Where(x => x.SalesOrdersId == SalesOrder.SalesOrdersId).ToList();
-                                if(SalesOrderProductlist!=null && SalesOrderProductlist.Count()>0)
+                                if (SalesOrderProductlist != null && SalesOrderProductlist.Count() > 0)
                                 {
                                     foreach (var item in SalesOrderProductlist)
                                     {
                                         SalesOrderItemsVM salesOrderItemsVM = new SalesOrderItemsVM()
                                         {
-                                            OrderItemsId =item.OrderItemsId,
-                                            SalesOrdersId =item.SalesOrdersId,
-                                            ProductId=item.ProductId,
-                                            Unit=item.Unit,
-                                            UnitPrice=item.UnitPrice,
-                                            QTY=item.QTY,
-                                            DiscountType=item.DiscountType,
-                                            Discount=item.Discount,
-                                            IsTaxble=item.IsTaxble,
-                                            TaxId=item.TaxId,
-                                            TaxTotal=item.TaxTotal,
-                                            Total=item.Total,
+                                            OrderItemsId = item.OrderItemsId,
+                                            SalesOrdersId = item.SalesOrdersId,
+                                            ProductId = item.ProductId,
+                                            Unit = item.Unit,
+                                            UnitPrice = item.UnitPrice,
+                                            QTY = item.QTY,
+                                            DiscountType = item.DiscountType,
+                                            Discount = item.Discount,
+                                            IsTaxble = item.IsTaxble,
+                                            TaxId = item.TaxId,
+                                            TaxTotal = item.TaxTotal,
+                                            Total = item.Total,
                                         };
                                         SalesOrderItemsList.Add(salesOrderItemsVM);
                                     }

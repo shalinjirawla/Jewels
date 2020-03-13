@@ -7,6 +7,7 @@ namespace Inventory.Application.ViewModel.ProductsVm
   public  class ProductVariantMergeVM
     {
        public ProductVM ProductData { get; set; }
+       public ProductDetailVM ProductDetailData { get; set; }
        public ProductVariantVM ProductVarinatData { get; set; }
     }
 }

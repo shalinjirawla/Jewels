@@ -53,4 +53,10 @@ export class SupplierServicesService {
       return this.Responce = responce;
     });
   }
+  public GetSuppliersAddress(supplierId:number): Observable<any> {
+    let url = this.BaseURL + `GetSupplierAddress?Id=${supplierId}`;
+    return this.HttpClient.get(url, httpOption).pipe((responce: any) => {
+      return this.Responce = responce;
+    });
+  }
 }

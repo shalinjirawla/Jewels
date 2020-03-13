@@ -4,6 +4,7 @@ using Inventory.Core.Models.Commons;
 using Inventory.Core.Models.Currency;
 using Inventory.Core.Models.Customer;
 using Inventory.Core.Models.Products;
+using Inventory.Core.Models.PurchaseOrder;
 using Inventory.Core.Models.SalesOrder;
 using Inventory.Core.Models.Supplier;
 using Inventory.Core.Models.Tenants;
@@ -54,6 +55,7 @@ namespace Inventory.EntityFrameworkCore.DbContext
         public DbSet<RawMaterails> RawMaterails { get; set; }
         public DbSet<UOM> UOMs { get; set; }
         public DbSet<Product> Product { get; set; }
+        public DbSet<ProductDetail> ProductDetail { get; set; }
         public DbSet<ProductVariant> ProductVariant { get; set; }
         public DbSet<ProductService> ProductService { get; set; }
         public DbSet<SalesOrderType> SalesOrderType { get; set; }
@@ -64,5 +66,13 @@ namespace Inventory.EntityFrameworkCore.DbContext
         public DbSet<SalesOrderDetails> SalesOrderDetails { get; set; }
         public DbSet<SalesOrderAdditionalChargeForProduct> SalesOrderAdditionalChargeForProduct { get; set; }
         public DbSet<SalesOrderAdditionalChargeForAll> SalesOrderAdditionalChargeForAll { get; set; }
+
+        public DbSet<PurchaseOrders> PurchaseOrders { get; set; }
+        public DbSet<PurchaseOrderItems> PurchaseOrderItems { get; set; }
+        public DbSet<PurchaseOrderDetails> PurchaseOrderDetails { get; set; }
+        public DbSet<PurchaseOrderAdditionalChargeForProduct> PurchaseOrderAdditionalChargeForProduct { get; set; }
+        public DbSet<PurchaseOrderAdditionalChargeForAll> PurchaseOrderAdditionalChargeForAll { get; set; }
+        public DbSet<ReceiveNotes> ReceiveNotes { get; set; }
+        public DbSet<ReceiveNotesItems> ReceiveNotesItems { get; set; }
     }
 }

@@ -42,7 +42,6 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TenantsComponent } from './views/Tenants/tenants/tenants.component';
-import { RawMaterailsComponent } from './views/Raw Materails/raw-materails/raw-materails.component';
 @NgModule({
   imports: [
     BrowserModule,
@@ -60,7 +59,8 @@ import { RawMaterailsComponent } from './views/Raw Materails/raw-materails/raw-m
     HttpClientModule,
     DataTablesModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    
   ],
   declarations: [
     AppComponent,
@@ -70,7 +70,7 @@ import { RawMaterailsComponent } from './views/Raw Materails/raw-materails/raw-m
     LoginComponent,
     RegisterComponent,
     TenantsComponent,
-    RawMaterailsComponent,
+    
   ],
   exports:[HttpClientModule],
   providers: [{

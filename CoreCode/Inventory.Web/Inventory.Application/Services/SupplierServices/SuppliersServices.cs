@@ -39,11 +39,11 @@ namespace Inventory.Application.Services.SupplierServices
                             supplier.SupplierCode = Model.SupplierCode;
                             supplier.Website = Model.Website;
                             supplier.Remarks = Model.Remarks;
-                            supplier.DefaultCurrency =Model.DefaultCurrency!=0 ? Model.DefaultCurrency :null;
-                            supplier.DefaultPaymentTerms = Model.DefaultPaymentTerms!=0 ? Model.DefaultPaymentTerms : null;
-                            supplier.DefaultTaxCode = Model.DefaultTaxCode!=0?Model.DefaultTaxCode:null;
-                            supplier.Shipmenmethod = Model.Shipmentmethod!=0?Model.Shipmentmethod:null;
-                            supplier.Shipmenterms = Model.Shipmentterms!=0 ? Model.Shipmentterms:null;
+                            supplier.DefaultCurrency = Model.DefaultCurrency != 0 ? Model.DefaultCurrency : null;
+                            supplier.DefaultPaymentTerms = Model.DefaultPaymentTerms != 0 ? Model.DefaultPaymentTerms : null;
+                            supplier.DefaultTaxCode = Model.DefaultTaxCode != 0 ? Model.DefaultTaxCode : null;
+                            supplier.Shipmenmethod = Model.Shipmentmethod != 0 ? Model.Shipmentmethod : null;
+                            supplier.Shipmenterms = Model.Shipmentterms != 0 ? Model.Shipmentterms : null;
                             supplier.CreatorUserId = UserId;
                             supplier.CreationTime = DateTime.Now;
                             supplier.LastModifierUserId = UserId;
@@ -112,14 +112,24 @@ namespace Inventory.Application.Services.SupplierServices
                             {
                                 alreadySuppliers.CompanyName = Model.CompanyName;
                                 alreadySuppliers.SupplierId = Model.SupplierId;
-
+                                alreadySuppliers.SupplierCode = Model.SupplierCode;
                                 alreadySuppliers.Website = Model.Website;
                                 alreadySuppliers.Remarks = Model.Remarks;
-                                alreadySuppliers.DefaultCurrency = Model.DefaultCurrency;
-                                alreadySuppliers.DefaultPaymentTerms = Model.DefaultPaymentTerms;
-                                alreadySuppliers.DefaultTaxCode = Model.DefaultTaxCode;
-                                alreadySuppliers.Shipmenmethod = Model.Shipmentmethod;
-                                alreadySuppliers.Shipmenterms = Model.Shipmentterms;
+                                alreadySuppliers.DefaultCurrency = Model.DefaultCurrency.HasValue ? Model.DefaultCurrency : null;
+                                if (alreadySuppliers.DefaultCurrency == 0)
+                                    alreadySuppliers.DefaultCurrency = null;
+                                alreadySuppliers.DefaultPaymentTerms = Model.DefaultPaymentTerms.HasValue ? Model.DefaultPaymentTerms : null;
+                                if (alreadySuppliers.DefaultPaymentTerms == 0)
+                                    alreadySuppliers.DefaultPaymentTerms = null;
+                                alreadySuppliers.DefaultTaxCode = Model.DefaultTaxCode.HasValue ? Model.DefaultTaxCode : null;
+                                if (alreadySuppliers.DefaultTaxCode == 0)
+                                    alreadySuppliers.DefaultTaxCode = null;
+                                alreadySuppliers.Shipmenmethod = Model.Shipmentmethod.HasValue ? Model.Shipmentmethod : null;
+                                if (alreadySuppliers.Shipmenmethod == 0)
+                                    alreadySuppliers.Shipmenmethod = null;
+                                alreadySuppliers.Shipmenterms = Model.Shipmentterms.HasValue ? Model.Shipmentterms : null;
+                                if (alreadySuppliers.Shipmenterms == 0)
+                                    alreadySuppliers.Shipmenterms = null;
                                 alreadySuppliers.LastModifierUserId = UserId;
                                 alreadySuppliers.LastModificationTime = DateTime.Now;
                                 alreadySuppliers.IsActive = true;
@@ -240,8 +250,8 @@ namespace Inventory.Application.Services.SupplierServices
                             list.Add(dto);
                         }
                     }
-                }); 
-                
+                });
+
 
             }
             catch (Exception e)
@@ -249,6 +259,61 @@ namespace Inventory.Application.Services.SupplierServices
                 throw e;
             }
             return list;
+        }
+
+        public SupplierAddress GetSupplierAddress(long Id)
+        {
+            SupplierAddress result = new SupplierAddress();
+            try
+            {
+                var supplieraddress = _DbContext.Addersses.Where(x => x.SupplierId == Id).ToList();
+                if (supplieraddress != null && supplieraddress.Count() > 0)
+                {
+                    List<SupplierAddress> list = new List<SupplierAddress>();
+                    foreach (var item in supplieraddress)
+                    {
+                        if (item.AddressType == "1")
+                        {
+                            SupplierAddressVm biilindAddress = new SupplierAddressVm()
+                            {
+                                Address = item.Address,
+                                addressId = item.AddressId.ToString(),
+                                AddressType = item.AddressType,
+                                City = item.City,
+                                CountryId = item.CountryId.ToString(),
+                                DefaultAddress = item.DefaultAddress,
+                                PostalCode = item.PostalCode,
+                                State = item.State,
+                            };
+                            result.BillingAddress = biilindAddress;
+                        }
+                        else
+                        {
+                            SupplierAddressVm shippingAddress = new SupplierAddressVm()
+                            {
+                                Address = item.Address,
+                                addressId = item.AddressId.ToString(),
+                                AddressType = item.AddressType,
+                                City = item.City,
+                                CountryId = item.CountryId.ToString(),
+                                DefaultAddress = item.DefaultAddress,
+                                PostalCode = item.PostalCode,
+                                State = item.State,
+                            };
+                            result.ShippingAddress = shippingAddress;
+                        }
+
+                    }
+                    result.SupplierId = Id;
+
+                }
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+
+            return result;
         }
 
         public async Task<SupplierVm> GetSupplierById(long Id)
@@ -273,7 +338,7 @@ namespace Inventory.Application.Services.SupplierServices
                         SupplierVm.Shipmentterms = SupplierDetail.Shipmenterms;
                     }
                     var SupplierAddressList = _DbContext.Addersses.Where(x => x.SupplierId == Id).ToList();
-                    
+
                     List<SupplierAddressVm> SupplierAddressVmlist = new List<SupplierAddressVm>();
                     SuppliersAddressList SuppliersAddressList = new SuppliersAddressList();
                     foreach (var itemaddress in SupplierAddressList)
@@ -350,7 +415,7 @@ namespace Inventory.Application.Services.SupplierServices
                             var suppliersaddress = _DbContext.Addersses.Where(x => x.SupplierId == item.SupplierId).ToList();
                             if (suppliersaddress != null)
                             {
-                              
+
                                 List<SupplierAddressVm> SupplierAddressVmlist = new List<SupplierAddressVm>();
                                 SuppliersAddressList SuppliersAddressList = new SuppliersAddressList();
                                 foreach (var itemaddress in suppliersaddress)
@@ -369,7 +434,7 @@ namespace Inventory.Application.Services.SupplierServices
                                 SuppliersAddressList.Address = SupplierAddressVmlist;
                                 supplier.AddressList = SuppliersAddressList;
                             }
-                            
+
                             var supplierConatct = _DbContext.Contacts.Where(x => x.SupplierId == item.SupplierId).ToList();
                             if (supplierConatct != null)
                             {
@@ -391,11 +456,11 @@ namespace Inventory.Application.Services.SupplierServices
                                     SupplierContactVmlist.Add(contact);
                                 }
                                 SuplliersContactList.Contact = SupplierContactVmlist;
-                                supplier.ContactList=SuplliersContactList;
+                                supplier.ContactList = SuplliersContactList;
                             }
                             supplierList.Add(supplier);
                         }
-                       
+
                     }
                 });
             }

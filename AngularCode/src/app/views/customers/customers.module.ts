@@ -6,6 +6,7 @@ import { CustomerComponent } from './customer/customer.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import {FirstCharcaterUpperCase} from './../_helpers/custome-pipe';
 // import { CardsComponent } from './cards.component';
 
 // // Forms Component
@@ -14,6 +15,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 // // Components Routing
  import { CustomersRoutingModule } from './customers-routing.module';
 import { CustomerTypeComponent } from './CustomerType/customer-type/customer-type.component';
+import { from } from 'rxjs';
 
 @NgModule({
   imports: [
@@ -34,6 +36,7 @@ import { CustomerTypeComponent } from './CustomerType/customer-type/customer-typ
   declarations: [
   CustomerComponent,
   CustomerTypeComponent,
+  FirstCharcaterUpperCase,
 ]
 })
 export class CustomerModule { }

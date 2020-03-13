@@ -1,0 +1,18 @@
+@media (min-width: 992px) {
+    .modal-lg, .modal-xl {
+      max-width: 1250px;
+    }
+  }
+  .sethrborder{
+      border: 1px solid gray;
+  }
+  #PurchaseOrderListId .alert{
+      padding: initial;
+  }
+  #selectedProductListId .table th, .table td {
+    border-top:none;
+  }
+  #selectedProductListId  .alert
+  {
+   margin-bottom: 0em;
+  }

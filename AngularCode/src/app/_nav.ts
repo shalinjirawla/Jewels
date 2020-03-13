@@ -165,12 +165,12 @@ export const navItems: NavData[] = [
   },
   {
     name: 'Purchases',
-    url: '/notifications',
+    url: '/purchases',
     icon: 'fa fa-book',
     children: [
       {
         name: 'Purchase Orders',
-        url: '/notifications/alerts',
+        url: '/purchases/purchases-order',
         icon: 'fa fa-cart-plus'
       },
       {
@@ -180,7 +180,7 @@ export const navItems: NavData[] = [
       },
       {
         name: 'Receive Notes',
-        url: '/notifications/modals',
+        url: '/purchases/receive-notes',
         icon: 'icon-bell'
       }
     ]

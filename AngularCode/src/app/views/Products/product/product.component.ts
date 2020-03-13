@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, FormControl, Validators, FormArray, NgModel } f
 import { ProductBrandService } from '../../../Services/Products-Services/product-brand.service';
 import { SupplierServicesService } from '../../../Services/SuppliersServices/supplier-services.service';
 import { ProductCategoriesService } from '../../../Services/Products-Services/product-categories.service';
-import { WarehouseService ,TaxCodeService} from '../../../Services/Masters-Services/general-setup.service';
+import { WarehouseService, TaxCodeService } from '../../../Services/Masters-Services/general-setup.service';
 import Swal from 'sweetalert2';
 import { RawMaterailsService } from '../../../Services/RawMaterails-Services/raw-materails.service'
 import { ProductService } from '../../../Services/Products-Services/product.service';
@@ -34,6 +34,7 @@ export class ProductComponent implements OnInit {
   //Title For Model End...
   //Form List for Product Start..
   ProductForm: FormGroup;
+  ProductDetailsForm: FormGroup;
   ProductVariantForm: FormGroup;
   AddCustomerForm: FormGroup;
   CategoriesList: any[];
@@ -160,6 +161,23 @@ export class ProductComponent implements OnInit {
       })]),
       IsProductVariants: [false],
     });
+    this.ProductDetailsForm = this.FormBuilder.group({
+      ProductId: [0],
+      ProductDetailsId: [0],
+      Image: [''],
+      ReorderQuantity: [''],
+      PurchasePrice: [''],
+      SellingPrice: [''],
+      MinmOrderQuantity: [''],
+      Desc: [''],
+      DefaultSupplierId: [''],
+      DefaultTaxId: [''],
+      DefaultWarehouseId: [''],
+      UnitsOfMeasurement: [''],
+      InitialStockHand: [''],
+      InitialStockPrice: [''],
+      InitialHandCost: [''],
+    });
     this.ProductVariantForm = this.FormBuilder.group({
       ProductId: ['0'],
       ProductVariantId: ['0'],
@@ -260,7 +278,7 @@ export class ProductComponent implements OnInit {
 
     } else {
       Swal.fire({
-        type: 'error',
+        type: 'warning',
         title: "Please Enter Variant Option Values..",
       })
     }
@@ -330,26 +348,36 @@ export class ProductComponent implements OnInit {
       );
     }
   }
-  handleFileSelect(evt, index) {
+  public VarinatProducthandleFileSelect(evt, index) {
     var files = evt.target.files;
     var file = files[0];
     if (files && file) {
       var reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
-        // this.Base64File = reader.result;
         let arrobj = this.ProductVariantForm.get('VariantOptionValue_points') as FormArray;
         arrobj.controls[index].patchValue({
           Image: reader.result,
         });
       };
     }
-  }
-
-  public VariantOptionSelectImage(selectedimages) {
 
   }
-  public AddProduct(ProductForm: any, ProductVariantForm: any) {
+  public ProducthandleFileSelect(evt) {
+    var files = evt.target.files;
+    var file = files[0];
+    if (files && file) {
+      var reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.ProductDetailsForm.patchValue({
+          Image: reader.result,
+        });
+      };
+    }
+
+  }
+  public AddProduct(ProductForm: any, ProductDetailsForm: any, ProductVariantForm: any) {
     const self = this;
     //self.saving = true;
 
@@ -362,10 +390,12 @@ export class ProductComponent implements OnInit {
       ProductForm.value.RawMaterial_points = null;
     else
       ProductForm.value.RawMaterial_points = JSON.stringify(this.RawMaterialPoints.value[0]);
-    ProductVariantForm.value.VariantOptionLabelsList = this.VariantoptionValueLabellist;
+    if (ProductVariantForm.value != null)
+      ProductVariantForm.value.VariantOptionLabelsList = this.VariantoptionValueLabellist;
     if (!ProductForm.value.IsProductVariants)
       ProductVariantForm.value = null;
     else {
+      ProductDetailsForm.value = null;
       if (ProductVariantForm.value != null && ProductVariantForm.value != undefined) {
         if (ProductVariantForm.value.VariantOptionValue_points != null &&
           ProductVariantForm.value.VariantOptionValue_points.length > 0) {
@@ -394,6 +424,7 @@ export class ProductComponent implements OnInit {
     }
     const FinalSave = {
       ProductData: ProductForm.value,
+      ProductDetailData: ProductDetailsForm.value,
       ProductVarinatData: this.ProductVarinat
     };
     this.ProductService.SaveProduct(FinalSave)
@@ -442,6 +473,7 @@ export class ProductComponent implements OnInit {
     const self = this;
 
     let productData = data.productData;
+    let producDetailstData = data.productDetailData;
     let productVarinatData = data.productVarinatData;
     let RawMaterial = JSON.parse(productData.rawMaterial_points);
     self.ProductForm.patchValue({
@@ -467,9 +499,10 @@ export class ProductComponent implements OnInit {
       });
       self.IsRawMaterailSelect = true;
     }
-    else
+    else {
       self.IsRawMaterailSelect = false;
 
+    }
     self.largeModal.show();
     if (productData.isProductVariants) {
       this.isProductVarintsSelect = true;
@@ -511,9 +544,9 @@ export class ProductComponent implements OnInit {
             Image: element.image,
             VariMinmOrderQuantity: element.variMinmOrderQuantity,
             VariantDesc: element.variantDesc,
-            DefaultSupplierId: element.defaultSupplierId?element.defaultSupplierId:'',
-            DefaultTaxId: element.defaultTaxId?element.defaultTaxId:'',
-            DefaultWarehouseId: element.defaultWarehouseId? element.defaultWarehouseId:'',
+            DefaultSupplierId: element.defaultSupplierId ? element.defaultSupplierId : '',
+            DefaultTaxId: element.defaultTaxId ? element.defaultTaxId : '',
+            DefaultWarehouseId: element.defaultWarehouseId ? element.defaultWarehouseId : '',
             UnitsOfMeasurement: element.unitsOfMeasurement,
             InitialStockHand: element.initialStockHand,
             InitialStockPrice: element.initialStockPrice,
@@ -524,6 +557,23 @@ export class ProductComponent implements OnInit {
       }
     } else {
       $('#ProductVariant-link').parent().hide();
+      self.ProductDetailsForm.patchValue({
+        ProductId: producDetailstData.productId,
+        ProductDetailsId: producDetailstData.productDetailsId,
+        Image: producDetailstData.image,
+        ReorderQuantity: producDetailstData.reorderQuantity,
+        PurchasePrice: producDetailstData.purchasePrice,
+        SellingPrice: producDetailstData.sellingPrice,
+        MinmOrderQuantity: producDetailstData.minmOrderQuantity,
+        Desc: producDetailstData.desc,
+        DefaultSupplierId: producDetailstData.defaultSupplierId ? producDetailstData.defaultSupplierId : '',
+        DefaultTaxId: producDetailstData.defaultTaxId ? producDetailstData.defaultTaxId : '',
+        DefaultWarehouseId: producDetailstData.defaultWarehouseId ? producDetailstData.defaultWarehouseId : '',
+        UnitsOfMeasurement: producDetailstData.unitsOfMeasurement,
+        InitialStockHand: producDetailstData.initialStockHand,
+        InitialStockPrice: producDetailstData.initialStockPrice,
+        InitialHandCost: producDetailstData.initialHandCost,
+      });
     }
   }
   public DeleteProduct(ProductId: number) {
@@ -555,4 +605,5 @@ export class ProductComponent implements OnInit {
     }
   }
   get f() { return this.ProductForm.controls; }
+  get f1() { return this.ProductDetailsForm.controls; }
 }

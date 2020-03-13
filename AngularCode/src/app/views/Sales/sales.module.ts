@@ -8,11 +8,10 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { CustomersRoutingModule } from '../Sales/sales-routing.module';
 import { QuotationsComponent } from './quotations/quotations.component';
-
 @NgModule({
   declarations: [
     SalesOrderComponent,
-    QuotationsComponent
+    QuotationsComponent,
   ],
   imports: [
     CommonModule,

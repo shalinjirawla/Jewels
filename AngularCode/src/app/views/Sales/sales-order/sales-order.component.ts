@@ -290,23 +290,26 @@ export class SalesOrderComponent implements OnInit {
   }
   public AddAdditionalChargeForProduct(product: any, index: any) {
     let arrylendth = this.AdditionalChargeForProduct.length;
-    if (index != 1) {
-      this.AdditionalChargeForProduct.push(this.formBuilder.group({
-        OrderItemsId: product.OrderItemsId,
-        AdditionalForProductId: [arrylendth],
-        ProductId: product.ProductId,
-        AdditionalChargeId: ['', Validators.required],
-        Amount: ['', Validators.required],
-        IsTaxble: product.IsTaxble,
-        TaxId: ['']
-      }));
-    } else {
-      let arrproductobj = this.AdditionalChargeFormForProduct.get('AdditionalChargeForProduct') as FormArray;
-      arrproductobj.controls[0].patchValue({
-        OrderItemsId: product.OrderItemsId,
-        ProductId: product.ProductId,
-        IsTaxble: product.IsTaxble,
-      });
+    var ProductExist = this.AdditionalChargeForProduct.value.filter(x => x.ProductId == product.ProductId);
+    if (ProductExist.length == 0) {
+      if (index != 1) {
+        this.AdditionalChargeForProduct.push(this.formBuilder.group({
+          OrderItemsId: product.OrderItemsId,
+          AdditionalForProductId: [arrylendth],
+          ProductId: product.ProductId,
+          AdditionalChargeId: ['', Validators.required],
+          Amount: ['', Validators.required],
+          IsTaxble: product.IsTaxble,
+          TaxId: ['']
+        }));
+      } else {
+        let arrproductobj = this.AdditionalChargeFormForProduct.get('AdditionalChargeForProduct') as FormArray;
+        arrproductobj.controls[0].patchValue({
+          OrderItemsId: product.OrderItemsId,
+          ProductId: product.ProductId,
+          IsTaxble: product.IsTaxble,
+        });
+      }
     }
   }
   public DeleteAdditionalChargeForAll(index) {
@@ -384,6 +387,7 @@ export class SalesOrderComponent implements OnInit {
   }
   public DeleteOrderItems(index) {
     this.OrderItems.removeAt(index);
+    this.AdditionalChargeForProduct.removeAt(index);
     this.TotalCalcalate();
   }
   public TabChange(event: any) {
@@ -550,6 +554,14 @@ export class SalesOrderComponent implements OnInit {
   public OpenAdditionlChargeModel() {
     this.largeModal1.show();
     this.AdditionalChargeSubmit = false;
+    //document.getElementById('ForAll-link').click();
+  }
+  public OpenAdditionlChargeModelandBindProduct(AdditionalChargeApplyType: string) {
+    this.largeModal1.show();
+    this.AdditionalChargeSubmit = false;
+    if (AdditionalChargeApplyType == "Product") {
+      this.ResetAdditionalChargeForAll();
+    }
     //document.getElementById('ForAll-link').click();
   }
   public CloseAdditionlChargeModel() {
@@ -782,7 +794,6 @@ export class SalesOrderComponent implements OnInit {
       const self = this;
       self.SalesOrderService.GetSalesOrder(SalesOrderId).subscribe((responce: any) => {
         if (responce != null && responce.status) {
-          debugger
           var SalesOrder = responce.data.salesOrdersVM;
           var SalesOrderType = responce.data.salesOrderDetailsVM;
           var SalesOrderItems = responce.data.salesOrderItemsList;
@@ -826,21 +837,24 @@ export class SalesOrderComponent implements OnInit {
             if (SalesOrderType.isAdditionalChargeApplyType == 'All') {
               self.SalesOrderAdditionalchargeForAll = SalesOrderType.additionalChargeForAll;
               if (self.SalesOrderAdditionalchargeForAll != null && self.SalesOrderAdditionalchargeForAll.length > 0) {
-                let index = 0;
+                let indexAll = 0;
                 self.SalesOrderAdditionalchargeForAll.forEach(element => {
-                  this.BindAddionalChargeForAll(element, index);
-                  index++;
+                  this.BindAddionalChargeForAll(element, indexAll);
+                  indexAll++;
                 });
+                this.AdditionalChargeActive == 'All'
               }
             }
             else if (SalesOrderType.isAdditionalChargeApplyType == 'Product') {
               self.SalesOrderAdditionalchargeForProduct = SalesOrderType.additionalChargeForProduct;
               if (self.SalesOrderAdditionalchargeForProduct != null && self.SalesOrderAdditionalchargeForProduct.length > 0) {
-                let index = 0;
+                let indexProduct = 0;
                 self.SalesOrderAdditionalchargeForProduct.forEach(element => {
-                //  this.BindAddionalChargeForProduct(element, index);
-                  index++;
+                  this.BindAddionalChargeForProduct(element, indexProduct);
+                  indexProduct++;
                 });
+                this.IsProductSalesOrderItemAdded = true;
+                this.AdditionalChargeActive == 'Product'
               }
             }
           }
@@ -879,24 +893,46 @@ export class SalesOrderComponent implements OnInit {
     arrobj.controls[index].patchValue({
       OrderItemsId: all.salesOrdersId,
       AdditionalForAllId: all.additionalForAllId,
-      AdditionalChargeId:all.additionalChargeId,
-      Amount:0,
+      AdditionalChargeId: all.additionalChargeId,
+      Amount: this.BindChargeAmount(all.additionalChargeId),
       TaxId: all.taxId,
     });
+  }
+  public BindChargeAmount(chargeId: number): any {
+    if (chargeId != 0) {
+      var obj = this.AdditionalChargeList.filter(x => x.additionalChargeId == chargeId);
+      if (obj != null)
+        return obj[0].unitPrice;
+      else
+        return 0;
+    } else
+      return 0;
   }
   public BindAddionalChargeForProduct(product: any, index) {
     let arrobj = this.AdditionalChargeFormForProduct.get('AdditionalChargeForProduct') as FormArray;
     if (index > 0)
-      this.AddAdditionalChargeForProduct(product, index);
+      this.BindaddAdditionalchargeProduct(product);
     arrobj.controls[index].patchValue({
-      OrderItemsId: [''],
-      AdditionalForProductId: [''],
-      ProductId: ['', Validators.required],
+      OrderItemsId: product.salesOrdersId,
+      AdditionalForProductId: product.additionalChargeForProductId,
+      ProductId: product.productId,
+      AdditionalChargeId: product.additionalChargeId,
+      Amount: this.BindChargeAmount(product.additionalChargeId),
+      IsTaxble: product.isTaxble,
+      TaxId: product.taxId,
+    });
+  }
+  public BindaddAdditionalchargeProduct(product: any) {
+    let arrylendth = this.AdditionalChargeForProduct.length;
+    this.AdditionalChargeForProduct.push(this.formBuilder.group({
+      OrderItemsId: product.OrderItemsId,
+      AdditionalForProductId: [arrylendth],
+      ProductId: product.ProductId,
       AdditionalChargeId: ['', Validators.required],
       Amount: ['', Validators.required],
-      IsTaxble: [false],
+      IsTaxble: product.IsTaxble,
       TaxId: ['']
-    });
+    }));
   }
   public DeleteSalesOrder(SalesOrderId: number) {
     if (SalesOrderId != 0) {

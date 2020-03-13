@@ -40,7 +40,7 @@ import { ServiceComponent } from './service/service.component';
     BrandComponent,
     RawMaterialsComponent,
     ServiceComponent,
+    
   ],
-  
 })
 export class ProductsModule { }

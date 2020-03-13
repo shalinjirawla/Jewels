@@ -176,7 +176,7 @@ namespace Inventory.Web.Controllers
                 Result = await _ProductBrandServices.UpdateProductCategories(BrandId, model, GetUserId);
                 if (Result)
                 {
-                    Message = "Product Successfully Updated..!";
+                    Message = "Product Brand Successfully Updated..!";
                 }
                 else
                 {

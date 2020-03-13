@@ -13,5 +13,6 @@ namespace Inventory.Application.Interface.Supplier
         Task<List<DefaultSupplierList>> GetDefaultSupplierList();
         Task<SupplierVm> GetSupplierById(long Id);
         Task<Boolean> DeleteSupplier(long Id);
+        SupplierAddress GetSupplierAddress(long Id);
     }
 }

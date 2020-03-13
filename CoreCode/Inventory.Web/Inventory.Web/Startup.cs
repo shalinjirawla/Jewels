@@ -40,7 +40,8 @@ using Inventory.Application.Interface.Supplier;
 using Inventory.Application.Services.SupplierServices;
 using Inventory.Application.Services.SalesOrderServices;
 using Inventory.Application.Interface.SalesOrder;
-
+using Inventory.Application.Interface.PurchaseOrder;
+using Inventory.Application.Services.PurchaseOrderServices;
 
 namespace Inventory.Web
 {
@@ -166,6 +167,9 @@ namespace Inventory.Web
             services.AddScoped<ISalesOrderType, GeneralsetupServices>();
             services.AddScoped<IAdditionalCharge, GeneralsetupServices>();
             services.AddScoped<ISalesOrder, SalesOrderServices>();
+            services.AddScoped<IPurchaseOrder, PurchaseOrderServices>();
+            services.AddScoped<IReceiveNotes, ReceiveNotesServices>();
+            //Configure CORS for angular2 UI
             //Configure CORS for angular2 UI
             services.AddCors(options =>
             {

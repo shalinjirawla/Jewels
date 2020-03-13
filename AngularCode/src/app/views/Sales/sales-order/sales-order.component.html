@@ -68,14 +68,14 @@
                                 <span *ngIf="item.shipmentStatus==3" class="badge p-2 badge-danger">Issued</span>
                             </td>
                             <td class="mr-2">
-                                <span *ngIf="item.shipmentStatus==0" class="badge p-2 badge-secondary">In
+                                <span *ngIf="item.paymentStatus==0" class="badge p-2 badge-secondary">In
                                     Progress</span>
-                                <span *ngIf="item.shipmentStatus==1" class="badge p-2 badge-success">Delivered</span>
-                                <span *ngIf="item.shipmentStatus==2" class="badge p-2 badge-info">Partial
+                                <span *ngIf="item.paymentStatus==1" class="badge p-2 badge-success">Delivered</span>
+                                <span *ngIf="item.paymentStatus==2" class="badge p-2 badge-info">Partial
                                     Delivered</span>
-                                <span *ngIf="item.shipmentStatus==3" class="badge p-2 badge-warning">Partially
+                                <span *ngIf="item.paymentStatus==3" class="badge p-2 badge-warning">Partially
                                     Issued</span>
-                                <span *ngIf="item.shipmentStatus==4" class="badge p-2 badge-danger">Issued</span>
+                                <span *ngIf="item.paymentStatus==4" class="badge p-2 badge-danger">Issued</span>
                             </td>
                             <td class="mr-2">
                                 {{SetFixedToDot(item.total)}}
@@ -317,7 +317,7 @@
                                     applied to 1 item or a group of items selling price or applied to entire sales order." placement="right"></i>
                                     <br />
                                     <button class="btn btn-primary btn-block"
-                                        (click)="OpenAdditionlChargeModel()">Manage</button>
+                                        (click)="OpenAdditionlChargeModelandBindProduct(OrderItemsForm.value.IsAdditionalChargeApplyType)">Manage</button>
                                 </div>
                                 <div class="form-group col-sm-3" *ngIf="SalesOrderDetailsForm.value.SalesOrdersId==null 
                                 || SalesOrderDetailsForm.value.SalesOrdersId==0">
@@ -965,7 +965,7 @@
                 <button type="button" class="btn btn-secondary" [disabled]="applysaving"
                     (click)="CloseAdditionlChargeModel()">Close</button>
                 <button type="button" class="btn btn-primary"
-                    *ngIf="SalesOrderDetailsForm.value.SalesOrdersId==null  || SalesOrderDetailsForm.value.SalesOrdersId==0"
+                   
                     [disabled]="applysaving"
                     (click)="ApplyAdditionalCharge(AdditionalChargeForAll,AdditionalChargeForProduct)">Apply</button>
             </div>

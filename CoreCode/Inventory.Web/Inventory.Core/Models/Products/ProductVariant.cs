@@ -34,7 +34,7 @@ namespace Inventory.Core.Models.Products
         [ForeignKey("WarehouseId")]
         public long? DefaultWarehouseId { get; set; }
         public Warehouse Warehouse { get; set; }
-        public double? UnitsOfMeasurement { get; set; }
+        public string UnitsOfMeasurement { get; set; }
         public double? InitialStockHand { get; set; }
         public double? InitialStockPrice { get; set; }
         public double? InitialHandCost { get; set; }
